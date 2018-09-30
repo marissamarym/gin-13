@@ -1,31 +1,27 @@
 // server.js
 // where your node app starts
 var express = require('express'); 
-
-var app = express();
-var server = app.listen(process.env.PORT || 300);
-
-app.use(express.static('public'));
-console.log('server running')
-
 var socket = require('socket.io');
-var io = socket(server);
-
-
 var Box2D= require("./box2d");
-var socket = require('socket.io');
-
 
 var universe = {players:[], objects:[]}
-var connections = []
+var CANVAS_WIDTH = 640;
+var CANVAS_HEIGHT = 480;
+var PIXEL_PER_METER = 100;
+
+
+//====================
+// PHYSICS STUFF
+//====================
+
 
 var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 10), true);
 
 function createBox(x, y, width, height){
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
 	bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
-	bodyDef.position.x = x;
-	bodyDef.position.y = y;
+	bodyDef.position.x = x / PIXEL_PER_METER;
+	bodyDef.position.y = y / PIXEL_PER_METER;
 
 	var fixDef = new Box2D.Dynamics.b2FixtureDef;
  	fixDef.density = 1.5;
@@ -33,12 +29,15 @@ function createBox(x, y, width, height){
  	fixDef.restitution = 1;
   
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
-  fixDef.shape.SetAsBox(width, height);
+  fixDef.shape.SetAsBox(width / PIXEL_PER_METER, height / PIXEL_PER_METER);
 	return world.CreateBody(bodyDef).CreateFixture(fixDef);  
 }
 
 function serverInit(){
-  
+  createBox(0,CANVAS_HEIGHT-10,CANVAS_WIDTH,10);
+  for (var i = 0; i < 10; i++){
+    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20);
+  }
 }
 
 
@@ -46,14 +45,22 @@ function severUpdate(){
   
 }
 
-serverInit
-
+serverInit()
 
 
 
 //====================
 // SOCKETING STUFF
 //====================
+
+
+var app = express();
+var server = app.listen(process.env.PORT || 300);
+
+app.use(express.static('public'));
+console.log('server running')
+
+var io = socket(server);
 
 
 function newConnection(socket){
