@@ -27,10 +27,11 @@ var FPS = 30;
 var Box2D= require("./box2d");
 
 var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 10), true);
+var bodies = []
 
-function createBox(x, y, width, height){
+function createBox(x, y, width, height, isStatic){
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
-	bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
+	bodyDef.type = isStatic ? Box2D.Dynamics.b2Body.b2_staticBody : Box2D.Dynamics.b2Body.b2_dynamicBody;
 	bodyDef.position.x = x / PIXEL_PER_METER;
 	bodyDef.position.y = y / PIXEL_PER_METER;
 
@@ -43,12 +44,17 @@ function createBox(x, y, width, height){
   fixDef.shape.SetAsBox(width / PIXEL_PER_METER, height / PIXEL_PER_METER);
 	return world.CreateBody(bodyDef).CreateFixture(fixDef);  
 }
+function describe(bodies){
+  for (var i = 0; i < bodies.length; i++){
+    console.log(bodies[i]);
+  }
+}
+
 
 function serverInit(){
-  console.log("engine init");
-  createBox(0,CANVAS_HEIGHT-10,CANVAS_WIDTH,10);
+  bodies.push(createBox(0,CANVAS_HEIGHT-10,CANVAS_WIDTH,10, true));
   for (var i = 0; i < 10; i++){
-    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20);
+    bodies.push(createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20, false));
   }
   setInterval(serverUpdate,1000/FPS);
 }
@@ -56,6 +62,7 @@ function serverInit(){
 
 function serverUpdate(){
   world.Step(1 / FPS, 10, 10);
+  universe.objects = describe(bodies);
 }
 
 serverInit()
