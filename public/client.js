@@ -26,7 +26,7 @@ new p5( function( sketch ) {
         sketch.fill(0,255,255);
         sketch.translate(obj.x,obj.y);
         sketch.rotate(obj.rotation);
-        sketch.rect(0,0,obj.width,obj.height);
+        sketch.rect(-obj.width/2,-obj.height/2,obj.width,obj.height);
         sketch.pop();
       }
 	  }

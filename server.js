@@ -26,7 +26,7 @@ var FPS = 30;
 
 var Box2D= require("./box2d");
 
-var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 0.1));
+var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
 
 function createBox(x, y, width, height, isStatic){
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
@@ -40,7 +40,7 @@ function createBox(x, y, width, height, isStatic){
  	fixDef.restitution = 1;
   
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
-  fixDef.shape.SetAsBox(width / PIXELS_PER_METER, height / PIXELS_PER_METER);
+  fixDef.shape.SetAsBox(width / PIXELS_PER_METER / 2, height / PIXELS_PER_METER / 2);
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef); 
   body.m_userdata = {name:"box",width:width,height:height}
   return body;
@@ -63,7 +63,7 @@ function describeBox2DWorld(){
 
 function serverInit(){
   console.log('init');
-  createBox(0,CANVAS_HEIGHT-10,CANVAS_WIDTH,10, true);
+  createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH, 100, true);
   for (var i = 0; i < 10; i++){
     createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20, false);
   }
