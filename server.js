@@ -16,7 +16,7 @@ console.log('server running')
 var universe = {players:[], objects:[]}
 var CANVAS_WIDTH = 640;
 var CANVAS_HEIGHT = 480;
-var PIXEL_PER_METER = 100;
+var PIXELS_PER_METER = 100;
 var FPS = 30;
 
 
@@ -27,13 +27,12 @@ var FPS = 30;
 var Box2D= require("./box2d");
 
 var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 10), true);
-var bodies = []
 
 function createBox(x, y, width, height, isStatic){
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
 	bodyDef.type = isStatic ? Box2D.Dynamics.b2Body.b2_staticBody : Box2D.Dynamics.b2Body.b2_dynamicBody;
-	bodyDef.position.x = x / PIXEL_PER_METER;
-	bodyDef.position.y = y / PIXEL_PER_METER;
+	bodyDef.position.x = x / PIXELS_PER_METER;
+	bodyDef.position.y = y / PIXELS_PER_METER;
 
 	var fixDef = new Box2D.Dynamics.b2FixtureDef;
  	fixDef.density = 1.5;
@@ -41,29 +40,35 @@ function createBox(x, y, width, height, isStatic){
  	fixDef.restitution = 1;
   
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
-  fixDef.shape.SetAsBox(width / PIXEL_PER_METER, height / PIXEL_PER_METER);
-	return world.CreateBody(bodyDef).CreateFixture(fixDef);  
+  fixDef.shape.SetAsBox(width / PIXELS_PER_METER, height / PIXELS_PER_METER);
+	var body = world.CreateBody(bodyDef).CreateFixture(fixDef); 
+  body.m_userdata = {width:width,height:height}
+  return body;
 }
-function describe(bodies){
-  for (var i = 0; i < bodies.length; i++){
-    console.log(bodies[i].m_body.m_xf.position);
+function describe(){
+  for (var b = world.m_bodyList; b; b = b.m_next) {
+    for (var f = b.m_fixtureList; f; f = f.m_next) {
+      if (f.m_userData) {
+					var x = Math.floor((f.m_body.m_xf.position.x * PIXELS_PER_METER) -  f.m_userData.width);
+					var y = Math.floor((f.m_body.m_xf.position.y * PIXELS_PER_METER) - f.m_userData.height);
+    }
   }
 }
 
 
 function serverInit(){
-  bodies.push(createBox(0,CANVAS_HEIGHT-10,CANVAS_WIDTH,10, true));
+  createBox(0,CANVAS_HEIGHT-10,CANVAS_WIDTH,10, true);
   // for (var i = 0; i < 10; i++){
   //   bodies.push(createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20, false));
   // }
-  universe.objects = describe(bodies);
+  describe();
   setInterval(serverUpdate,1000/FPS);
 }
 
 
 function serverUpdate(){
   world.Step(1 / FPS, 10, 10);
-  //universe.objects = describe(bodies);
+
 }
 
 serverInit()
