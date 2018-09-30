@@ -1,7 +1,7 @@
 // server.js
 // where your node app starts
 
-
+//
 var express = require('express'); 
 var app = express();
 var server = app.listen(process.env.PORT || 300);
@@ -26,7 +26,7 @@ var FPS = 30;
 
 var Box2D= require("./box2d");
 
-var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 10), true);
+var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 0.1));
 
 function createBox(x, y, width, height, isStatic){
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
@@ -55,7 +55,7 @@ function describeBox2DWorld(){
         var name = f.m_userdata.name;
         var w = f.m_userdata.width;
         var h = f.m_userdata.height;
-        world.objects.push({name:name, x:x, y:y, width:w, height:h, rotation:r})
+        universe.objects.push({name:name, x:x, y:y, width:w, height:h, rotation:r})
       }
     }
   }
@@ -73,8 +73,9 @@ function serverInit(){
 
 function serverUpdate(){
   world.Step(1 / FPS, 10, 10);
-  world.objects = []
+  universe.objects = []
   describeBox2DWorld();
+  
 }
 
 serverInit()
