@@ -1,38 +1,37 @@
-/* global describe io p5*/
+/* global describe io P5*/
 
 var universe = {players:[],objects:[]};
 var socket;
 
-new p5( function( sketch ) {
-  sketch.setup = function() {
-    socket = io();
+P5 = new p5()
+P5.setup = function() {
+  socket = io();
 
-    sketch.createCanvas(640, 480);
-    sketch.background(0);
+  P5.createCanvas(640, 480);
+  P5.background(0);
 
-    socket.emit('game-start', {})
-    socket.on('heartbeat', function(data){
-      universe = data;
-    })
+  socket.emit('game-start', {})
+  socket.on('heartbeat', function(data){
+    universe = data;
+  })
+}
+P5.draw = function() {
+  P5.background(0);
+  socket.emit('game-update', {});
+  console.log(universe);
+  for (var i = 0; i < universe.objects.length; i++) {
+    var obj = universe.objects[i];
+    if (obj.name == "box"){
+      P5.push();     
+      P5.stroke(0,255,255);
+      P5.noFill();
+      P5.translate(obj.x,obj.y);
+      P5.rotate(obj.rotation);
+      P5.rect(-obj.width/2,-obj.height/2,obj.width,obj.height);
+      P5.pop();
+    }
   }
-  sketch.draw = function() {
-    sketch.background(0);
-    socket.emit('game-update', {});
-    console.log(universe);
-    for (var i = 0; i < universe.objects.length; i++) {
-      var obj = universe.objects[i];
-      if (obj.name == "box"){
-        sketch.push();     
-        sketch.stroke(0,255,255);
-        sketch.noFill();
-        sketch.translate(obj.x,obj.y);
-        sketch.rotate(obj.rotation);
-        sketch.rect(-obj.width/2,-obj.height/2,obj.width,obj.height);
-        sketch.pop();
-      }
-	  }
-  }
-});
+}
 
 
 
