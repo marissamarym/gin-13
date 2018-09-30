@@ -22,8 +22,28 @@ var listener = app.listen(process.env.PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 
-var world = new Box2D.Dynamics.b2World(
-	new b2Vec2(0, 10) //gravity
-	, true //allow sleep
-	);
+var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 10), true);
+
+function createBox(x, y, width, height){
+	var bodyDef = new Box2D.Dynamics.b2BodyDef;
+	bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
+	bodyDef.position.x = x;
+	bodyDef.position.y = y;
+
+	var fixDef = new Box2D.Dynamics.b2FixtureDef;
+ 	fixDef.density = 1.5;
+ 	fixDef.friction = 0.01;
+ 	fixDef.restitution = 1;
+  
+  fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
+  fixDef.shape.SetAsBox(width, height);
+	return world.CreateBody(bodyDef).CreateFixture(fixDef);  
+}
+
+
+function update(){
+  
+}
+
+
 
