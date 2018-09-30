@@ -80,7 +80,7 @@ function serverInit(){
 function serverUpdate(){
   serverTicks += 1;  
   calculatePlayers();
-  //interact();
+  interact();
   world.Step(1 / FPS, 10, 10);
   universe.objects = []
   describeBox2DWorld();
@@ -161,6 +161,7 @@ function interact(){
       }
     }
   }  
+  console.log(joints);
   for (var j = 0; j < joints; j++){
     var player = getPlayerById(joints[j].player_id);
     var p = player.pose.rightWrist;
