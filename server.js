@@ -14,7 +14,6 @@ console.log('server running')
 //====================
 
 var universe = {players:[], objects:[]}
-var ground;
 var joints = []
 var CANVAS_WIDTH = 640;
 var CANVAS_HEIGHT = 480;
@@ -68,10 +67,10 @@ function describeBox2DWorld(){
 
 function serverInit(){
   console.log('init');
-  ground = createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH, GROUND_HEIGHT*2, true);
+  createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH, GROUND_HEIGHT*2, true);
   createBox(-10,CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   createBox(CANVAS_WIDTH+10, CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
-  for (var i = 0; i < 10; i++){
+  for (var i = 0; i < 5; i++){
     createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 40+i*2,40+i*2, false);
   }
   setInterval(serverUpdate,1000/FPS);
@@ -105,6 +104,9 @@ function getBodyById(id){
       }
     }
   }  
+}
+function getArbitraryBody(){
+  return world.m_bodyList;
 }
 function getPlayerById(id){
   for (var i = 0; i < universe.players.length; i++){
@@ -156,16 +158,15 @@ function interact(){
           if (v3.dist({x:x,y:y}, p) < f.m_userdata.width && !isJointed(f.m_userdata.id) && joints.length < 1){
 
             var def = new Box2D.Dynamics.Joints.b2MouseJointDef();
-            def.bodyA = ground;
+            def.bodyA = getArbitraryBody();
             def.bodyB = b;
             def.target = new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER);
             def.collideConnected = true;
-            def.maxForce = 1 * b.GetMass();
+            def.maxForce = 100 * b.GetMass();
             def.dampingRatio = 0;
             var joint = world.CreateJoint(def);
-            console.log(joint);
             universe.players[i].hand.push(f.m_userdata.id);
-            joints.push({"player_id":universe.players[i].id, "object_id":f.m_userdata.id})
+            joints.push({"player_id":universe.players[i].id, "object_id":f.m_userdata.id, joint:joint})
             break;
           }
         }
@@ -173,12 +174,13 @@ function interact(){
     }
   }  
 
-  // for (var j = 0; j < joints; j++){
-  //   var player = getPlayerById(joints[j].player_id);
-  //   var p = player.pose.rightWrist;
-  //   var joint = joints[j].joint;
-  //   joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x, p.y));
-  // }
+  //console.log(joints);
+  for (var j = 0; j < joints.length; j++){
+    var player = getPlayerById(joints[j].player_id);
+    var p = player.pose.rightWrist;
+    var joint = joints[j].joint;
+    joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER));
+  }
 }
 
 
