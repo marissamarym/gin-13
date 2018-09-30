@@ -15,6 +15,7 @@ console.log('server running')
 
 var universe = {players:[], objects:[]}
 var ground;
+var joints = []
 var CANVAS_WIDTH = 640;
 var CANVAS_HEIGHT = 480;
 var PIXELS_PER_METER = 100;
@@ -63,16 +64,6 @@ function describeBox2DWorld(){
     }
   }
 }
-function getBodyById(id){
-  for (var b = world.m_bodyList; b; b = b.m_next) {
-    for (var f = b.m_fixtureList; f; f = f.m_next) {
-      if (f.m_userdata && f.m_userdata.id == id) {
-				return b
-      }
-    }
-  }  
-}
-
 
 function serverInit(){
   console.log('init');
@@ -89,6 +80,7 @@ function serverInit(){
 function serverUpdate(){
   serverTicks += 1;  
   calculatePlayers();
+  //interact();
   world.Step(1 / FPS, 10, 10);
   universe.objects = []
   describeBox2DWorld();
@@ -103,6 +95,23 @@ serverInit()
 //====================
 
 var v3 = require('./ld-v3')
+
+function getBodyById(id){
+  for (var b = world.m_bodyList; b; b = b.m_next) {
+    for (var f = b.m_fixtureList; f; f = f.m_next) {
+      if (f.m_userdata && f.m_userdata.id == id) {
+				return b
+      }
+    }
+  }  
+}
+function getPlayerById(id){
+  for (var i = 0; i < universe.players.length; i++){
+    if (universe.players[i].id == id){
+      return universe.players[i];
+    }
+  }
+}
 
 function calculatePlayers(){
   for (var i = 0; i < universe.players.length; i++){
@@ -143,17 +152,21 @@ function interact(){
             def.collideConnected = true;
             def.maxForce = 1000 * b.GetMass();
             def.dampingRatio = 0;
-            var mouse_joint = world.CreateJoint(def);
+            var joint = world.CreateJoint(def);
             universe.players[i].hand.push(f.m_userdata.id);
+            joints.push({"joint":joint,"player_id":universe.players[i].id, "object_id":f.m_userdata.id})
             break;
           }
         }
       }
     }
-    for (var j = 0; j < universe.players[i].hand; j++){
-      
-    }
-  }   
+  }  
+  for (var j = 0; j < joints; j++){
+    var player = getPlayerById(joints[j].player_id);
+    var p = player.pose.rightWrist;
+    var joint = joints[j].joint;
+    joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x, p.y));
+  }
 }
 
 
