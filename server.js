@@ -22,7 +22,10 @@ var listener = app.listen(process.env.PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 
-var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 10), true);
+var world = {players:[], objects:[]}
+var connections = []
+
+var box2dworld = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 10), true);
 
 function createBox(x, y, width, height){
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
@@ -37,7 +40,11 @@ function createBox(x, y, width, height){
   
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
   fixDef.shape.SetAsBox(width, height);
-	return world.CreateBody(bodyDef).CreateFixture(fixDef);  
+	return box2dworld.CreateBody(bodyDef).CreateFixture(fixDef);  
+}
+
+function init(){
+  
 }
 
 
