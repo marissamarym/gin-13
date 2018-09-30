@@ -103,7 +103,7 @@ var PoseReader = new function(){
   }
   
   this._draw_bones = function(){
-    P5.eginShape()
+    P5.beginShape()
     for (var i = 0; i < arguments.length; i++){
       P5.vertex(arguments[i].x, arguments[i].y);
     }

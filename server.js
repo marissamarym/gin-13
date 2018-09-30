@@ -101,7 +101,7 @@ function newConnection(socket){
 	function gameStart(data){
 		console.log(socket.id)
 		
-		universe.players.push({"id":socket.id, "data":{}})
+		universe.players.push({"id":socket.id, "rawdata":{}})
 		setInterval(heartbeat, 10)
 
 		function heartbeat(){
@@ -112,7 +112,7 @@ function newConnection(socket){
 
 		for (var i = 0; i < universe.players.length; i++) {
 			if(socket.id == universe.players[i].id){
-				universe.players[i].data = data;
+				universe.players[i].rawdata = data;
 				break;
 			}
 		}

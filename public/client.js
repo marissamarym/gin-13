@@ -5,7 +5,7 @@ var P5 = window; //p5 pollutes global namespace
                  //this makes it look like that it doesn't
                  //so it feels nicer
 
-var localPlayer = Player();
+var localPlayer = {pose:null, color:[Math.random()*255,100,255]}
 
 P5.setup = function() {
   socket = io();
@@ -15,16 +15,18 @@ P5.setup = function() {
 
   PoseReader.init();
   
-  socket.emit('game-start', localPlayer.data)
+  socket.emit('game-start', localPlayer)
   socket.on('heartbeat', function(data){
     universe = data;
   })
 }
 P5.draw = function() {
   P5.background(0);
-  socket.emit('game-update', localPlayer.data);
-  console.log(universe);
   
+  localPlayer.pose = PoseReader.get();
+    
+  socket.emit('game-update', localPlayer);
+  console.log(universe);
   
   for (var i = 0; i < universe.objects.length; i++) {
     var obj = universe.objects[i];
@@ -37,6 +39,17 @@ P5.draw = function() {
       P5.rect(-obj.width/2,-obj.height/2,obj.width,obj.height);
       P5.pop();
     }
+  }
+  
+  for (var i = 0; i < universe.players.length; i++) {
+    var obj = universe.players[i];
+    if (obj.id != socket.id && obj.rawdata.pose != null){
+      PoseReader.draw_pose(obj.rawdata.pose,{color:obj.rawdata.color});
+    }
+  }
+  
+  if (localPlayer.pose != null){
+    PoseReader.draw_pose(localPlayer.pose,{color:localPlayer.color})
   }
 }
 
