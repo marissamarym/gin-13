@@ -87,13 +87,15 @@ serverInit()
 // PLAYING STUFF
 //====================
 
+var v3 = require('./v3')
+
 function calculatePlayers(){
   for (var i = 0; i < universe.players.length; i++){
     var pose0 = universe.players[i].raw_data.pose;
     if (pose0 == null){
       continue;
     }
-    var scl = dist(pose.nose.x, pose.nose.y , pose.leftEye.x, pose.leftEye.y);
+    var scl = v3.dist(pose0.nose , pose0.leftEye);
   }
 }
 
