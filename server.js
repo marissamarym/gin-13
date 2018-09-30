@@ -156,11 +156,12 @@ function interact(){
           var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
           var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
           if (v3.dist({x:x,y:y}, p) < f.m_userdata.width && !isJointed(f.m_userdata.id) && joints.length < 1){
-
+            var targ = new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER);
+            b.SetPosition(new Box2D.Common.Math.b2Vec2(targ.x,targ.y))
             var def = new Box2D.Dynamics.Joints.b2MouseJointDef();
             def.bodyA = getArbitraryBody();
             def.bodyB = b;
-            def.target = new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER);
+            def.target = targ;
             def.collideConnected = true;
             def.maxForce = 100 * b.GetMass();
             def.dampingRatio = 0;
@@ -176,18 +177,24 @@ function interact(){
 
   //console.log(joints);
   for (var j = joints.length-1; j >= 0; j--){
-    console.log(joints[j]);
+
     var player = getPlayerById(joints[j].player_id);
     var p = player.pose.rightWrist;
     var joint = joints[j].joint;
     joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER));
     var reactionForce = joint.GetReactionForce(FPS);
     var forceModuleSq = reactionForce.LengthSquared();
-    var maxForceSq = 100;
+    var maxForceSq = 200;
     if(forceModuleSq > maxForceSq){
-      joints.splice(j,1);
-      world.DestroyJoint(joint);
+      
       player.hand.splice(player.hand.indexOf(joints[j].object_id),1);
+      joints.splice(j,1);
+      try{
+        world.DestroyJoint(joint);
+      }catch(e){
+        console.log("joint deletion failed");
+      }
+      
     }
   }
 }

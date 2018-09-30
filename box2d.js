@@ -3695,7 +3695,7 @@ Box2D.postDefs = [];
    }
    b2Settings.b2Assert = function (a) {
       if (!a) {
-         console.log(b2Settings.b2Assert.caller);
+         console.log(b2Settings.b2Assert.caller.name);
          throw "Assertion Failed";
       }
    }
