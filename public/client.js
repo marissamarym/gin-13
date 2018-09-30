@@ -23,7 +23,8 @@ new p5( function( sketch ) {
       var obj = universe.objects[i];
       if (obj.name == "box"){
         sketch.push();     
-        sketch.fill(0,255,255);
+        sketch.stroke(0,255,255);
+        sketch.noFill();
         sketch.translate(obj.x,obj.y);
         sketch.rotate(obj.rotation);
         sketch.rect(-obj.width/2,-obj.height/2,obj.width,obj.height);

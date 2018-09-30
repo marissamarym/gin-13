@@ -1,7 +1,7 @@
 // server.js
 // where your node app starts
 
-////
+///////
 var express = require('express'); 
 var app = express();
 var server = app.listen(process.env.PORT || 300);
@@ -18,7 +18,7 @@ var CANVAS_WIDTH = 640;
 var CANVAS_HEIGHT = 480;
 var PIXELS_PER_METER = 100;
 var FPS = 30;
-
+var serverTicks = 0;
 
 //====================
 // PHYSICS STUFF
@@ -37,7 +37,7 @@ function createBox(x, y, width, height, isStatic){
 	var fixDef = new Box2D.Dynamics.b2FixtureDef;
  	fixDef.density = 1.5;
  	fixDef.friction = 0.01;
- 	fixDef.restitution = 1;
+ 	fixDef.restitution = 0.8;
   
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
   fixDef.shape.SetAsBox(width / PIXELS_PER_METER / 2, height / PIXELS_PER_METER / 2);
@@ -63,17 +63,18 @@ function describeBox2DWorld(){
 
 function serverInit(){
   console.log('init');
-  createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH, 100, true);
-  createBox(0,CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
-  createBox(CANVAS_WIDTH, CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
+  createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT+40,CANVAS_WIDTH, 100, true);
+  createBox(-10,CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
+  createBox(CANVAS_WIDTH+10, CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   for (var i = 0; i < 10; i++){
-    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20, false);
+    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 32,32, false);
   }
   setInterval(serverUpdate,1000/FPS);
 }
 
 
 function serverUpdate(){
+  serverTicks += 1;  
   world.Step(1 / FPS, 10, 10);
   universe.objects = []
   describeBox2DWorld();
