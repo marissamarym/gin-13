@@ -62,6 +62,7 @@ function describeBox2DWorld(){
 }
 
 function serverInit(){
+  console.log('init');
   createBox(0,CANVAS_HEIGHT-10,CANVAS_WIDTH,10, true);
   for (var i = 0; i < 10; i++){
     createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20, false);
