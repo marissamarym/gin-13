@@ -87,7 +87,11 @@ serverInit()
 // PLAYING STUFF
 //====================
 
-
+function calculatePlayers(){
+  for (var i = 0; i < universe.players.leng
+  
+  
+}
 
 
 //====================
