@@ -45,7 +45,8 @@ function createBox(x, y, width, height, isStatic){
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
   fixDef.shape.SetAsBox(width / PIXELS_PER_METER / 2, height / PIXELS_PER_METER / 2);
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef); 
-  body.m_userdata = {name:"box",width:width,height:height,is_static:isStatic,id:Math.floor(Math.random()*10000)}
+  body.m_userdata = {name:"box",width:width,height:height,is_static:isStatic,
+                     id:Math.floor(Math.random()*10000),interact_cooldown:0}
   return body;
 }
 function describeBox2DWorld(){
@@ -147,7 +148,18 @@ function calculatePlayers(){
   } 
 }
 
+function cooldown(){
+  for (var b = world.m_bodyList; b; b = b.m_next) {
+      for (var f = b.m_fixtureList; f; f = f.m_next) {
+        if (f.m_userdata && f.m_userdata.interact_cooldown > 0) {
+          f.m_userdata.interact_cooldown -= 1;
+        }
+      }
+  }
+}
+
 function interact(){
+  cooldown();
   for (var i = 0; i < universe.players.length; i++){
     var pose = universe.players[i].pose;
     if (pose == null){
@@ -159,9 +171,15 @@ function interact(){
         if (f.m_userdata && !f.m_userdata.is_static) {
           var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
           var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
-          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width && !isJointed(f.m_userdata.id) && joints.length < 10){
+          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width 
+              && !isJointed(f.m_userdata.id) 
+              && joints.length < 10
+              && f.m_userdata.interact_cooldown <= 0
+              ){
             var targ = new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER);
-            b.SetPosition(new Box2D.Common.Math.b2Vec2(targ.x,targ.y))
+            b.SetPosition(new Box2D.Common.Math.b2Vec2(
+              targ.x+f.m_userdata.width/PIXELS_PER_METER/2,
+              targ.y+f.m_userdata.height/PIXELS_PER_METER/2))
             var def = new Box2D.Dynamics.Joints.b2MouseJointDef();
             def.bodyA = getAnotherBody(b);
             def.bodyB = b;
@@ -187,12 +205,18 @@ function interact(){
   for (var j = joints.length-1; j >= 0; j--){
 
     var player = getPlayerById(joints[j].player_id);
+    var obj = getBodyById(joints[j].object_id);
+    for (var f = obj.m_fixtureList; f; f = f.m_next) {
+        if (f.m_userdata) {
+          f.m_userdata.interact_cooldown = 100;
+        }
+    }
     var p = player.pose.rightWrist;
     var joint = joints[j].joint;
     joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER));
     var reactionForce = joint.GetReactionForce(FPS);
     var forceModuleSq = reactionForce.LengthSquared();
-    var maxForceSq = 120;
+    var maxForceSq = 200;
     if(forceModuleSq > maxForceSq){
       
       player.hand.splice(player.hand.indexOf(joints[j].object_id),1);
@@ -226,7 +250,7 @@ function newConnection(socket){
 		console.log(socket.id)
 		
 		universe.players.push({id:socket.id, raw_data:{}, pose:null, hand:[]})
-		setInterval(heartbeat, 10)
+		setInterval(heartbeat, 50)
 
 		function heartbeat(){
 			io.sockets.emit('heartbeat', universe)
