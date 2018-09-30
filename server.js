@@ -17,7 +17,7 @@ var universe = {players:[], objects:[]}
 var CANVAS_WIDTH = 640;
 var CANVAS_HEIGHT = 480;
 var PIXELS_PER_METER = 100;
-var GROUND_HEIGHT = 50;
+var GROUND_HEIGHT = 20;
 
 var FPS = 30;
 var serverTicks = 0;
@@ -69,7 +69,7 @@ function serverInit(){
   createBox(-10,CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   createBox(CANVAS_WIDTH+10, CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   for (var i = 0; i < 10; i++){
-    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 32,32, false);
+    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 40+i*2,40+i*2, false);
   }
   setInterval(serverUpdate,1000/FPS);
 }
@@ -99,17 +99,39 @@ function calculatePlayers(){
     if (pose0 == null){
       continue;
     }
-    var scale = 200/v3.dist(pose0.nose, v3.lerp(pose0.leftHip, pose0.rightHip,0.5));
+    var scale = 150/v3.dist(pose0.nose, v3.lerp(pose0.leftHip, pose0.rightHip,0.5));
     var basePos = v3.lerp(pose0.leftAnkle, pose0.rightAnkle,0.5);
 
     var pose = {}
     for (var k in pose0){
       
-      pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),{x:basePos.x, y:CANVAS_HEIGHT})
+      pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),{x:basePos.x, y:CANVAS_HEIGHT-GROUND_HEIGHT})
       
     }
     universe.players[i].pose = pose;
   } 
+}
+
+function interact(){
+  for (var i = 0; i < universe.players.length; i++){
+    var pose = universe.players[i].pose;
+    if (pose == null){
+      continue;
+    }
+    
+    for (var b = world.m_bodyList; b; b = b.m_next) {
+      for (var f = b.m_fixtureList; f; f = f.m_next) {
+        if (f.m_userdata) {
+          var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
+          var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
+          if (v3.dist({x:x,y:y}, pose.rightWrist) < f.m_userdata.width){
+            
+          }
+        }
+      }
+    }
+    
+  }   
 }
 
 

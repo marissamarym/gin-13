@@ -33,7 +33,7 @@ P5.draw = function() {
     if (obj.name == "box"){
       P5.push();     
       P5.stroke(0,255,255);
-      P5.strokeWeight(3);
+      P5.strokeWeight(4);
       P5.noFill();
       P5.translate(obj.x,obj.y);
       P5.rotate(obj.rotation);
@@ -45,7 +45,7 @@ P5.draw = function() {
   for (var i = 0; i < universe.players.length; i++) {
     var obj = universe.players[i];
     if (obj.pose != null){
-      PoseReader.draw_pose(obj.pose,{color:obj.raw_data.color, stroke_weight:3});
+      PoseReader.draw_pose(obj.pose,{color:obj.raw_data.color, stroke_weight:4});
     }
   }
   
