@@ -14,6 +14,7 @@ console.log('server running')
 //====================
 
 var universe = {players:[], objects:[]}
+var ground;
 var CANVAS_WIDTH = 640;
 var CANVAS_HEIGHT = 480;
 var PIXELS_PER_METER = 100;
@@ -65,7 +66,7 @@ function describeBox2DWorld(){
 
 function serverInit(){
   console.log('init');
-  createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH, GROUND_HEIGHT*2, true);
+  ground = createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH, GROUND_HEIGHT*2, true);
   createBox(-10,CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   createBox(CANVAS_WIDTH+10, CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   for (var i = 0; i < 10; i++){
@@ -118,14 +119,18 @@ function interact(){
     if (pose == null){
       continue;
     }
-    
+    var p = pose.rightWrist;
     for (var b = world.m_bodyList; b; b = b.m_next) {
       for (var f = b.m_fixtureList; f; f = f.m_next) {
         if (f.m_userdata) {
           var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
           var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
-          if (v3.dist({x:x,y:y}, pose.rightWrist) < f.m_userdata.width){
-            
+          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width){
+            var def = new Box2D.Dynamics.Joints.b2MouseJointDef();
+            def.bodyA = ground;
+            def.bodyB = b;
+            def.target = new Box2D.Common.Math.b2Vec2(p.x, p.y);
+            continue;
           }
         }
       }
@@ -152,7 +157,7 @@ function newConnection(socket){
 	function gameStart(data){
 		console.log(socket.id)
 		
-		universe.players.push({id:socket.id, raw_data:{}, pose:null})
+		universe.players.push({id:socket.id, raw_data:{}, pose:null, inventory:[]})
 		setInterval(heartbeat, 10)
 
 		function heartbeat(){
