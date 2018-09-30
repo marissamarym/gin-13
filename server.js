@@ -1,7 +1,7 @@
 // server.js
 // where your node app starts
 
-//
+////
 var express = require('express'); 
 var app = express();
 var server = app.listen(process.env.PORT || 300);
@@ -64,6 +64,8 @@ function describeBox2DWorld(){
 function serverInit(){
   console.log('init');
   createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH, 100, true);
+  createBox(0,CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
+  createBox(CANVAS_WIDTH, CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   for (var i = 0; i < 10; i++){
     createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20, false);
   }
