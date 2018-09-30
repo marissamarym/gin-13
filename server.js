@@ -99,7 +99,7 @@ function calculatePlayers(){
     var basePos = v3.lerp(pose0.leftAnkle, pose0.rightAnkle,0.5);
     var pose = {}
     for (var k in pose0){
-      pose[k] = v3.scale(pose0[k])
+      pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),{x:0, y:CANVAS_HEIGHT})
       
     }
   }
