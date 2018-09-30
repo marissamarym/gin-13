@@ -1,19 +1,5 @@
 //Utility for creating and manipulating 3D vectors
 
-Object.defineProperty(Array.prototype, "x", {
-    get: function () {return this[0]},
-    set: function (n) {this[0] = n},
-});
-Object.defineProperty(Array.prototype, "y", {
-    get: function () {return this[1]},
-    set: function (n) {this[1] = n},
-});
-Object.defineProperty(Array.prototype, "z", {
-    get: function () {return this[2]},
-    set: function (n) {this[2] = n},
-});
-
-
 function Vec(x,y,z){
   return {x:x,y:y,z:z}
 }
@@ -95,7 +81,8 @@ function lerp(v0,v1,t){
 }
 
 function dist(v0,v1){
-  return Math.sqrt(Math.pow(v0.x-v1.x,2) + Math.pow(v0.y-v1.y,2) + Math.pow(v0.z-v1.z,2))
+  var zc = Math.pow(v0.z-v1.z,2)
+  return Math.sqrt(Math.pow(v0.x-v1.x,2) + Math.pow(v0.y-v1.y,2) + (isNaN(zc) ? 0 : zc))
 }
 
 module.exports = {

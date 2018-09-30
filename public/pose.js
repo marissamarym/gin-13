@@ -123,12 +123,13 @@ var PoseReader = new function(){
   this.draw_pose = function(pose, args) {
     if (args == undefined){args = {}}
     if (args.color == undefined){args.color = [255,255,255]}
+    if (args.stroke_weight == undefined){args.stroke_weight = 4}
     
     P5.push();
     
     P5.colorMode(P5.HSB, 255);
     P5.stroke.apply(this, args.color);
-    P5.strokeWeight(4);
+    P5.strokeWeight(args.stroke_weight);
     
     P5.strokeJoin(P5.ROUND);
     

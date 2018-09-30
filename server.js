@@ -17,6 +17,8 @@ var universe = {players:[], objects:[]}
 var CANVAS_WIDTH = 640;
 var CANVAS_HEIGHT = 480;
 var PIXELS_PER_METER = 100;
+var GROUND_HEIGHT = 50;
+
 var FPS = 30;
 var serverTicks = 0;
 
@@ -63,7 +65,7 @@ function describeBox2DWorld(){
 
 function serverInit(){
   console.log('init');
-  createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT+40,CANVAS_WIDTH, 100, true);
+  createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH, GROUND_HEIGHT*2, true);
   createBox(-10,CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   createBox(CANVAS_WIDTH+10, CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   for (var i = 0; i < 10; i++){
@@ -97,9 +99,9 @@ function calculatePlayers(){
     if (pose0 == null){
       continue;
     }
-    var scale = 10/v3.dist(pose0.nose, pose0.leftEye);
+    var scale = 200/v3.dist(pose0.nose, v3.lerp(pose0.leftHip, pose0.rightHip,0.5));
     var basePos = v3.lerp(pose0.leftAnkle, pose0.rightAnkle,0.5);
-    console.log(v3.dist(pose0.nose));
+
     var pose = {}
     for (var k in pose0){
       
