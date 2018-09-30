@@ -43,8 +43,8 @@ P5.draw = function() {
   
   for (var i = 0; i < universe.players.length; i++) {
     var obj = universe.players[i];
-    if (obj.id != socket.id && obj.rawdata.pose != null){
-      PoseReader.draw_pose(obj.rawdata.pose,{color:obj.rawdata.color});
+    if (obj.id != socket.id && obj.raw_data.pose != null){
+      PoseReader.draw_pose(obj.raw_data.pose,{color:obj.raw_data.color});
     }
   }
   
