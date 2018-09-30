@@ -83,6 +83,12 @@ function serverUpdate(){
 
 serverInit()
 
+//====================
+// PLAYING STUFF
+//====================
+
+
+
 
 //====================
 // SOCKETING STUFF
