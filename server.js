@@ -87,7 +87,7 @@ serverInit()
 // PLAYING STUFF
 //====================
 
-var v3 = require('./v3')
+var v3 = require('./ld-v3')
 
 function calculatePlayers(){
   for (var i = 0; i < universe.players.length; i++){
@@ -95,7 +95,13 @@ function calculatePlayers(){
     if (pose0 == null){
       continue;
     }
-    var scl = v3.dist(pose0.nose , pose0.leftEye);
+    var scale = 10/v3.dist(pose0.nose, pose0.leftEye);
+    var basePos = v3.lerp(pose0.leftAnkle, pose0.rightAnkle,0.5);
+    var pose = {}
+    for (var k in pose0){
+      pose[k] = v3.scale(pose0[k])
+      
+    }
   }
 }
 

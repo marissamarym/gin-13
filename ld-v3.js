@@ -88,5 +88,5 @@ function dist(v0,v1){
 module.exports = {
   Vec:Vec,forward:forward,up:up,right:right,zero:zero,fromtuple:fromtuple,totuple:totuple,
   rotvec:rotvec,roteuler:roteuler,
-  scale:scale,add:add,subtract:subtract,mag:mag,normalize:normalize,lerp:lerp
+  scale:scale,add:add,subtract:subtract,mag:mag,normalize:normalize,lerp:lerp,dist:dist,
 }
