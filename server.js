@@ -136,14 +136,18 @@ function calculatePlayers(){
       continue;
     }
     var scale = 150/v3.dist(pose0.nose, v3.lerp(pose0.leftHip, pose0.rightHip,0.5));
-    var basePos = v3.lerp(pose0.leftAnkle, pose0.rightAnkle,0.5);
+    var basePos = v3.lerp(pose0.leftHip, pose0.rightHip,0.5);
 
     var pose = {}
     for (var k in pose0){
       
-      pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),{x:basePos.x, y:CANVAS_HEIGHT-GROUND_HEIGHT})
+      pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),{x:basePos.x, y:CANVAS_HEIGHT-GROUND_HEIGHT-150})
       
     }
+    pose.leftAnkle.y = CANVAS_HEIGHT-GROUND_HEIGHT;
+    pose.rightAnkle.y = CANVAS_HEIGHT-GROUND_HEIGHT;
+    pose.leftKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT -75;
+    pose.rightKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT -75;
     universe.players[i].pose = pose;
   } 
 }
@@ -185,7 +189,7 @@ function interact(){
             def.bodyB = b;
             def.target = targ;
             def.collideConnected = true;
-            def.maxForce = 800 * b.GetMass();
+            def.maxForce = 1000 * b.GetMass();
             def.dampingRatio = 0;
             try{
               var joint = world.CreateJoint(def);
@@ -216,7 +220,7 @@ function interact(){
     joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER));
     var reactionForce = joint.GetReactionForce(FPS);
     var forceModuleSq = reactionForce.LengthSquared();
-    var maxForceSq = 200;
+    var maxForceSq = obj.GetMass()*50000;
     if(forceModuleSq > maxForceSq){
       
       player.hand.splice(player.hand.indexOf(joints[j].object_id),1);
