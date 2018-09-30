@@ -26,7 +26,7 @@ P5.draw = function() {
   localPlayer.pose = PoseReader.get();
     
   socket.emit('game-update', localPlayer);
-  console.log(universe);
+  //console.log(universe);
   
   for (var i = 0; i < universe.objects.length; i++) {
     var obj = universe.objects[i];

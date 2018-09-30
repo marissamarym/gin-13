@@ -71,7 +71,7 @@ function serverInit(){
   createBox(-10,CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   createBox(CANVAS_WIDTH+10, CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   for (var i = 0; i < 5; i++){
-    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 40+i*2,40+i*2, false);
+    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 40+i*10,40+i*10, false);
   }
   setInterval(serverUpdate,1000/FPS);
 }
@@ -159,7 +159,7 @@ function interact(){
         if (f.m_userdata && !f.m_userdata.is_static) {
           var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
           var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
-          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width/2 && !isJointed(f.m_userdata.id) && joints.length < 10){
+          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width && !isJointed(f.m_userdata.id) && joints.length < 10){
             var targ = new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER);
             b.SetPosition(new Box2D.Common.Math.b2Vec2(targ.x,targ.y))
             var def = new Box2D.Dynamics.Joints.b2MouseJointDef();
@@ -167,7 +167,7 @@ function interact(){
             def.bodyB = b;
             def.target = targ;
             def.collideConnected = true;
-            def.maxForce = 100 * b.GetMass();
+            def.maxForce = 800 * b.GetMass();
             def.dampingRatio = 0;
             try{
               var joint = world.CreateJoint(def);
@@ -192,7 +192,7 @@ function interact(){
     joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER));
     var reactionForce = joint.GetReactionForce(FPS);
     var forceModuleSq = reactionForce.LengthSquared();
-    var maxForceSq = 100;
+    var maxForceSq = 120;
     if(forceModuleSq > maxForceSq){
       
       player.hand.splice(player.hand.indexOf(joints[j].object_id),1);
