@@ -1,31 +1,25 @@
 // server.js
 // where your node app starts
+var express = require('express'); 
 
-// init project
-var express = require('express');
 var app = express();
-var Box2D= require("./box2d");
+var server = app.listen(process.env.PORT || 300);
 
-// we've started you off with Express, 
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
-
-// http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
+console.log('server running')
 
-// http://expressjs.com/en/starter/basic-routing.html
-app.get('/', function(request, response) {
-  response.sendFile(__dirname + '/views/index.html');
-});
+var socket = require('socket.io');
+var io = socket(server);
 
-// listen for requests :)
-var listener = app.listen(process.env.PORT, function() {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
 
-var world = {players:[], objects:[]}
+var Box2D= require("./box2d");
+var socket = require('socket.io');
+
+
+var universe = {players:[], objects:[]}
 var connections = []
 
-var box2dworld = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 10), true);
+var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 10), true);
 
 function createBox(x, y, width, height){
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
@@ -40,17 +34,63 @@ function createBox(x, y, width, height){
   
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
   fixDef.shape.SetAsBox(width, height);
-	return box2dworld.CreateBody(bodyDef).CreateFixture(fixDef);  
+	return world.CreateBody(bodyDef).CreateFixture(fixDef);  
 }
 
-function init(){
+function serverInit(){
   
 }
 
 
-function update(){
+function severUpdate(){
   
 }
 
+serverInit
 
 
+
+
+//====================
+// SOCKETING STUFF
+//====================
+
+
+function newConnection(socket){
+	console.log('new connection: ' + socket.id)
+	socket.on('game-start', gameStart)
+	socket.on('game-update', gameUpdate)
+	socket.on('disconnect', removePlayer)
+
+	function gameStart(data){
+		console.log(socket.id)
+		
+		universe.players.push({"id":socket.id, "data":{}})
+		setInterval(heartbeat, 10)
+
+		function heartbeat(){
+			io.sockets.emit('heartbeat', universe)
+		}
+	}
+	function gameUpdate(data){
+
+		for (var i = 0; i < universe.players.length; i++) {
+			if(socket.id == universe.players[i].id){
+				universe.players[i].data = data;
+				break;
+			}
+		}
+	}
+
+	function removePlayer(){
+		for (var i = 0; i < universe.players.length; i++) {
+			if(socket.id == universe.players[i].id){
+				universe.players.splice(i, 1)
+				console.log('disconnected')
+				break;
+			}
+		}
+	}
+}	
+
+io.sockets.on('connection', newConnection);
