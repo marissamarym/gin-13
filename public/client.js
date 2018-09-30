@@ -1,42 +1,30 @@
-// client-side js
-// run by the browser each time your view template is loaded
+/* global describe io createCanvas background*/
 
-console.log('hello world :o');
+var universe = {};
+var socket;
 
-// our default array of dreams
-const dreams = [
-  'Find and count some sheep',
-  'Climb a really tall mountain',
-  'Wash the dishes'
-];
+function setup() {
+  socket = io();
+  
+  createCanvas(640, 480);
+  background(0);
+  
+	socket.emit('game-start', {})
+	socket.on('heartbeat', function(data){
+		universe = data;
+	})
 
-// define variables that reference elements on our page
-const dreamsList = document.getElementById('dreams');
-const dreamsForm = document.forms[0];
-const dreamInput = dreamsForm.elements['dream'];
-
-// a helper function that creates a list item for a given dream
-const appendNewDream = function(dream) {
-  const newListItem = document.createElement('li');
-  newListItem.innerHTML = dream;
-  dreamsList.appendChild(newListItem);
 }
 
-// iterate through every dream and add it to our page
-dreams.forEach( function(dream) {
-  appendNewDream(dream);
-});
+function draw() {
 
-// listen for the form to be submitted and add a new dream when it is
-dreamsForm.onsubmit = function(event) {
-  // stop our form submission from refreshing the page
-  event.preventDefault();
+  background(0);
 
-  // get dream value and add it to the list
-  dreams.push(dreamInput.value);
-  appendNewDream(dreamInput.value);
+	socket.emit('game-update', {});
+  console.log(universe);
+	for (var i = 0; i < universe.objects.length; i++) {
+    var obj = universe.objects[i];
+	}
 
-  // reset form 
-  dreamInput.value = '';
-  dreamInput.focus();
-};
+  
+}

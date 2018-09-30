@@ -42,37 +42,41 @@ function createBox(x, y, width, height, isStatic){
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
   fixDef.shape.SetAsBox(width / PIXELS_PER_METER, height / PIXELS_PER_METER);
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef); 
-  body.m_userdata = {width:width,height:height}
+  body.m_userdata = {name:"box",width:width,height:height}
   return body;
 }
-function describe(){
+function describeBox2DWorld(){
   for (var b = world.m_bodyList; b; b = b.m_next) {
     for (var f = b.m_fixtureList; f; f = f.m_next) {
-      if (f.m_userData) {
-					var x = Math.floor((f.m_body.m_xf.position.x * PIXELS_PER_METER) -  f.m_userData.width);
-					var y = Math.floor((f.m_body.m_xf.position.y * PIXELS_PER_METER) - f.m_userData.height);
+      if (f.m_userdata) {
+				var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
+				var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
+        var r = f.m_body.m_sweep.a;
+        var name = f.m_userdata.name;
+        var w = f.m_userdata.width;
+        var h = f.m_userdata.height;
+        world.objects.push({name:name, x:x, y:y, width:w, height:h, rotation:r})
+      }
     }
   }
 }
 
-
 function serverInit(){
   createBox(0,CANVAS_HEIGHT-10,CANVAS_WIDTH,10, true);
-  // for (var i = 0; i < 10; i++){
-  //   bodies.push(createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20, false));
-  // }
-  describe();
+  for (var i = 0; i < 10; i++){
+    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20, false);
+  }
   setInterval(serverUpdate,1000/FPS);
 }
 
 
 function serverUpdate(){
   world.Step(1 / FPS, 10, 10);
-
+  world.objects = []
+  describeBox2DWorld();
 }
 
 serverInit()
-
 
 
 //====================
