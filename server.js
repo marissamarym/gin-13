@@ -1,19 +1,30 @@
 // server.js
 // where your node app starts
+
+
 var express = require('express'); 
-var socket = require('socket.io');
-var Box2D= require("./box2d");
+var app = express();
+var server = app.listen(process.env.PORT || 300);
+app.use(express.static('public'));
+console.log('server running')
+
+
+//====================
+// GLOBALS
+//====================
 
 var universe = {players:[], objects:[]}
 var CANVAS_WIDTH = 640;
 var CANVAS_HEIGHT = 480;
 var PIXEL_PER_METER = 100;
+var FPS = 30;
 
 
 //====================
 // PHYSICS STUFF
 //====================
 
+var Box2D= require("./box2d");
 
 var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 10), true);
 
@@ -34,15 +45,17 @@ function createBox(x, y, width, height){
 }
 
 function serverInit(){
+  console.log("engine init");
   createBox(0,CANVAS_HEIGHT-10,CANVAS_WIDTH,10);
   for (var i = 0; i < 10; i++){
     createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20);
   }
+  setInterval(serverUpdate,1000/FPS);
 }
 
 
-function severUpdate(){
-  
+function serverUpdate(){
+  world.Step(1 / FPS, 10, 10);
 }
 
 serverInit()
@@ -53,13 +66,7 @@ serverInit()
 // SOCKETING STUFF
 //====================
 
-
-var app = express();
-var server = app.listen(process.env.PORT || 300);
-
-app.use(express.static('public'));
-console.log('server running')
-
+var socket = require('socket.io');
 var io = socket(server);
 
 
