@@ -2,13 +2,13 @@
 
 var universe = {players:[],objects:[]};
 var socket;
+v
 
-P5 = new p5()
-P5.setup = function() {
+function setup() {
   socket = io();
 
-  P5.createCanvas(640, 480);
-  P5.background(0);
+  window.createCanvas(640, 480);
+  window.background(0);
 
   socket.emit('game-start', {})
   socket.on('heartbeat', function(data){
