@@ -153,25 +153,26 @@ function interact(){
         if (f.m_userdata && !f.m_userdata.is_static) {
           var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
           var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
-          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width){
+          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width && !isJointed(f.m_userdata.id) && joints.length < 1){
 
-            // var def = new Box2D.Dynamics.Joints.b2MouseJointDef();
-            // def.bodyA = ground;
-            // def.bodyB = b;
-            // def.target = new Box2D.Common.Math.b2Vec2(p.x, p.y);
-            // def.collideConnected = true;
-            // def.maxForce = 1000 * b.GetMass();
-            // def.dampingRatio = 0;
-            // var joint = world.CreateJoint(def);
-            //universe.players[i].hand.push(f.m_userdata.id);
-            //joints.push({"joint":joint,"player_id":universe.players[i].id, "object_id":f.m_userdata.id})
+            var def = new Box2D.Dynamics.Joints.b2MouseJointDef();
+            def.bodyA = ground;
+            def.bodyB = b;
+            def.target = new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER);
+            def.collideConnected = true;
+            def.maxForce = 1 * b.GetMass();
+            def.dampingRatio = 0;
+            var joint = world.CreateJoint(def);
+            console.log(joint);
+            universe.players[i].hand.push(f.m_userdata.id);
+            joints.push({"player_id":universe.players[i].id, "object_id":f.m_userdata.id})
             break;
           }
         }
       }
     }
   }  
-  // console.log(joints);
+
   // for (var j = 0; j < joints; j++){
   //   var player = getPlayerById(joints[j].player_id);
   //   var p = player.pose.rightWrist;
