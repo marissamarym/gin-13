@@ -1,10 +1,9 @@
-
 /* global describe P5 ml5*/
 var P5 = window;
 var PoseReader = new function(){
   this.video = null
   this.poseNet = null
-  this.pose0 = null
+  this.pose = null
   this.posenet_objs = []
   this.track_smooth = 0.3
 
@@ -63,10 +62,10 @@ var PoseReader = new function(){
     this.posenet_objs = results;
     if (results.length > 0){
       var new_pose = this._convert(this._get_largest_posenet_obj(results));
-      if (this.pose0 == null){
-        this.pose0 = new_pose
+      if (this.pose == null){
+        this.pose = new_pose
       }else{
-        this.lerp_pose(this.pose0, new_pose, this.track_smooth);
+        this.lerp_pose(this.pose, new_pose, this.track_smooth);
         
       }
     }
@@ -89,11 +88,11 @@ var PoseReader = new function(){
   }
   
   this.get = function(){
-    return this.pose0;
+    return this.pose;
   }
   
   this.draw = function(){
-    if (this.pose0 != null){
+    if (this.pose != null){
       this.draw_pose(this.get());
     }
   }
