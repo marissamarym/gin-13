@@ -175,11 +175,20 @@ function interact(){
   }  
 
   //console.log(joints);
-  for (var j = 0; j < joints.length; j++){
+  for (var j = joints.length-1; j >= 0; j--){
+    console.log(joints[j]);
     var player = getPlayerById(joints[j].player_id);
     var p = player.pose.rightWrist;
     var joint = joints[j].joint;
     joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER));
+    var reactionForce = joint.GetReactionForce(FPS);
+    var forceModuleSq = reactionForce.LengthSquared();
+    var maxForceSq = 100;
+    if(forceModuleSq > maxForceSq){
+      joints.splice(j,1);
+      world.DestroyJoint(joint);
+      player.hand.splice(player.hand.indexOf(joints[j].object_id),1);
+    }
   }
 }
 
