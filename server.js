@@ -46,23 +46,24 @@ function createBox(x, y, width, height, isStatic){
 }
 function describe(bodies){
   for (var i = 0; i < bodies.length; i++){
-    console.log(bodies[i]);
+    console.log(bodies[i].m_body.m_xf.position);
   }
 }
 
 
 function serverInit(){
   bodies.push(createBox(0,CANVAS_HEIGHT-10,CANVAS_WIDTH,10, true));
-  for (var i = 0; i < 10; i++){
-    bodies.push(createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20, false));
-  }
+  // for (var i = 0; i < 10; i++){
+  //   bodies.push(createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 20,20, false));
+  // }
+  universe.objects = describe(bodies);
   setInterval(serverUpdate,1000/FPS);
 }
 
 
 function serverUpdate(){
   world.Step(1 / FPS, 10, 10);
-  universe.objects = describe(bodies);
+  //universe.objects = describe(bodies);
 }
 
 serverInit()
