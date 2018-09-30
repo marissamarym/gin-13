@@ -58,11 +58,21 @@ function describeBox2DWorld(){
         var name = f.m_userdata.name;
         var w = f.m_userdata.width;
         var h = f.m_userdata.height;
-        universe.objects.push({name:name, x:x, y:y, width:w, height:h, rotation:r})
+        universe.objects.push({name:name, x:x, y:y, width:w, height:h, rotation:r, id:Math.floor(Math.random()*10000)})
       }
     }
   }
 }
+function getBodyById(id){
+  for (var b = world.m_bodyList; b; b = b.m_next) {
+    for (var f = b.m_fixtureList; f; f = f.m_next) {
+      if (f.m_userdata && f.m_userdata.id == id) {
+				return b
+      }
+    }
+  }  
+}
+
 
 function serverInit(){
   console.log('init');
@@ -130,12 +140,19 @@ function interact(){
             def.bodyA = ground;
             def.bodyB = b;
             def.target = new Box2D.Common.Math.b2Vec2(p.x, p.y);
-            continue;
+            def.collideConnected = true;
+            def.maxForce = 1000 * b.GetMass();
+            def.dampingRatio = 0;
+            var mouse_joint = world.CreateJoint(def);
+            universe.players[i].hand.push(f.m_userdata.id);
+            break;
           }
         }
       }
     }
-    
+    for (var j = 0; j < universe.players[i].hand; j++){
+      
+    }
   }   
 }
 
@@ -157,7 +174,7 @@ function newConnection(socket){
 	function gameStart(data){
 		console.log(socket.id)
 		
-		universe.players.push({id:socket.id, raw_data:{}, pose:null, inventory:[]})
+		universe.players.push({id:socket.id, raw_data:{}, pose:null, hand:[]})
 		setInterval(heartbeat, 10)
 
 		function heartbeat(){
