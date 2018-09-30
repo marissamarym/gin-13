@@ -1,14 +1,15 @@
 /* global describe io P5*/
-
-var universe = {players:[],objects:[]};
 var socket;
-v
+var universe = {players:[],objects:[]};
+var P5 = window; //p5 pollutes global namespace
+                 //this makes it look like that it doesn't
+                 //so it feels nicer
 
-function setup() {
+P5.setup = function() {
   socket = io();
 
-  window.createCanvas(640, 480);
-  window.background(0);
+  P5.createCanvas(640, 480);
+  P5.background(0);
 
   socket.emit('game-start', {})
   socket.on('heartbeat', function(data){
