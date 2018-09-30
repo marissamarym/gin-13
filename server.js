@@ -75,9 +75,11 @@ function serverInit(){
 
 function serverUpdate(){
   serverTicks += 1;  
+  calculatePlayers();
   world.Step(1 / FPS, 10, 10);
   universe.objects = []
   describeBox2DWorld();
+  
   
 }
 
@@ -97,12 +99,15 @@ function calculatePlayers(){
     }
     var scale = 10/v3.dist(pose0.nose, pose0.leftEye);
     var basePos = v3.lerp(pose0.leftAnkle, pose0.rightAnkle,0.5);
+    console.log(v3.dist(pose0.nose));
     var pose = {}
     for (var k in pose0){
-      pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),{x:0, y:CANVAS_HEIGHT})
+      
+      pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),{x:basePos.x, y:CANVAS_HEIGHT})
       
     }
-  }
+    universe.players[i].pose = pose;
+  } 
 }
 
 
@@ -123,7 +128,7 @@ function newConnection(socket){
 	function gameStart(data){
 		console.log(socket.id)
 		
-		universe.players.push({id:socket.id, raw_data:{}})
+		universe.players.push({id:socket.id, raw_data:{}, pose:null})
 		setInterval(heartbeat, 10)
 
 		function heartbeat(){
@@ -152,3 +157,12 @@ function newConnection(socket){
 }	
 
 io.sockets.on('connection', newConnection);
+
+
+//====================
+// UTILS
+//====================
+
+function mapval(value,istart,istop,ostart,ostop){
+    return ostart + (ostop - ostart) * ((value - istart)*1.0 / (istop - istart))
+}

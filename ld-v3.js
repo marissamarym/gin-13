@@ -1,5 +1,18 @@
 //Utility for creating and manipulating 3D vectors
 
+Object.defineProperty(Array.prototype, "x", {
+    get: function () {return this[0]},
+    set: function (n) {this[0] = n},
+});
+Object.defineProperty(Array.prototype, "y", {
+    get: function () {return this[1]},
+    set: function (n) {this[1] = n},
+});
+Object.defineProperty(Array.prototype, "z", {
+    get: function () {return this[2]},
+    set: function (n) {this[2] = n},
+});
+
 
 function Vec(x,y,z){
   return {x:x,y:y,z:z}
@@ -78,7 +91,7 @@ function normalize(v){
   return Vec(v.x*p,v.y*p,v.z*p)
 }
 function lerp(v0,v1,t){
-    return Vec(v0.x*(1-t)+v1.x*t,v0.y*(1-t)+v1.y*t,v0.z*(1-t)+v1.z*t)
+  return Vec(v0.x*(1-t)+v1.x*t,v0.y*(1-t)+v1.y*t,v0.z*(1-t)+v1.z*t)
 }
 
 function dist(v0,v1){
