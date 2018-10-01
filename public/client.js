@@ -10,16 +10,24 @@ var localPlayer = {pose:null, color:[Math.random()*255,100,255]}
 function poseFormula(pose0){
   var upper_height = 100;
   var lower_height = 100;
+  var shoulder_width = 50;
   var ground_height = 20
   var scale = upper_height/P5.dist(
     pose0.nose.x, pose0.nose.y , 
     P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5),
     P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5),
   );
+  var xscale = Math.abs(pose0.leftShoulder.x-pose0.rightShoulder.x);
+  if (xscale > P5.width*0.3){
+    xscale = shoulder_width/(xscale*scale);
+  }else{
+    xscale = 1;
+  }
+  
   var basePos = {x:P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5), y:P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5)};
   var pose = {};
   for (var k in pose0){
-    pose[k] = {x:(pose0[k].x-basePos.x)*scale+basePos.x,
+    pose[k] = {x:(pose0[k].x-basePos.x)*scale*xscale+basePos.x,
                y:(pose0[k].y-basePos.y)*scale+P5.height-ground_height-lower_height
               }
   }
@@ -27,7 +35,18 @@ function poseFormula(pose0){
   pose.rightAnkle.y = P5.height-ground_height;
   pose.leftKnee.y = P5.height-ground_height-lower_height/2;
   pose.rightKnee.y = P5.height-ground_height-lower_height/2;
-  if (pose.leftSHoulder.x-pose.rightS)
+  
+  if (P5.dist(pose0.nose.x, pose0.nose.y , 
+    P5.lerp(pose0.leftShoulder.x, pose0.rightShoulder.x,0.5),
+    P5.lerp(pose0.leftShoulder.y, pose0.rightShoudler.y,0.5)) > 
+    P5.dist(
+    P5.lerp(pose0.leftShoulder.x, pose0.rightShoulder.x,0.5),
+    P5.lerp(pose0.leftShoulder.y, pose0.rightShoudler.y,0.5),
+    P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5),
+    P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5))){
+    
+     
+  }
   
   return pose
 }
