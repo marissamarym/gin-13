@@ -29,20 +29,31 @@ var SpeechBubble = new function(){
     }
   }
   this.draw_speech = function(speech){
+    P5.push();
+    P5.textSize(16);
+    P5.textAlign(P5.LEFT);
+    P5.textFont("Courier");
+    
     var t = speech.text.slice(0,Math.ceil(speech.len))
     var w = P5.textWidth(t);
+    var h = 30
+    
+    P5.line()
     
     P5.push();
+    P5.translate(50,0)
     P5.strokeWeight(2);
+    P5.stroke(255);
     P5.noFill();
-    P5.arc(0,0,10,10,)
-    
-    P5.textSize(16);
-    P5.textAlign(P5.CENTER);
-    P5.textFont("Courier");
+    P5.arc(0,0,h,h,P5.HALF_PI,P5.HALF_PI+P5.PI)
+    P5.arc(w,0,h,h,-P5.HALF_PI,P5.HALF_PI)
+    P5.line(0,-h/2,w,-h/2);
+    P5.line(h,h/2,w,h/2);
     P5.fill(255)
-
-    P5.text(t, 0, 0);
+    P5.noStroke();
+    P5.text(t, 0, +5);
+    P5.pop()
+    
     P5.pop();
   }
   
