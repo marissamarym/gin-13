@@ -11,6 +11,8 @@ function poseFormula(pose0){
   var upper_height = 100;
   var lower_height = 100;
   var shoulder_width = 50;
+  var max_shoulder_perc = 0.3;
+  var head_torso_ratio = 1/3;
   var ground_height = 20
   var scale = upper_height/P5.dist(
     pose0.nose.x, pose0.nose.y , 
@@ -18,12 +20,11 @@ function poseFormula(pose0){
     P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5),
   );
   var xscale = Math.abs(pose0.leftShoulder.x-pose0.rightShoulder.x);
-  if (xscale > P5.width*0.3){
+  if (xscale > P5.width*max_shoulder_perc){
     xscale = shoulder_width/(xscale*scale);
   }else{
     xscale = 1;
   }
-  
   var basePos = {x:P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5), y:P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5)};
   var pose = {};
   for (var k in pose0){
@@ -36,17 +37,16 @@ function poseFormula(pose0){
   pose.leftKnee.y = P5.height-ground_height-lower_height/2;
   pose.rightKnee.y = P5.height-ground_height-lower_height/2;
   
-  
   var neck = {x:P5.lerp(pose.leftShoulder.x, pose.rightShoulder.x,0.5),
               y:P5.lerp(pose.leftShoulder.y, pose.rightShoulder.y,0.5)}
   var waist = {x:P5.lerp(pose.leftHip.x, pose.rightHip.x,0.5),
                y:P5.lerp(pose.leftHip.y, pose.rightHip.y,0.5)}
-  if (P5.dist(pose.nose.x, pose.nose.y , neck.x, neck.y)/0.25 >
-      P5.dist(neck.x,neck.y,waist.x,waist.y)){
-    console.log('f')
+  if (P5.dist(pose.nose.x, pose.nose.y , neck.x, neck.y) >
+      P5.dist(neck.x,neck.y,waist.x,waist.y)*head_torso_ratio){
     var dis_l = {x:pose.leftShoulder.x-neck.x, y:pose.leftShoulder.y-neck.y} 
 
-    var new_neck = {x:P5.lerp(waist.x,pose.nose.x,0.8),y:P5.lerp(waist.y,pose.nose.y,0.8)};
+    var new_neck = {x:P5.lerp(waist.x,pose.nose.x,1-1/(1+1/head_torso_ratio)),
+                    y:P5.lerp(waist.y,pose.nose.y,1-1/(1+1/head_torso_ratio))};
     var dis = {x:new_neck.x-neck.x, y:new_neck.y-neck.y}
     pose.leftShoulder.x += dis.x;
     pose.leftShoulder.y += dis.y;
@@ -69,7 +69,7 @@ function poseFormula(pose0){
 function warnDist(){
   if (localPlayer.pose != null){
     var d = P5.dist(localPlayer.pose.leftShoulder.x,localPlayer.pose.leftShoulder.y,
-                localPlayer.pose.rightShoulder.x,localPlayer.pose.rightShoulder.y);
+                    localPlayer.pose.rightShoulder.x,localPlayer.pose.rightShoulder.y);
     P5.push();
     P5.textSize(16);
     P5.translate(P5.width/2, P5.height);
@@ -102,6 +102,9 @@ P5.draw = function() {
   P5.background(0);
   
   localPlayer.pose = PoseReader.get();
+  if (localPlayer.pose != null){
+    localPlayer.pose = poseFormula(localPlayer.pose);
+  }
     
   socket.emit('game-update', localPlayer);
   //console.log(universe);
@@ -129,7 +132,7 @@ P5.draw = function() {
   }
   P5.image(PoseReader.video, 0, 0, P5.width*0.2, P5.height*0.2);
   if (localPlayer.pose != null){
-    PoseReader.draw_pose(poseFormula(localPlayer.pose),{color:localPlayer.color})
+    PoseReader.draw_pose(localPlayer.pose,{color:localPlayer.color})
     if (P5.dist(localPlayer.pose.leftShoulder.x,localPlayer.pose.leftShoulder.y,
                 localPlayer.pose.rightShoulder.x,localPlayer.pose.rightShoulder.y) > P5.width/2){
     }
