@@ -117,7 +117,7 @@ var PoseReader = new function(){
     if (args.lower_height == undefined){args.lower_height = 100}
     if (args.shoulder_width == undefined){args.shoulder_width = 50}
     if (args.max_x_perc == undefined){args.max_x_perc = 0.3}
-    if (args.head_torso_ratio == undefined){args.head_torso_ratio = 1/4}
+    if (args.head_torso_ratio == undefined){args.head_torso_ratio = 1/3}
     if (args.ground_height == undefined){args.ground_height=20}
     
     var scale = args.upper_height/P5.dist(
@@ -142,17 +142,18 @@ var PoseReader = new function(){
     pose.rightAnkle.y = P5.height-args.ground_height;
     pose.leftKnee.y = P5.height-args.ground_height-args.lower_height/2;
     pose.rightKnee.y = P5.height-args.ground_height-args.lower_height/2;
-
+    var brow = {x:P5.lerp(pose.leftEye.x, pose.rightEye.x,0.5),
+                y:P5.lerp(pose.leftEye.y, pose.rightEye.y,0.5)}
     var neck = {x:P5.lerp(pose.leftShoulder.x, pose.rightShoulder.x,0.5),
                 y:P5.lerp(pose.leftShoulder.y, pose.rightShoulder.y,0.5)}
     var waist = {x:P5.lerp(pose.leftHip.x, pose.rightHip.x,0.5),
                  y:P5.lerp(pose.leftHip.y, pose.rightHip.y,0.5)}
-    if (P5.dist(pose.nose.x, pose.nose.y , neck.x, neck.y) >
+    if (P5.dist(brow.x, brow.y , neck.x, neck.y) >
         P5.dist(neck.x,neck.y,waist.x,waist.y)*args.head_torso_ratio){
       var dis_l = {x:pose.leftShoulder.x-neck.x, y:pose.leftShoulder.y-neck.y} 
 
-      var new_neck = {x:P5.lerp(waist.x,pose.nose.x,1-1/(1+1/args.head_torso_ratio)),
-                      y:P5.lerp(waist.y,pose.nose.y,1-1/(1+1/args.head_torso_ratio))};
+      var new_neck = {x:P5.lerp(waist.x,brow.x,1-1/(1+1/args.head_torso_ratio)),
+                      y:P5.lerp(waist.y,brow.y,1-1/(1+1/args.head_torso_ratio))};
       var dis = {x:new_neck.x-neck.x, y:new_neck.y-neck.y}
       pose.leftShoulder.x += dis.x;
       pose.leftShoulder.y += dis.y;

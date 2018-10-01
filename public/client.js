@@ -71,9 +71,13 @@ P5.draw = function() {
   P5.image(PoseReader.video, 0, 0, P5.width*0.2, P5.height*0.2);
   if (localPlayer.pose != null){
     PoseReader.draw_pose(localPlayer.pose,{color:localPlayer.color})
-    if (P5.dist(localPlayer.pose.leftShoulder.x,localPlayer.pose.leftShoulder.y,
-                localPlayer.pose.rightShoulder.x,localPlayer.pose.rightShoulder.y) > P5.width/2){
-    }
+    P5.push();
+    P5.textSize(16);
+    P5.translate(localPlayer.pose.nose.x, 200);
+    P5.textAlign(P5.CENTER);
+    P5.fill(255)
+    P5.text("ME", 0, 0);
+    P5.pop();
   }
   warnDist();
   
