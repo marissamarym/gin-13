@@ -1,4 +1,4 @@
-/* global describe io P5 PoseReader Player p5*/
+/* global describe io P5 PoseReader SpeechBubble p5*/
 var socket;
 var universe = {players:[],objects:[]};
 var P5 = window; //p5 pollutes global namespace
@@ -34,6 +34,7 @@ P5.setup = function() {
   P5.background(0);
   P5.textFont('Courier');
   PoseReader.init();
+  SpeechBubble.init();
     
   socket.emit('game-start', localPlayer)
   socket.on('heartbeat', function(data){
@@ -44,7 +45,7 @@ P5.draw = function() {
   P5.background(0);
   
   localPlayer.pose = PoseReader.get_normalized();
-  updateSpeech();
+  localPlayer.speech = SpeechBubble.speech;
     
   socket.emit('game-update', localPlayer);
   //console.log(universe);
@@ -68,15 +69,9 @@ P5.draw = function() {
     if (obj.pose != null){
       var col =  (socket.id == obj.id) ? [255,50] : obj.raw_data.color
       PoseReader.draw_pose(obj.pose,{color:col, stroke_weight:4});
-
-      P5.push();
-      P5.textSize(16);
-      P5.translate(obj.pose.nose.x, obj.pose.nose.y-50);
-      P5.textAlign(P5.CENTER);
-      P5.fill(255)
-      //console.log(obj.raw_data.speech.len);
-      P5.text(obj.raw_data.speech.text.slice(0,Math.ceil(obj.raw_data.speech.len)), 0, 0);
-      P5.pop();
+    }
+    if (obj.raw_data.speech != null){
+      SpeechBubble.draw_speech(obj.raw_data.speech);
     }
   }
   P5.image(PoseReader.video, 0, 0, P5.width*0.2, P5.height*0.2);
