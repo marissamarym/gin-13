@@ -72,7 +72,7 @@ function serverInit(){
   createBox(-10,CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   createBox(CANVAS_WIDTH+10, CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   for (var i = 0; i < 5; i++){
-    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 40+i*10,40+i*10, false);
+    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 50+i*5,50+i*5, false);
   }
   setInterval(serverUpdate,1000/FPS);
 }
@@ -130,24 +130,26 @@ function isJointed(id){
 }
 
 function calculatePlayers(){
+  var upper_height = 100;
+  var lower_height = 100;
   for (var i = 0; i < universe.players.length; i++){
     var pose0 = universe.players[i].raw_data.pose;
     if (pose0 == null){
       continue;
     }
-    var scale = 150/v3.dist(pose0.nose, v3.lerp(pose0.leftHip, pose0.rightHip,0.5));
+    var scale = upper_height/v3.dist(pose0.nose, v3.lerp(pose0.leftHip, pose0.rightHip,0.5));
     var basePos = v3.lerp(pose0.leftHip, pose0.rightHip,0.5);
 
     var pose = {}
     for (var k in pose0){
       
-      pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),{x:basePos.x, y:CANVAS_HEIGHT-GROUND_HEIGHT-150})
+      pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),{x:basePos.x, y:CANVAS_HEIGHT-GROUND_HEIGHT-lower_height})
       
     }
     pose.leftAnkle.y = CANVAS_HEIGHT-GROUND_HEIGHT;
     pose.rightAnkle.y = CANVAS_HEIGHT-GROUND_HEIGHT;
-    pose.leftKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT -75;
-    pose.rightKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT -75;
+    pose.leftKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT -lower_height/2;
+    pose.rightKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT -lower_height/2;
     universe.players[i].pose = pose;
   } 
 }
@@ -175,10 +177,11 @@ function interact(){
         if (f.m_userdata && !f.m_userdata.is_static) {
           var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
           var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
-          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width 
+          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width * 1.0
               && !isJointed(f.m_userdata.id) 
               && joints.length < 10
               && f.m_userdata.interact_cooldown <= 0
+              && universe.players[i].hand.length < 1
               ){
             var targ = new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER);
             b.SetPosition(new Box2D.Common.Math.b2Vec2(
@@ -220,7 +223,7 @@ function interact(){
     joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER));
     var reactionForce = joint.GetReactionForce(FPS);
     var forceModuleSq = reactionForce.LengthSquared();
-    var maxForceSq = obj.GetMass()*50000;
+    var maxForceSq = obj.GetMass()*30000;
     if(forceModuleSq > maxForceSq){
       
       player.hand.splice(player.hand.indexOf(joints[j].object_id),1);
