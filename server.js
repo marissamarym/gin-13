@@ -1,7 +1,7 @@
 // server.js
 // where your node app starts
 
-///////
+////////
 var express = require('express'); 
 var app = express();
 var server = app.listen(process.env.PORT || 300);
@@ -202,7 +202,7 @@ function interact(){
     var obj = getBodyById(joints[j].object_id);
     if (player == undefined || obj == undefined){
       try{
-        world.DestroyJoint(joint);
+        world.DestroyJoint(joints[j].joint);
       }catch(e){
         console.log("joint deletion failed.");
       }

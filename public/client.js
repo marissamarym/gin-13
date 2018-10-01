@@ -1,4 +1,5 @@
 /* global describe io P5 PoseReader SpeechBubble p5*/
+
 var socket;
 var universe = {players:[],objects:[]};
 var P5 = window; //p5 pollutes global namespace
@@ -53,8 +54,19 @@ P5.draw = function() {
   for (var i = 0; i < universe.objects.length; i++) {
     var obj = universe.objects[i];
     if (obj.name == "box"){
-      P5.push();     
-      P5.stroke(0,255,255);
+      P5.push();
+      var attached = false;
+      for (var j = 0; j < universe.players.length; j++){
+        if (universe.players[j].hand.includes(obj.id)){
+          attached = true;
+          break;
+        }
+      }
+      if (attached){
+        P5.stroke(255);
+      }else{
+        P5.stroke(0,255,255);
+      }
       P5.strokeWeight(4);
       P5.noFill();
       P5.translate(obj.x,obj.y);
