@@ -28,13 +28,18 @@ function warnDist(){
 }
 function updateSpeech(){
   if (speechRec.resultString != undefined){
-    if (localPlayer.speech.text != speechRec.resultString){
-      localPlayer.speech.text = speechRec.resultString;
-      localPlayer.speech.len = speechRec.resultString.length;
+    if (localPlayer.speech.text != speechRec.resultString ){
+      if (localPlayer.speech.text.indexOf(speechRec.resultString) == -1
+      &&  speechRec.resultString.length > 0){
+        localPlayer.speech.text = speechRec.resultString;
+        localPlayer.speech.len = speechRec.resultString.length*2;
+      }else{
+        localPlayer.speech.len = localPlayer.speech.text.length*2;
+      }
     }
   }
   if (localPlayer.speech.len > 0){
-    localPlayer.speech.len -= 0.1;
+    localPlayer.speech.len -= 1;
   }
 }
 
@@ -91,7 +96,7 @@ P5.draw = function() {
       P5.translate(obj.pose.nose.x, obj.pose.nose.y-50);
       P5.textAlign(P5.CENTER);
       P5.fill(255)
-      console.log(obj.raw_data.speech.len);
+      //console.log(obj.raw_data.speech.len);
       P5.text(obj.raw_data.speech.text.slice(0,Math.ceil(obj.raw_data.speech.len)), 0, 0);
       P5.pop();
     }
