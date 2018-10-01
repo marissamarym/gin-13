@@ -13,7 +13,7 @@ var PoseReader = new function(){
     this.video.size(P5.width,P5.height);
 
     function modelReady() {
-      P5.select('#status').html('Model Loaded');
+      P5.select('#status').html('MODEL LOADED.');
     }
     // Create a new poseNet method with a single detection
     this.poseNet = ml5.poseNet(this.video, modelReady);

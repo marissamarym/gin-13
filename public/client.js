@@ -27,6 +27,8 @@ function poseFormula(pose0){
   pose.rightAnkle.y = P5.height-ground_height;
   pose.leftKnee.y = P5.height-ground_height-lower_height/2;
   pose.rightKnee.y = P5.height-ground_height-lower_height/2;
+  if (pose.leftSHoulder.x-pose.rightS)
+  
   return pose
 }
 
@@ -36,13 +38,13 @@ function warnDist(){
                 localPlayer.pose.rightShoulder.x,localPlayer.pose.rightShoulder.y);
     P5.push();
     P5.textSize(16);
-    P5.translate(P5.width/2, P5.height/2);
+    P5.translate(P5.width/2, P5.height);
     P5.textAlign(P5.CENTER);
-    P5.fill(0,255,255)
+    P5.fill(255)
     if (d > P5.width*0.5){
-      P5.text('further away from the camera!', 0, 0);
-    }else if (d > P5.width*0.5){
-      P5.text('just a bit further!', 0, 0);
+      P5.text("SHOW YOUR LIMBS!", 0, 0);
+    }else if (d > P5.width*0.3){
+      P5.text("JUST A BIT FURTHER!", 0, 0);
     }
     P5.pop();
   }  
@@ -54,7 +56,7 @@ P5.setup = function() {
 
   P5.createCanvas(640, 480);
   P5.background(0);
-
+  P5.textFont('Courier');
   PoseReader.init();
   
   socket.emit('game-start', localPlayer)
