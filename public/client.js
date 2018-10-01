@@ -10,19 +10,23 @@ var localPlayer = {pose:null, color:[Math.random()*255,100,255]}
 function poseFormula(pose0){
   var upper_height = 100;
   var lower_height = 100;
+  var ground_height = 20
   var scale = upper_height/P5.dist(
-    pose0.nose.x, pose0.nose.y 
-    lerp(pose0.leftHip.x, pose0.rightHip.x,0.5));
-  var basePos = v3.lerp(pose0.leftHip, pose0.rightHip,0.5);
-  var pose = {}
+    pose0.nose.x, pose0.nose.y ,
+    P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5),
+    P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5),
+  );
+  var basePos = {x:P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5), y:P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5)};
+  var pose = {};
   for (var k in pose0){
-    pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),
-                     {x:basePos.x, y:CANVAS_HEIGHT-GROUND_HEIGHT-lower_height})
+    pose[k] = {x:(pose0[k].x-basePos.x)*scale+basePos.x,
+               y:(pose0[k].y-basePos.y)*scale+P5.height-ground_height-lower_height
+              }
   }
-  pose.leftAnkle.y = CANVAS_HEIGHT-GROUND_HEIGHT;
-  pose.rightAnkle.y = CANVAS_HEIGHT-GROUND_HEIGHT;
-  pose.leftKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT-lower_height/2;
-  pose.rightKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT-lower_height/2;
+  pose.leftAnkle.y = P5.height-ground_height;
+  pose.rightAnkle.y = P5.height-ground_height;
+  pose.leftKnee.y = P5.height-ground_height-lower_height/2;
+  pose.rightKnee.y = P5.height-ground_height-lower_height/2;
   return pose
 }
 
@@ -64,13 +68,14 @@ P5.draw = function() {
   for (var i = 0; i < universe.players.length; i++) {
     var obj = universe.players[i];
     if (obj.pose != null){
-      PoseReader.draw_pose(obj.pose,{color:obj.raw_data.color, stroke_weight:4});
+      var col =  (socket.id == obj.id) ? [255,50] : obj.raw_data.color
+      PoseReader.draw_pose(obj.pose,{color:col, stroke_weight:4});
     }
   }
   P5.image(PoseReader.video, 0, 0, P5.width*0.2, P5.height*0.2);
-  // if (localPlayer.pose != null){
-  //   PoseReader.draw_pose(localPlayer.pose,{color:localPlayer.color})
-  // }
+  if (localPlayer.pose != null){
+    PoseReader.draw_pose(poseFormula(localPlayer.pose),{color:localPlayer.color})
+  }
 }
 
 
