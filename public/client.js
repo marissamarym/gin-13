@@ -35,17 +35,22 @@ function poseFormula(pose0){
   pose.rightAnkle.y = P5.height-ground_height;
   pose.leftKnee.y = P5.height-ground_height-lower_height/2;
   pose.rightKnee.y = P5.height-ground_height-lower_height/2;
-  
-  if (P5.dist(pose0.nose.x, pose0.nose.y , 
-    P5.lerp(pose0.leftShoulder.x, pose0.rightShoulder.x,0.5),
-    P5.lerp(pose0.leftShoulder.y, pose0.rightShoudler.y,0.5)) > 
-    P5.dist(
-    P5.lerp(pose0.leftShoulder.x, pose0.rightShoulder.x,0.5),
-    P5.lerp(pose0.leftShoulder.y, pose0.rightShoudler.y,0.5),
-    P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5),
-    P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5))){
-    
-     
+  var _y = pose.rightShoulder.y;
+  var neck = {x:P5.lerp(pose.leftShoulder.x, pose.rightShoulder.x,0.5),
+              y:P5.lerp(pose.leftShoulder.y, 
+                        _y,0.5)}
+  var waist = {x:P5.lerp(pose.leftHip.x, pose.rightHip.x,0.5),
+               y:P5.lerp(pose.leftHip.y, pose.rightHip.y,0.5)}
+  if (P5.dist(pose.nose.x, pose.nose.y , neck.x, neck.y)*0.25 >
+      P5.dist(neck.x,neck.y,waist.x,waist.y)){
+    var dis_l = {x:pose.leftShoulder.x-neck.x, y:pose.leftShoulder.y-neck.y} 
+    var dis_r = {x:pose.rightShoulder.x-neck.x, y:pose.rightShoulder.y-neck.y}
+    neck.x = P5.lerp(waist.x,neck.x,0.8);
+    neck.y = P5.lerp(waist.y,neck.y,0.8);
+    pose.leftShoulder.x = pose.neck.x + dis_l.x;
+    pose.leftShoulder.y = pose.neck.y + dis_l.y;
+    pose.rightShoulder.x = pose.neck.x + dis_r.x;
+    pose.rightShoulder.y = pose.neck.y + dis_r.y;
   }
   
   return pose
