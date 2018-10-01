@@ -5,7 +5,7 @@ var P5 = window; //p5 pollutes global namespace
                  //this makes it look like that it doesn't
                  //so it feels nicer
 
-var localPlayer = {pose:null, color:[Math.random()*255,100,255], speech: {text:"",len:0}}
+var localPlayer = {pose:null, color:[Math.random()*255,100,255], speech:null}
 var speechRec;
 
 function warnDist(){
@@ -26,23 +26,6 @@ function warnDist(){
   }  
   
 }
-function updateSpeech(){
-  if (speechRec.resultString != undefined){
-    if (localPlayer.speech.text != speechRec.resultString ){
-      if (localPlayer.speech.text.indexOf(speechRec.resultString) == -1
-      &&  speechRec.resultString.length > 0){
-        localPlayer.speech.text = speechRec.resultString;
-        localPlayer.speech.len = speechRec.resultString.length*2;
-      }else{
-        localPlayer.speech.len = localPlayer.speech.text.length*2;
-      }
-    }
-  }
-  if (localPlayer.speech.len > 0){
-    localPlayer.speech.len -= 1;
-  }
-}
-
 
 P5.setup = function() {
   socket = io();
@@ -51,12 +34,7 @@ P5.setup = function() {
   P5.background(0);
   P5.textFont('Courier');
   PoseReader.init();
-  
-  speechRec = new p5.SpeechRec('en-US', function(){}); // new P5.SpeechRec object
-	speechRec.continuous = true; // do continuous recognition
-	speechRec.interimResults = true; // allow partial recognition (faster, less accurate)
-  speechRec.start();
-  
+    
   socket.emit('game-start', localPlayer)
   socket.on('heartbeat', function(data){
     universe = data;
