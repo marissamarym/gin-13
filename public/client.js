@@ -36,30 +36,32 @@ function poseFormula(pose0){
   pose.leftKnee.y = P5.height-ground_height-lower_height/2;
   pose.rightKnee.y = P5.height-ground_height-lower_height/2;
   
-  try{
-  var neck = {}
-  neck.x = P5.lerp(pose.leftShoulder.x, pose.rightShoulder.x,0.5)
-  var _ly = pose.leftShoulder.y
-
-  var _ry = JSON.paJSON.stringify(pose.rightShoudler).y
-  neck.y = P5.lerp(_ly, _ry,0.5)
-  var waist = {}
-  waist.x = P5.lerp(pose.leftHip.x, pose.rightHip.x,0.5)
-  waist.y = P5.lerp(pose.leftHip.y, pose.rightHip.y,0.5)
-  if (P5.dist(pose.nose.x, pose.nose.y , neck.x, neck.y)*0.25 >
+  
+  var neck = {x:P5.lerp(pose.leftShoulder.x, pose.rightShoulder.x,0.5),
+              y:P5.lerp(pose.leftShoulder.y, pose.rightShoulder.y,0.5)}
+  var waist = {x:P5.lerp(pose.leftHip.x, pose.rightHip.x,0.5),
+               y:P5.lerp(pose.leftHip.y, pose.rightHip.y,0.5)}
+  if (P5.dist(pose.nose.x, pose.nose.y , neck.x, neck.y)/0.25 >
       P5.dist(neck.x,neck.y,waist.x,waist.y)){
+    console.log('f')
     var dis_l = {x:pose.leftShoulder.x-neck.x, y:pose.leftShoulder.y-neck.y} 
-    var dis_r = {x:pose.rightShoulder.x-neck.x, y:pose.rightShoulder.y-neck.y}
-    neck.x = P5.lerp(waist.x,neck.x,0.8);
-    neck.y = P5.lerp(waist.y,neck.y,0.8);
-    pose.leftShoulder.x = pose.neck.x + dis_l.x;
-    pose.leftShoulder.y = pose.neck.y + dis_l.y;
-    pose.rightShoulder.x = pose.neck.x + dis_r.x;
-    pose.rightShoulder.y = pose.neck.y + dis_r.y;
+
+    var new_neck = {x:P5.lerp(waist.x,pose.nose.x,0.8),y:P5.lerp(waist.y,pose.nose.y,0.8)};
+    var dis = {x:new_neck.x-neck.x, y:new_neck.y-neck.y}
+    pose.leftShoulder.x += dis.x;
+    pose.leftShoulder.y += dis.y;
+    pose.rightShoulder.x += dis.x;
+    pose.rightShoulder.y += dis.y;
+    pose.leftElbow.x += dis.x;
+    pose.leftElbow.y += dis.y;
+    pose.rightElbow.x += dis.x;
+    pose.rightElbow.y += dis.y;
+    pose.leftWrist.x += dis.x;
+    pose.leftWrist.y += dis.y;
+    pose.rightWrist.x += dis.x;
+    pose.rightWrist.y += dis.y;
   }
-  }catch(e){
-    console.log(e)
-  }
+
   
   return pose
 }
