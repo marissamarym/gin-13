@@ -6,7 +6,7 @@ var P5 = window; //p5 pollutes global namespace
                  //so it feels nicer
 
 var localPlayer = {pose:null, color:[Math.random()*255,100,255], speech:{text:"",len:0}}
-var speechRec;
+var USE_SPEECH = false;
 
 function warnDist(){
   if (PoseReader.get() != null){
@@ -34,7 +34,7 @@ P5.setup = function() {
   P5.background(0);
   P5.textFont('Courier');
   PoseReader.init();
-  SpeechBubble.init();
+  if (USE_SPEECH){SpeechBubble.init()}
     
   socket.emit('game-start', localPlayer)
   socket.on('heartbeat', function(data){
@@ -45,7 +45,7 @@ P5.draw = function() {
   P5.background(0);
   
   localPlayer.pose = PoseReader.get_normalized();
-  SpeechBubble.update(localPlayer.speech);
+  if (USE_SPEECH){SpeechBubble.update(localPlayer.speech);}
     
   socket.emit('game-update', localPlayer);
   //console.log(universe);
@@ -70,7 +70,7 @@ P5.draw = function() {
       var col =  (socket.id == obj.id) ? [255,50] : obj.raw_data.color
       PoseReader.draw_pose(obj.pose,{color:col, stroke_weight:4});
     }
-    if (obj.raw_data.speech != null && obj.pose != null){
+    if (USE_SPEECH && obj.raw_data.speech != null && obj.pose != null){
       P5.push();
       P5.translate(obj.pose.nose.x, obj.pose.nose.y-60);
       SpeechBubble.draw_speech(obj.raw_data.speech);
