@@ -10,6 +10,9 @@ var SpeechBubble = new function(){
     this.recognizer.start();
   }
   this.update = function(speech){
+    if (this.recognizer == null){
+      return;
+    }
     var result = this.recognizer.resultString
     if (result != undefined){
       if (speech.text != result ){

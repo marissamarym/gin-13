@@ -7,7 +7,12 @@ var P5 = window; //p5 pollutes global namespace
                  //so it feels nicer
 
 var localPlayer = {pose:null, color:[Math.random()*255,100,255], speech:{text:"",len:0}}
-var USE_SPEECH = true
+var USE_SPEECH = true;
+var VIEW_ONLY = false;
+if (!window.chrome){
+  alert("Your browser is not supported. Please use Chrome. You'll be entering view only mode now.")
+  VIEW_ONLY = true;
+}
 
 function warnDist(){
   if (PoseReader.get() != null){
@@ -34,10 +39,12 @@ P5.setup = function() {
   P5.createCanvas(640, 480);
   P5.background(0);
   P5.textFont('Courier');
-  PoseReader.init();
-  if (USE_SPEECH){SpeechBubble.init()}
-    
-  socket.emit('game-start', localPlayer)
+  
+  if (!VIEW_ONLY){
+    PoseReader.init();
+    if (USE_SPEECH){SpeechBubble.init()}
+    socket.emit('game-start', localPlayer)
+  }
   socket.on('heartbeat', function(data){
     universe = data;
   })
@@ -47,8 +54,8 @@ P5.draw = function() {
   
   localPlayer.pose = PoseReader.get_normalized();
   if (USE_SPEECH){SpeechBubble.update(localPlayer.speech);}
-    
   socket.emit('game-update', localPlayer);
+  
   //console.log(universe);
   
   for (var i = 0; i < universe.objects.length; i++) {
