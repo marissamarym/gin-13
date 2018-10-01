@@ -129,28 +129,30 @@ function isJointed(id){
   return false;
 }
 
-function calculatePlayers(){
+function poseFormula(pose0){
   var upper_height = 100;
   var lower_height = 100;
+  var scale = upper_height/v3.dist(pose0.nose, v3.lerp(pose0.leftHip, pose0.rightHip,0.5));
+  var basePos = v3.lerp(pose0.leftHip, pose0.rightHip,0.5);
+  var pose = {}
+  for (var k in pose0){
+    pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),
+                     {x:basePos.x, y:CANVAS_HEIGHT-GROUND_HEIGHT-lower_height})
+  }
+  pose.leftAnkle.y = CANVAS_HEIGHT-GROUND_HEIGHT;
+  pose.rightAnkle.y = CANVAS_HEIGHT-GROUND_HEIGHT;
+  pose.leftKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT-lower_height/2;
+  pose.rightKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT-lower_height/2;
+  return pose
+}
+
+function calculatePlayers(){
   for (var i = 0; i < universe.players.length; i++){
     var pose0 = universe.players[i].raw_data.pose;
     if (pose0 == null){
       continue;
     }
-    var scale = upper_height/v3.dist(pose0.nose, v3.lerp(pose0.leftHip, pose0.rightHip,0.5));
-    var basePos = v3.lerp(pose0.leftHip, pose0.rightHip,0.5);
-
-    var pose = {}
-    for (var k in pose0){
-      
-      pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),{x:basePos.x, y:CANVAS_HEIGHT-GROUND_HEIGHT-lower_height})
-      
-    }
-    pose.leftAnkle.y = CANVAS_HEIGHT-GROUND_HEIGHT;
-    pose.rightAnkle.y = CANVAS_HEIGHT-GROUND_HEIGHT;
-    pose.leftKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT -lower_height/2;
-    pose.rightKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT -lower_height/2;
-    universe.players[i].pose = pose;
+    universe.players[i].pose = poseFormula(pose0);
   } 
 }
 

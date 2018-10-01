@@ -7,6 +7,25 @@ var P5 = window; //p5 pollutes global namespace
 
 var localPlayer = {pose:null, color:[Math.random()*255,100,255]}
 
+function poseFormula(pose0){
+  var upper_height = 100;
+  var lower_height = 100;
+  var scale = upper_height/P5.dist(
+    pose0.nose.x, pose0.nose.y 
+    lerp(pose0.leftHip.x, pose0.rightHip.x,0.5));
+  var basePos = v3.lerp(pose0.leftHip, pose0.rightHip,0.5);
+  var pose = {}
+  for (var k in pose0){
+    pose[k] = v3.add(v3.scale(v3.subtract(pose0[k],basePos),scale),
+                     {x:basePos.x, y:CANVAS_HEIGHT-GROUND_HEIGHT-lower_height})
+  }
+  pose.leftAnkle.y = CANVAS_HEIGHT-GROUND_HEIGHT;
+  pose.rightAnkle.y = CANVAS_HEIGHT-GROUND_HEIGHT;
+  pose.leftKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT-lower_height/2;
+  pose.rightKnee.y = CANVAS_HEIGHT-GROUND_HEIGHT-lower_height/2;
+  return pose
+}
+
 P5.setup = function() {
   socket = io();
 
