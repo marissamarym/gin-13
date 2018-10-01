@@ -16,9 +16,9 @@ var SpeechBubble = new function(){
         if (speech.text.indexOf(result) == -1
         &&  this.recognizer.resultString.length > 0){
           speech.text = result;
-          speech.len = result.length*2;
+          speech.len = result.length*4;
         }else{
-          speech.len = speech.text.length*2;
+          speech.len = speech.text.length*4;
         }
       }
     }
