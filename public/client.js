@@ -7,7 +7,7 @@ var P5 = window; //p5 pollutes global namespace
                  //so it feels nicer
 
 var localPlayer = {pose:null, color:[Math.random()*255,100,255], speech:{text:"",len:0}}
-var USE_SPEECH = true;
+var USE_SPEECH = true
 
 function warnDist(){
   if (PoseReader.get() != null){
