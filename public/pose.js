@@ -26,7 +26,7 @@ var PoseReader = new function(){
       
     });
     // Hide the video element, and just show the canvas
-    this.video.hide();
+    // this.video.hide();
   }
 
   this._convert = function(posenet_obj){

@@ -4,10 +4,19 @@
 body {
   font-family: "Courier", monospace;
   margin: 2em;
-  background-color:dimgray;
+  background-color:black;
   color:cyan;
   text-align:center;
 }
-/* canvas {
-  transform: scale(1.2);
-} */
+canvas {
+  transform-origin: top center;
+  transform: scale(1.5);
+}
+video {
+  transform-origin: top right;
+  transform: scale(0.5);
+  position:fixed;
+  right:0;
+  top:0;
+  
+}
