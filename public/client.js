@@ -5,7 +5,7 @@ var P5 = window; //p5 pollutes global namespace
                  //this makes it look like that it doesn't
                  //so it feels nicer
 
-var localPlayer = {pose:null, color:[Math.random()*255,100,255], speech:null}
+var localPlayer = {pose:null, color:[Math.random()*255,100,255], speech:{text:"",len:0}}
 var speechRec;
 
 function warnDist(){
@@ -45,7 +45,7 @@ P5.draw = function() {
   P5.background(0);
   
   localPlayer.pose = PoseReader.get_normalized();
-  localPlayer.speech = SpeechBubble.speech;
+  SpeechBubble.update(localPlayer.speech);
     
   socket.emit('game-update', localPlayer);
   //console.log(universe);
@@ -70,8 +70,11 @@ P5.draw = function() {
       var col =  (socket.id == obj.id) ? [255,50] : obj.raw_data.color
       PoseReader.draw_pose(obj.pose,{color:col, stroke_weight:4});
     }
-    if (obj.raw_data.speech != null){
+    if (obj.raw_data.speech != null && obj.pose != null){
+      P5.push();
+      P5.translate(obj.pose.nose.x, obj.pose.nose.y-50);
       SpeechBubble.draw_speech(obj.raw_data.speech);
+      P5.pop();
     }
   }
   P5.image(PoseReader.video, 0, 0, P5.width*0.2, P5.height*0.2);
