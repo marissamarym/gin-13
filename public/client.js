@@ -10,7 +10,7 @@ var localPlayer = {pose:null, color:[Math.random()*255,100,255], speech:{text:""
 var USE_SPEECH = true;
 var VIEW_ONLY = false;
 if (!window.chrome){
-  alert("Your browser is not supported. Please use Chrome. You'll be entering view only mode now.")
+  alert("Some functionalities are not supported by your browser. Please use Chrome. You'll be entering view only mode now.")
   VIEW_ONLY = true;
 }
 
@@ -48,6 +48,8 @@ P5.setup = function() {
   socket.on('heartbeat', function(data){
     universe = data;
   })
+  
+  if (VIEW_ONLY){P5.select('#status').html('VIEW ONLY - USE CHROME TO PLAY');}
 }
 P5.draw = function() {
   P5.background(0);
