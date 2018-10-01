@@ -72,7 +72,7 @@ P5.draw = function() {
     }
     if (obj.raw_data.speech != null && obj.pose != null){
       P5.push();
-      P5.translate(obj.pose.nose.x, obj.pose.nose.y-50);
+      P5.translate(obj.pose.nose.x, obj.pose.nose.y-60);
       SpeechBubble.draw_speech(obj.raw_data.speech);
       P5.pop();
     }
