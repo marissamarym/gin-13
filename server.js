@@ -215,6 +215,14 @@ function interact(){
 
     var player = getPlayerById(joints[j].player_id);
     var obj = getBodyById(joints[j].object_id);
+    if (player == undefined || obj == undefined){
+      try{
+        world.DestroyJoint(joint);
+      }catch(e){
+        console.log("joint deletion failed.");
+      }
+      joints.splice(j,1);
+    }
     for (var f = obj.m_fixtureList; f; f = f.m_next) {
         if (f.m_userdata) {
           f.m_userdata.interact_cooldown = 100;
