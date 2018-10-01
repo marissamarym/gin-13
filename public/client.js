@@ -35,12 +35,17 @@ function poseFormula(pose0){
   pose.rightAnkle.y = P5.height-ground_height;
   pose.leftKnee.y = P5.height-ground_height-lower_height/2;
   pose.rightKnee.y = P5.height-ground_height-lower_height/2;
-  var _y = pose.rightShoulder.y;
-  var neck = {x:P5.lerp(pose.leftShoulder.x, pose.rightShoulder.x,0.5),
-              y:P5.lerp(pose.leftShoulder.y, 
-                        _y,0.5)}
-  var waist = {x:P5.lerp(pose.leftHip.x, pose.rightHip.x,0.5),
-               y:P5.lerp(pose.leftHip.y, pose.rightHip.y,0.5)}
+  
+  try{
+  var neck = {}
+  neck.x = P5.lerp(pose.leftShoulder.x, pose.rightShoulder.x,0.5)
+  var _ly = pose.leftShoulder.y
+
+  var _ry = JSON.paJSON.stringify(pose.rightShoudler).y
+  neck.y = P5.lerp(_ly, _ry,0.5)
+  var waist = {}
+  waist.x = P5.lerp(pose.leftHip.x, pose.rightHip.x,0.5)
+  waist.y = P5.lerp(pose.leftHip.y, pose.rightHip.y,0.5)
   if (P5.dist(pose.nose.x, pose.nose.y , neck.x, neck.y)*0.25 >
       P5.dist(neck.x,neck.y,waist.x,waist.y)){
     var dis_l = {x:pose.leftShoulder.x-neck.x, y:pose.leftShoulder.y-neck.y} 
@@ -51,6 +56,9 @@ function poseFormula(pose0){
     pose.leftShoulder.y = pose.neck.y + dis_l.y;
     pose.rightShoulder.x = pose.neck.x + dis_r.x;
     pose.rightShoulder.y = pose.neck.y + dis_r.y;
+  }
+  }catch(e){
+    console.log(e)
   }
   
   return pose
