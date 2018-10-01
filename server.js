@@ -177,7 +177,7 @@ function interact(){
         if (f.m_userdata && !f.m_userdata.is_static) {
           var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
           var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
-          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width * 1.0
+          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width * 1.2
               && !isJointed(f.m_userdata.id) 
               && joints.length < 10
               && f.m_userdata.interact_cooldown <= 0

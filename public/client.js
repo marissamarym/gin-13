@@ -48,7 +48,7 @@ P5.draw = function() {
       PoseReader.draw_pose(obj.pose,{color:obj.raw_data.color, stroke_weight:4});
     }
   }
-  
+  P5.image(PoseReader.video, 0, 0, P5.width*0.2, P5.height*0.2);
   // if (localPlayer.pose != null){
   //   PoseReader.draw_pose(localPlayer.pose,{color:localPlayer.color})
   // }
