@@ -98,7 +98,7 @@ var PoseReader = new function(){
   }
   
   this.estimate_scale = function(pose){
-    return P5.dist(pose.nose.x, pose.nose.y , pose.leftEye.x, pose.leftEye.y);
+    return P5.dist(pose.leftEar.x, pose.leftEar.y , pose.rightEar.x, pose.rightEar.y);
     
   }
   
@@ -155,8 +155,8 @@ var PoseReader = new function(){
     var s = this.estimate_scale(pose);
     
     P5.fill(0);
-    P5.ellipse(pose.leftEye.x, pose.leftEye.y, s*0.8, s*0.8);
-    P5.ellipse(pose.rightEye.x, pose.rightEye.y, s*0.8, s*0.8);
+    P5.ellipse(pose.leftEye.x, pose.leftEye.y, s*0.3, s*0.3);
+    P5.ellipse(pose.rightEye.x, pose.rightEye.y, s*0.3, s*0.3);
     P5.pop();
   }
 }

@@ -12,7 +12,7 @@ function poseFormula(pose0){
   var lower_height = 100;
   var shoulder_width = 50;
   var max_shoulder_perc = 0.3;
-  var head_torso_ratio = 1/3;
+  var head_torso_ratio = 1/4;
   var ground_height = 20
   var scale = upper_height/P5.dist(
     pose0.nose.x, pose0.nose.y , 
@@ -28,7 +28,7 @@ function poseFormula(pose0){
   var basePos = {x:P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5), y:P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5)};
   var pose = {};
   for (var k in pose0){
-    pose[k] = {x:(pose0[k].x-basePos.x)*scale*xscale+basePos.x,
+    pose[k] = {x:(pose0[k].x-basePos.x)*scale*xscale+P5.map(basePos.x,0,1,-0.2,1.2),
                y:(pose0[k].y-basePos.y)*scale+P5.height-ground_height-lower_height
               }
   }
@@ -67,9 +67,9 @@ function poseFormula(pose0){
 }
 
 function warnDist(){
-  if (localPlayer.pose != null){
-    var d = P5.dist(localPlayer.pose.leftShoulder.x,localPlayer.pose.leftShoulder.y,
-                    localPlayer.pose.rightShoulder.x,localPlayer.pose.rightShoulder.y);
+  if (PoseReader.get() != null){
+    var d = P5.dist(PoseReader.get().leftShoulder.x,PoseReader.get().leftShoulder.y,
+                    PoseReader.get().rightShoulder.x,PoseReader.get().rightShoulder.y);
     P5.push();
     P5.textSize(16);
     P5.translate(P5.width/2, P5.height);
@@ -101,9 +101,8 @@ P5.setup = function() {
 P5.draw = function() {
   P5.background(0);
   
-  localPlayer.pose = PoseReader.get();
-  if (localPlayer.pose != null){
-    localPlayer.pose = poseFormula(localPlayer.pose);
+  if (PoseReader.get() != null){
+    localPlayer.pose = poseFormula(PoseReader.get());
   }
     
   socket.emit('game-update', localPlayer);
