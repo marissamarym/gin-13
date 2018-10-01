@@ -30,11 +30,12 @@ function updateSpeech(){
   if (speechRec.resultString != undefined){
     if (localPlayer.speech.text != speechRec.resultString){
       localPlayer.speech.text = speechRec.resultString;
-      localPlayer.speech.len = 
+      localPlayer.speech.len = speechRec.resultString.length;
     }
-    
   }
-  
+  if (localPlayer.speech.len > 0){
+    localPlayer.speech.len -= 0.1;
+  }
 }
 
 
@@ -60,6 +61,7 @@ P5.draw = function() {
   P5.background(0);
   
   localPlayer.pose = PoseReader.get_normalized();
+  updateSpeech();
     
   socket.emit('game-update', localPlayer);
   //console.log(universe);
@@ -83,6 +85,15 @@ P5.draw = function() {
     if (obj.pose != null){
       var col =  (socket.id == obj.id) ? [255,50] : obj.raw_data.color
       PoseReader.draw_pose(obj.pose,{color:col, stroke_weight:4});
+
+      P5.push();
+      P5.textSize(16);
+      P5.translate(obj.pose.nose.x, obj.pose.nose.y-50);
+      P5.textAlign(P5.CENTER);
+      P5.fill(255)
+      console.log(obj.raw_data.speech.len);
+      P5.text(obj.raw_data.speech.text.slice(0,Math.ceil(obj.raw_data.speech.len)), 0, 0);
+      P5.pop();
     }
   }
   P5.image(PoseReader.video, 0, 0, P5.width*0.2, P5.height*0.2);
