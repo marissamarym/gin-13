@@ -4,6 +4,7 @@ var PoseReader = new function(){
   this.video = null
   this.poseNet = null
   this.pose = null
+  this.pose_normalized = null
   this.posenet_objs = []
   this.track_smooth = 0.3
 
@@ -66,8 +67,13 @@ var PoseReader = new function(){
         this.pose = new_pose
       }else{
         this.lerp_pose(this.pose, new_pose, this.track_smooth);
-        
       }
+      var new_normalized = this.normalize(new_pose)
+      if (this.pose_normalized == null){
+        this.pose_normalized = new_normalized
+      }else{
+        this.lerp_pose(this.pose_normalized, new_normalized, this.track_smooth);
+      } 
     }
   }
   
@@ -90,6 +96,9 @@ var PoseReader = new function(){
   this.get = function(){
     return this.pose;
   }
+  this.get_normalized = function(){
+    return this.pose_normalized;
+  }
   
   this.draw = function(){
     if (this.pose != null){
@@ -100,6 +109,65 @@ var PoseReader = new function(){
   this.estimate_scale = function(pose){
     return P5.dist(pose.leftEar.x, pose.leftEar.y , pose.rightEar.x, pose.rightEar.y);
     
+  }
+  
+  this.normalize = function(pose0, args){
+    if (args == undefined){args = {}}
+    if (args.upper_height == undefined){args.upper_height = 100}
+    if (args.lower_height == undefined){args.lower_height = 100}
+    if (args.shoulder_width == undefined){args.shoulder_width = 50}
+    if (args.max_x_perc == undefined){args.max_x_perc = 0.3}
+    if (args.head_torso_ratio == undefined){args.head_torso_ratio = 1/4}
+    if (args.ground_height == undefined){args.ground_height=20}
+    
+    var scale = args.upper_height/P5.dist(
+      pose0.nose.x, pose0.nose.y , 
+      P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5),
+      P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5),
+    );
+    var xscale = Math.abs(pose0.leftShoulder.x-pose0.rightShoulder.x);
+    if (xscale > P5.width*args.max_x_perc){
+      xscale = args.shoulder_width/(xscale*scale);
+    }else{
+      xscale = 1;
+    }
+    var basePos = {x:P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5), y:P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5)};
+    var pose = {};
+    for (var k in pose0){
+      pose[k] = {x:(pose0[k].x-basePos.x)*scale*xscale+P5.map(basePos.x,0,1,-0.2,1.2),
+                 y:(pose0[k].y-basePos.y)*scale+P5.height-args.ground_height-args.lower_height
+                }
+    }
+    pose.leftAnkle.y = P5.height-args.ground_height;
+    pose.rightAnkle.y = P5.height-args.ground_height;
+    pose.leftKnee.y = P5.height-args.ground_height-args.lower_height/2;
+    pose.rightKnee.y = P5.height-args.ground_height-args.lower_height/2;
+
+    var neck = {x:P5.lerp(pose.leftShoulder.x, pose.rightShoulder.x,0.5),
+                y:P5.lerp(pose.leftShoulder.y, pose.rightShoulder.y,0.5)}
+    var waist = {x:P5.lerp(pose.leftHip.x, pose.rightHip.x,0.5),
+                 y:P5.lerp(pose.leftHip.y, pose.rightHip.y,0.5)}
+    if (P5.dist(pose.nose.x, pose.nose.y , neck.x, neck.y) >
+        P5.dist(neck.x,neck.y,waist.x,waist.y)*args.head_torso_ratio){
+      var dis_l = {x:pose.leftShoulder.x-neck.x, y:pose.leftShoulder.y-neck.y} 
+
+      var new_neck = {x:P5.lerp(waist.x,pose.nose.x,1-1/(1+1/args.head_torso_ratio)),
+                      y:P5.lerp(waist.y,pose.nose.y,1-1/(1+1/args.head_torso_ratio))};
+      var dis = {x:new_neck.x-neck.x, y:new_neck.y-neck.y}
+      pose.leftShoulder.x += dis.x;
+      pose.leftShoulder.y += dis.y;
+      pose.rightShoulder.x += dis.x;
+      pose.rightShoulder.y += dis.y;
+      pose.leftElbow.x += dis.x;
+      pose.leftElbow.y += dis.y;
+      pose.rightElbow.x += dis.x;
+      pose.rightElbow.y += dis.y;
+      pose.leftWrist.x += dis.x;
+      pose.leftWrist.y += dis.y;
+      pose.rightWrist.x += dis.x;
+      pose.rightWrist.y += dis.y;
+    }
+    return pose
   }
   
   this._draw_bones = function(){
