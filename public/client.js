@@ -89,7 +89,7 @@ P5.draw = function() {
       P5.pop();
     }
   }
-  P5.image(PoseReader.video, 0, 0, P5.width*0.2, P5.height*0.2);
+  //P5.image(PoseReader.video, 0, 0, P5.width*0.2, P5.height*0.2);
   if (localPlayer.pose != null){
     PoseReader.draw_pose(localPlayer.pose,{color:localPlayer.color})
     P5.push();
