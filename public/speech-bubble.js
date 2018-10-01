@@ -29,13 +29,20 @@ var SpeechBubble = new function(){
     }
   }
   this.draw_speech = function(speech){
-
+    var t = speech.text.slice(0,Math.ceil(speech.len))
+    var w = P5.textWidth(t);
+    
     P5.push();
+    P5.strokeWeight(2);
+    P5.noFill();
+    P5.arc(0,0,10,10,)
+    
     P5.textSize(16);
     P5.textAlign(P5.CENTER);
     P5.textFont("Courier");
     P5.fill(255)
-    P5.text(speech.text.slice(0,Math.ceil(speech.len)), 0, 0);
+
+    P5.text(t, 0, 0);
     P5.pop();
   }
   

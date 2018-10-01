@@ -207,6 +207,7 @@ function interact(){
         console.log("joint deletion failed.");
       }
       joints.splice(j,1);
+      continue;
     }
     for (var f = obj.m_fixtureList; f; f = f.m_next) {
         if (f.m_userdata) {
