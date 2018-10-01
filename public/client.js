@@ -72,11 +72,12 @@ P5.draw = function() {
   if (localPlayer.pose != null){
     PoseReader.draw_pose(localPlayer.pose,{color:localPlayer.color})
     P5.push();
-    P5.textSize(16);
-    P5.translate(localPlayer.pose.nose.x, 200);
-    P5.textAlign(P5.CENTER);
-    P5.fill(255)
-    P5.text("ME", 0, 0);
+    P5.strokeWeight(4);
+    P5.stroke(255);
+    P5.noFill();
+    P5.translate(localPlayer.pose.nose.x, 150);
+    P5.triangle(-6,0,6,0,0,10)
+    
     P5.pop();
   }
   warnDist();

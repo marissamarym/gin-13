@@ -68,9 +68,10 @@ function describeBox2DWorld(){
 
 function serverInit(){
   console.log('init');
-  createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH, GROUND_HEIGHT*2, true);
-  createBox(-10,CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
-  createBox(CANVAS_WIDTH+10, CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
+  
+  createBox(-10,(CANVAS_HEIGHT-GROUND_HEIGHT)/2, 20, CANVAS_HEIGHT-GROUND_HEIGHT, true);
+  createBox(CANVAS_WIDTH+10, (CANVAS_HEIGHT-GROUND_HEIGHT)/2, 20, CANVAS_HEIGHT-GROUND_HEIGHT, true);
+  createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH+20, GROUND_HEIGHT*2, true);
   for (var i = 0; i < 4; i++){
     createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
   }
