@@ -12,7 +12,7 @@ function poseFormula(pose0){
   var lower_height = 100;
   var ground_height = 20
   var scale = upper_height/P5.dist(
-    pose0.nose.x, pose0.nose.y ,
+    pose0.nose.x, pose0.nose.y , 
     P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5),
     P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5),
   );
@@ -28,6 +28,25 @@ function poseFormula(pose0){
   pose.leftKnee.y = P5.height-ground_height-lower_height/2;
   pose.rightKnee.y = P5.height-ground_height-lower_height/2;
   return pose
+}
+
+function warnDist(){
+  if (localPlayer.pose != null){
+    var d = P5.dist(localPlayer.pose.leftShoulder.x,localPlayer.pose.leftShoulder.y,
+                localPlayer.pose.rightShoulder.x,localPlayer.pose.rightShoulder.y);
+    P5.push();
+    P5.textSize(16);
+    P5.translate(P5.width/2, P5.height/2);
+    P5.textAlign(P5.CENTER);
+    P5.fill(0,255,255)
+    if (d > P5.width*0.5){
+      P5.text('further away from the camera!', 0, 0);
+    }else if (d > P5.width*0.5){
+      P5.text('just a bit further!', 0, 0);
+    }
+    P5.pop();
+  }  
+  
 }
 
 P5.setup = function() {
@@ -75,7 +94,12 @@ P5.draw = function() {
   P5.image(PoseReader.video, 0, 0, P5.width*0.2, P5.height*0.2);
   if (localPlayer.pose != null){
     PoseReader.draw_pose(poseFormula(localPlayer.pose),{color:localPlayer.color})
+    if (P5.dist(localPlayer.pose.leftShoulder.x,localPlayer.pose.leftShoulder.y,
+                localPlayer.pose.rightShoulder.x,localPlayer.pose.rightShoulder.y) > P5.width/2){
+    }
   }
+  warnDist();
+  
 }
 
 
