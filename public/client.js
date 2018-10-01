@@ -1,11 +1,12 @@
-/* global describe io P5 PoseReader Player*/
+/* global describe io P5 PoseReader Player p5*/
 var socket;
 var universe = {players:[],objects:[]};
 var P5 = window; //p5 pollutes global namespace
                  //this makes it look like that it doesn't
                  //so it feels nicer
 
-var localPlayer = {pose:null, color:[Math.random()*255,100,255]}
+var localPlayer = {pose:null, color:[Math.random()*255,100,255], speech: {text:"",len:0}}
+var speechRec;
 
 function warnDist(){
   if (PoseReader.get() != null){
@@ -25,6 +26,17 @@ function warnDist(){
   }  
   
 }
+function updateSpeech(){
+  if (speechRec.resultString != undefined){
+    if (localPlayer.speech.text != speechRec.resultString){
+      localPlayer.speech.text = speechRec.resultString;
+      localPlayer.speech.len = 
+    }
+    
+  }
+  
+}
+
 
 P5.setup = function() {
   socket = io();
@@ -33,6 +45,11 @@ P5.setup = function() {
   P5.background(0);
   P5.textFont('Courier');
   PoseReader.init();
+  
+  speechRec = new p5.SpeechRec('en-US', function(){}); // new P5.SpeechRec object
+	speechRec.continuous = true; // do continuous recognition
+	speechRec.interimResults = true; // allow partial recognition (faster, less accurate)
+  speechRec.start();
   
   socket.emit('game-start', localPlayer)
   socket.on('heartbeat', function(data){
