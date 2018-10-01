@@ -71,8 +71,8 @@ function serverInit(){
   createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH, GROUND_HEIGHT*2, true);
   createBox(-10,CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
   createBox(CANVAS_WIDTH+10, CANVAS_HEIGHT/2, 20, CANVAS_HEIGHT, true);
-  for (var i = 0; i < 5; i++){
-    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 50+i*5,50+i*5, false);
+  for (var i = 0; i < 4; i++){
+    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
   }
   setInterval(serverUpdate,1000/FPS);
 }
@@ -225,7 +225,7 @@ function interact(){
     joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER));
     var reactionForce = joint.GetReactionForce(FPS);
     var forceModuleSq = reactionForce.LengthSquared();
-    var maxForceSq = obj.GetMass()*30000;
+    var maxForceSq = obj.GetMass()*20000;
     if(forceModuleSq > maxForceSq){
       
       player.hand.splice(player.hand.indexOf(joints[j].object_id),1);
