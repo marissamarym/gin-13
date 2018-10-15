@@ -232,17 +232,19 @@ function cooldown(world){
 
 function checkRoomSwitch(){
   for (var i = 0; i < universe.length; i++){
-    for (var j = universe[i].players.length-1; j> 0; j--){
+    for (var j = universe[i].players.length-1; j>= 0; j--){
       var room = universe[i];
       var pose = room.players[j].pose;
+      // console.log(room, room.players[j]);
       if (pose == null){
         continue;
       }
       
       if (pose.nose.x > CANVAS_WIDTH-20){
         
-        var p = room.players.splice(j,1);
-        universe[(i+1)%universe.length].players.push(p[0]);
+        var p = room.players.splice(j,1)[0];
+        console.log("PLAYER "+p.id+" LEFT ROOM IDX "+i);
+        universe[(i+1)%universe.length].players.push(p);
       }
     }
   }
