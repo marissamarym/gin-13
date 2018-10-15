@@ -13,7 +13,7 @@ console.log('server running')
 // GLOBALS
 //====================
 
-var universe = {}
+var universe = []
 var worlds = {}
 var worlds_accessory = {}
 var CANVAS_WIDTH = 640;
@@ -76,19 +76,21 @@ function emptyRoomDesc(){
 }
 
 var initRoom = {
-  box_pickup:function(){
+  box_pickup:function(){var room_name = "box_pickup"
+    
     universe.push(emptyRoomDesc())
-    worlds["box_pickup"] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
-    worlds_accessory["box_pickup"] = {"joints":[]}
-    createFloorAndWall(worlds["box_pickup"]);
+    worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
+    worlds_accessory[room_name] = {"joints":[]}
+    createFloorAndWall(worlds[room_name]);
     for (var i = 0; i < 4; i++){
-      createBox(worlds["box_pickup"],Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
+      createBox(worlds[room_name],Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
     }
   },
-  custom_shape:function(){
+  custom_shape:function(){var room_name = "custom_shape"
+  
     universe.push(emptyRoomDesc())
-    worlds["box_pickup"] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
-    createFloorAndWall(worlds["custom_shape"]);
+    worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
+    createFloorAndWall(worlds[room_name]);
   },
 }
 
@@ -133,6 +135,16 @@ function getRoomByName(name){
   for (var i = 0; i < universe.length; i++){
     if (universe[i].name == name){
       return universe[i]
+    }
+  }
+}
+
+function getPlayerEnclosingRoomIndex(id){
+  for (var i = 0; i < universe.length; i++){
+    for (var j = 0; j < universe[i].players.length; j++){
+      if (universe[i].players[j].id == id){
+        return i;
+      }
     }
   }
 }
@@ -207,17 +219,17 @@ box_pickup:function(){
           var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
           var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
           if (v3.dist({x:x,y:y}, p) < f.m_userdata.width * 1.2
-              && !isJointed(f.m_userdata.id) 
+              && !isJointed(joints, f.m_userdata.id) 
               && joints.length < 10
               && f.m_userdata.interact_cooldown <= 0
-              && universe.players[i].hand.length < 1
+              && room.players[i].hand.length < 1
               ){
             var targ = new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER);
             b.SetPosition(new Box2D.Common.Math.b2Vec2(
               targ.x+f.m_userdata.width/PIXELS_PER_METER/2,
               targ.y+f.m_userdata.height/PIXELS_PER_METER/2))
             var def = new Box2D.Dynamics.Joints.b2MouseJointDef();
-            def.bodyA = getAnotherBody(b);
+            def.bodyA = getAnotherBody(world,b);
             def.bodyB = b;
             def.target = targ;
             def.collideConnected = true;
@@ -240,8 +252,8 @@ box_pickup:function(){
   //console.log(joints);
   for (var j = joints.length-1; j >= 0; j--){
 
-    var player = getPlayerById(joints[j].player_id);
-    var obj = getBodyById(joints[j].object_id);
+    var player = getPlayerById(room, joints[j].player_id);
+    var obj = getBodyById(world, joints[j].object_id);
     if (player == undefined || obj == undefined){
       try{
         world.DestroyJoint(joints[j].joint);
@@ -274,6 +286,10 @@ box_pickup:function(){
       
     }
   }
+},
+custom_shape:function(){
+  
+  
 }
 }
 
@@ -295,30 +311,37 @@ function newConnection(socket){
 	function gameStart(data){
 		console.log(socket.id)
 		
-		universe.players.push({id:socket.id, raw_data:{}, pose:null, hand:[]})
+		universe[0].players.push({id:socket.id, raw_data:{}, pose:null, hand:[]})
 		setInterval(heartbeat, 50)
 
+    var self_id = socket.id
+    
 		function heartbeat(){
-			io.sockets.emit('heartbeat', universe)
+      var room = universe[getPlayerEnclosingRoomIndex(self_id)]
+			io.sockets.emit('heartbeat', room)
 		}
 	}
 	function gameUpdate(data){
-
-		for (var i = 0; i < universe.players.length; i++) {
-			if(socket.id == universe.players[i].id){
-				universe.players[i].raw_data = data;
-				break;
-			}
+    
+		for (var i = 0; i < universe.length; i++) {
+      for (var j = 0; j < universe[i].length; j++){
+        if(socket.id == universe[i].players[j].id){
+          universe[i].players[j].raw_data = data;
+          break;
+        }
+      }
 		}
 	}
 
 	function removePlayer(){
-		for (var i = 0; i < universe.players.length; i++) {
-			if(socket.id == universe.players[i].id){
-				universe.players.splice(i, 1)
-				console.log('disconnected')
-				break;
-			}
+    for (var i = 0; i < universe.length; i++) {
+      for (var j = 0; j < universe[i].length; j++){
+        if(socket.id == universe[i].players[j].id){
+          universe[i].players.splice(j, 1)
+          console.log('disconnected')
+          break;
+        }
+      }
 		}
 	}
 }	
