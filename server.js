@@ -75,11 +75,19 @@ function emptyRoomDesc(name,type){
   return {name:name,type:type,players:[],objects:[]}
 }
 
+function createRoomIfEmpty(room_name,room_type){
+  var room_idx = getRoomByName(room_name)
+  var empty = emptyRoomDesc(room_name,room_type)
+  if (room_idx == undefined){
+    universe.push(empty)
+  }else{
+    universe[room_idx] = empty;
+  }
+}
+
 var initRoom = {
   box_pickup:function(room_name){
-    if (getRoomByName(room_name) == undefined){
-      universe.push(emptyRoomDesc(room_name,"box_pickup"))
-    }
+    createRoomIfEmpty(room_name,"box_pickup")
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
     worlds_accessory[room_name] = {"joints":[]}
     createFloorAndWall(worlds[room_name]);
@@ -88,10 +96,10 @@ var initRoom = {
     }
   },
   custom_shape:function(room_name){
-  
-    universe.push(emptyRoomDesc(room_name,"custom_shape"))
+    createRoomIfEmpty(room_name,"custom_shape")
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
     createFloorAndWall(worlds[room_name]);
+    worlds_accessory[room_name] = {"dots":[]}
   },
 }
 
@@ -264,8 +272,12 @@ function checkRoomSwitch(){
         
         var p = room.players.splice(j,1)[0];
         p.offset.x = 0;
+        var next_idx = (i+1)%universe.length
+        if (universe[next_idx].players.length == 0){
+          initRoom[universe[next_idx].type](universe[next_idx].name);
+        }
         // console.log("PLAYER "+p.id+" LEFT ROOM IDX "+i);
-        universe[(i+1)%universe.length].players.push(p);
+        universe[next_idx].players.push(p);
       }
     }
   }
@@ -369,6 +381,29 @@ function objectPickup(room_name, kpt_name, obj_name){
 }
 
 
+
+function freehand(room_name, kpt_name){
+  var world = worlds[room_name]
+  var room = getRoomByName(room_name)
+  var dots = worlds_accessory[room_name]["dots"]
+  console.log(dots);
+  for (var i = 0; i < room.players.length; i++){
+    var pose = room.players[i].pose;
+
+    if (pose == null){
+      continue;
+    }
+    var p = v3.add(pose[kpt_name],room.players[i].offset);
+    dots.push({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
+    
+  }
+  worlds_accessory[room_name]["dots"] = dots.slice(0,100);
+}
+  
+
+
+
+
 var interact = {
 box_pickup:function(room_name){
   cooldown(worlds[room_name]);
@@ -376,7 +411,7 @@ box_pickup:function(room_name){
   objectPickup(room_name, "rightWrist", "box")
 },
 custom_shape:function(room_name){
-  
+  freehand(room_name,"rightWrist");
   
 }
 }

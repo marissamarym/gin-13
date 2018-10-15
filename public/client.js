@@ -87,6 +87,13 @@ P5.draw = function() {
       P5.rotate(obj.rotation);
       P5.rect(-obj.width/2,-obj.height/2,obj.width,obj.height);
       P5.pop();
+    }else if (obj.name == "dot"){
+      P5.push();
+      P5.noStroke();
+      P5.fill.apply(this, obj.color);
+      P5.ellipse(obj.x,obj.y,10,10);
+      P5.pop()
+      
     }
   }
   
