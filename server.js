@@ -270,13 +270,13 @@ function checkRoomSwitch(){
       }
       var p = v3.add(pose.rightWrist,offset);
       // console.log(offset)
-      if (v3.dist(p, {x:CANVAS_WIDTH, y:CANVAS_HEIGHT/2}) <= 20){
+      if (v3.dist(p, {x:CANVAS_WIDTH, y:CANVAS_HEIGHT/2}) <= 30){
         
         var p = room.players.splice(j,1)[0];
         p.offset.x = 0;
         var next_idx = (i+1)%universe.length
-        if (universe[next_idx].players.length == 0){
-          initRoom[universe[next_idx].type](universe[next_idx].name);
+        if (universe[i].players.length == 0){
+          // initRoom[universe[i].type](universe[i].name);
         }
         // console.log("PLAYER "+p.id+" LEFT ROOM IDX "+i);
         universe[next_idx].players.push(p);
@@ -397,8 +397,9 @@ function freehand(room_name, kpt_name){
     }
     
     var p = v3.add(pose[kpt_name],room.players[i].offset);
-    if (length(dots) == 0 || v3.dist(d
-    dots.unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
+    if (dots.length == 0 || v3.dist(dots[0],p) > 5){
+      dots.unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
+    }
     
   }
   worlds_accessory[room_name]["dots"] = dots.slice(0,200);

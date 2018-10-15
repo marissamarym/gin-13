@@ -36,6 +36,18 @@ function warnDist(){
   
 }
 
+function colorEq(c0,c1){
+  if (c0.length != c1.length){
+    return false;
+  }
+  for (var i = 0; i < c0.length; i++){
+    if (c0[i] != c1[i]){
+      return false
+    }
+  }
+  return true;
+}
+
 P5.setup = function() {
   socket = io();
 
@@ -91,10 +103,25 @@ P5.draw = function() {
       P5.push();
       P5.noStroke();
       P5.colorMode(P5.HSB, 255);
-      P5.fill.apply(this, obj.color);
-      P5.ellipse(obj.x,obj.y,4,4);
-      P5.pop()
+//       P5.fill.apply(this, obj.color);
+//       P5.ellipse(obj.x,obj.y,4,4);
       
+      var next_dot = undefined;
+      for (var j = i+1; j < room.objects.length; j++) {
+        if (room.objects[j].name == "dot" && colorEq(room.objects[j].color,obj.color)){
+          next_dot = room.objects[j];
+          break;
+        }
+      }
+      if (next_dot != undefined){
+  
+        P5.stroke.apply(this, obj.color);
+        P5.strokeWeight(2);
+        P5.noFill()
+        P5.line(obj.x,obj.y,next_dot.x,next_dot.y);
+        
+      }
+      P5.pop()
     }
   }
   
