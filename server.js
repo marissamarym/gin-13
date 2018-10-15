@@ -408,8 +408,6 @@ function freehand(room_name, kpt_name){
   
 
 
-
-
 var interact = {
 box_pickup:function(room_name){
   cooldown(worlds[room_name]);
