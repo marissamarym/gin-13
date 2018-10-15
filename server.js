@@ -14,8 +14,8 @@ console.log('server running')
 //====================
 
 var universe = {}
-var worlds = []
-var joints = []
+var worlds = {}
+var worlds_accessory = {}
 var CANVAS_WIDTH = 640;
 var CANVAS_HEIGHT = 480;
 var PIXELS_PER_METER = 100;
@@ -79,6 +79,7 @@ var initRoom = {
   box_pickup:function(){
     universe.push(emptyRoomDesc())
     worlds["box_pickup"] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
+    worlds_accessory["box_pickup"] = {"joints":[]}
     createFloorAndWall(worlds["box_pickup"]);
     for (var i = 0; i < 4; i++){
       createBox(worlds["box_pickup"],Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
@@ -128,6 +129,14 @@ serverInit()
 
 var v3 = require('./ld-v3')
 
+function getRoomByName(name){
+  for (var i = 0; i < universe.length; i++){
+    if (universe[i].name == name){
+      return universe[i]
+    }
+  }
+}
+
 function getBodyById(world,id){
   for (var b = world.m_bodyList; b; b = b.m_next) {
     for (var f = b.m_fixtureList; f; f = f.m_next) {
@@ -151,7 +160,7 @@ function getPlayerById(room, id){
     }
   }
 }
-function isJointed(id){
+function isJointed(joints, id){
   for (var i = 0; i < joints.length; i++){
     if (joints[i].object_id == id || joints[i].player_id == id){
       return true;
@@ -171,7 +180,7 @@ function calculatePlayers(room){
   } 
 }
 
-function cooldown(){
+function cooldown(world){
   for (var b = world.m_bodyList; b; b = b.m_next) {
       for (var f = b.m_fixtureList; f; f = f.m_next) {
         if (f.m_userdata && f.m_userdata.interact_cooldown > 0) {
@@ -180,11 +189,14 @@ function cooldown(){
       }
   }
 }
-
-function interact(){
-  cooldown();
-  for (var i = 0; i < universe.players.length; i++){
-    var pose = universe.players[i].pose;
+var interact = {
+box_pickup:function(){
+  var world = worlds["box_pickup"]
+  var room  = getRoomByName("box_pickup")
+  var joints = worlds_accessory["box_pickup"]["joints"]
+  cooldown(world);
+  for (var i = 0; i < room.players.length; i++){
+    var pose = room.players[i].pose;
     if (pose == null){
       continue;
     }
@@ -262,6 +274,7 @@ function interact(){
       
     }
   }
+}
 }
 
 
