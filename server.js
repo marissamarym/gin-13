@@ -155,6 +155,14 @@ function getRoomByName(name){
   }
 }
 
+function getBodyName(b){
+  for (var f = b.m_fixtureList; f; f = f.m_next) {
+    if (f.m_userdata){
+      return f.m_userdata.name 
+    }
+  }
+}
+
 function getPlayerEnclosingRoomIndex(id){
   for (var i = 0; i < universe.length; i++){
     for (var j = 0; j < universe[i].players.length; j++){
@@ -233,32 +241,23 @@ function checkRoomSwitch(){
   
 }
 
-var objectPickup(room_name, player, joint){
+function objectPickup(room_name, joint_name, obj_name){
+  var world = worlds[room_name]
+  var room = getRoomByName(room_name)
+  var joints = worlds_accessory[room_name]["joints"]
   
-  
-  
-  
-}
-
-
-var interact = {
-box_pickup:function(){
-  var world = worlds["box_pickup"]
-  var room  = getRoomByName("box_pickup")
-  var joints = worlds_accessory["box_pickup"]["joints"]
   cooldown(world);
-  
   for (var i = 0; i < room.players.length; i++){
     var pose = room.players[i].pose;
 
     if (pose == null){
       continue;
     }
-    var p = pose.rightWrist;
+    var p = pose[joint_name];
     
     for (var b = world.m_bodyList; b; b = b.m_next) {
       for (var f = b.m_fixtureList; f; f = f.m_next) {
-        if (f.m_userdata && !f.m_userdata.is_static) {
+        if (f.m_userdata && !f.m_userdata.is_static && f.m_userdata.name == obj_name) {
           var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
           var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
           if (v3.dist({x:x,y:y}, p) < f.m_userdata.width * 1.2
@@ -298,6 +297,11 @@ box_pickup:function(){
 
     var player = getPlayerById(room, joints[j].player_id);
     var obj = getBodyById(world, joints[j].object_id);
+    
+    if (getBodyName(obj) != obj_name){
+      break;
+    }
+    
     if (player == undefined || obj == undefined){
       try{
         world.DestroyJoint(joints[j].joint);
@@ -312,7 +316,7 @@ box_pickup:function(){
           f.m_userdata.interact_cooldown = 100;
         }
     }
-    var p = player.pose.rightWrist;
+    var p = player.pose[joint_name];
     var joint = joints[j].joint;
     joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER));
     var reactionForce = joint.GetReactionForce(FPS);
@@ -330,6 +334,14 @@ box_pickup:function(){
       
     }
   }
+  
+}
+
+
+var interact = {
+box_pickup:function(){var room_name = "box_pickup";
+  objectPickup(room_name, "leftWrist", "box")
+  objectPickup(room_name, "rightWrist", "box")
 },
 custom_shape:function(){
   
