@@ -229,8 +229,8 @@ function calculatePlayers(room){
       room.players[i].offset = {x:CANVAS_WIDTH/2, y:0};
       console.log("reset");
     }
-    var spd = ret.pose.nose.x *0.4
-    console.log(ret.pose.nose)
+    var spd = ret.pose.nose.x *0.3
+
     room.players[i].offset.x = Math.min(Math.max(room.players[i].offset.x+spd, 0), CANVAS_WIDTH);
     room.players[i].offset.y = ret.offset.y;
   } 
