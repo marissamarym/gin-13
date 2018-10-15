@@ -77,8 +77,9 @@ function emptyRoomDesc(name,type){
 
 var initRoom = {
   box_pickup:function(room_name){
-    
-    universe.push(emptyRoomDesc(room_name,"box_pickup"))
+    if (getRoomByName(room_name) == undefined){
+      universe.push(emptyRoomDesc(room_name,"box_pickup"))
+    }
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
     worlds_accessory[room_name] = {"joints":[]}
     createFloorAndWall(worlds[room_name]);
