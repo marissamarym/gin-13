@@ -71,14 +71,14 @@ function createFloorAndWall(world){
   createBox(world,CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH+20, GROUND_HEIGHT*2, true); 
 }
 
-function emptyRoomDesc(name){
-  return {name:name,players:[],objects:[]}
+function emptyRoomDesc(name,type){
+  return {name:name,type:type,players:[],objects:[]}
 }
 
 var initRoom = {
   box_pickup:function(room_name){
     
-    universe.push(emptyRoomDesc(room_name))
+    universe.push(emptyRoomDesc(room_name,"box_pickup"))
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
     worlds_accessory[room_name] = {"joints":[]}
     createFloorAndWall(worlds[room_name]);
@@ -88,7 +88,7 @@ var initRoom = {
   },
   custom_shape:function(room_name){
   
-    universe.push(emptyRoomDesc(room_name))
+    universe.push(emptyRoomDesc(room_name,"custom_shape"))
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
     createFloorAndWall(worlds[room_name]);
   },
@@ -113,9 +113,8 @@ var describeRoom = {
 function serverInit(){
   console.log('init');
     
-  for (var k in initRoom){
-    initRoom[k]()
-  }
+  initRoom.box_pickup("box_pickup")
+  initRoom.custom_shape("custom_shape")
   
   setInterval(serverUpdate,1000/FPS);
 }
@@ -130,10 +129,10 @@ function serverUpdate(){
     }
     calculatePlayers(universe[i]);
     
-    interact[universe[i].name]();
+    interact[universe[i].type](universe[i].name);
     worlds[universe[i].name].Step(1 / FPS, 10, 10);
     
-    describeRoom[universe[i].name]();
+    describeRoom[universe[i].type](universe[i].name);
   }
   
   
@@ -241,7 +240,7 @@ function checkRoomSwitch(){
   
 }
 
-function objectPickup(room_name, joint_name, obj_name){
+function objectPickup(room_name, kpt_name, obj_name){
   var world = worlds[room_name]
   var room = getRoomByName(room_name)
   var joints = worlds_accessory[room_name]["joints"]
@@ -252,7 +251,7 @@ function objectPickup(room_name, joint_name, obj_name){
     if (pose == null){
       continue;
     }
-    var p = pose[joint_name];
+    var p = pose[kpt_name];
     
     for (var b = world.m_bodyList; b; b = b.m_next) {
       for (var f = b.m_fixtureList; f; f = f.m_next) {
@@ -280,7 +279,7 @@ function objectPickup(room_name, joint_name, obj_name){
             try{
               var joint = world.CreateJoint(def);
               room.players[i].hand.push(f.m_userdata.id);
-              joints.push({"player_id":room.players[i].id, "object_id":f.m_userdata.id, joint:joint})
+              joints.push({"player_id":room.players[i].id, "object_id":f.m_userdata.id, joint:joint, kpt:kpt_name})
               break;
             }catch (e){
               console.log("joint creation failed.");
@@ -297,8 +296,8 @@ function objectPickup(room_name, joint_name, obj_name){
     var player = getPlayerById(room, joints[j].player_id);
     var obj = getBodyById(world, joints[j].object_id);
     
-    if (getBodyName(obj) != obj_name){
-      break;
+    if (getBodyName(obj) != obj_name || joints[j].kpt != kpt_name){
+      continue;
     }
     
     if (player == undefined || obj == undefined){
@@ -315,7 +314,7 @@ function objectPickup(room_name, joint_name, obj_name){
           f.m_userdata.interact_cooldown = 100;
         }
     }
-    var p = player.pose[joint_name];
+    var p = player.pose[kpt_name];
     var joint = joints[j].joint;
     joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER));
     var reactionForce = joint.GetReactionForce(FPS);
@@ -340,10 +339,10 @@ function objectPickup(room_name, joint_name, obj_name){
 var interact = {
 box_pickup:function(room_name){
   cooldown(worlds[room_name]);
-  // objectPickup(room_name, "leftWrist", "box")
+  objectPickup(room_name, "leftWrist", "box")
   objectPickup(room_name, "rightWrist", "box")
 },
-custom_shape:function(){
+custom_shape:function(room_name){
   
   
 }

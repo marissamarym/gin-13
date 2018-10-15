@@ -119,6 +119,7 @@ var PoseReader = new function(){
     if (args.max_x_perc == undefined){args.max_x_perc = 0.3}
     if (args.head_torso_ratio == undefined){args.head_torso_ratio = 1/3}
     if (args.ground_height == undefined){args.ground_height=20}
+    if (args.forearm_length ==
     
     var scale = args.upper_height/P5.dist(
       pose0.nose.x, pose0.nose.y , 
