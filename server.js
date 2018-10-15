@@ -94,6 +94,19 @@ var initRoom = {
   },
 }
 
+var describeRoom = {
+  box_pickup:function(){var room_name = "box_pickup"
+    var room = getRoomByName(room_name)
+    describeBox2DWorld(worlds[room_name],room.objects)
+  },
+  custom_shape:function(){var room_name = "custom_shape"
+    var room = getRoomByName(room_name)
+    describeBox2DWorld(worlds[room_name],room.objects)
+  },  
+  
+  
+}
+
 
 function serverInit(){
   console.log('init');
