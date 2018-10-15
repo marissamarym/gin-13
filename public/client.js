@@ -1,12 +1,15 @@
 /* global describe io P5 PoseReader SpeechBubble p5*/
 
+var CANVAS_WIDTH = 640;
+var CANVAS_HEIGHT = 480;
+
 var socket;
 var room = {name:"",players:[],objects:[]};
 var P5 = window; //p5 pollutes global namespace
                  //this makes it look like that it doesn't
                  //so it feels nicer
 
-var localPlayer = {pose:null, offset:{x:0,y:0}, color:[Math.random()*255,100,255], speech:{text:"",len:0}}
+var localPlayer = {pose:null, offset:{x:CANVAS_WIDTH/2,y:0}, color:[Math.random()*255,100,255], speech:{text:"",len:0}}
 var USE_SPEECH = false;
 var VIEW_ONLY = false;
 if (!window.chrome){
@@ -33,10 +36,15 @@ function warnDist(){
   
 }
 
+function calcMoveSpeed(pose){
+  return pose.nose.x * 0.2;
+}
+
+
 P5.setup = function() {
   socket = io();
 
-  P5.createCanvas(640, 480);
+  P5.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
   P5.background(0);
   P5.textFont('Courier');
   
@@ -55,8 +63,15 @@ P5.setup = function() {
 }
 P5.draw = function() {
   P5.background(0);
+  localPlayer.pose = PoseReader.get_normalized()
   
-  localPlayer.pose = PoseReader.get_normalized();
+  if (localPlayer.pose != null){
+    var ret = PoseReader.extract_offset(localPlayer.pose);
+  
+    localPlayer.pose = ret.pose
+    localPlayer.offset.x += calcMoveSpeed(ret.pose);
+    localPlayer.offset.y = ret.offset.y
+  }
   if (USE_SPEECH){SpeechBubble.update(localPlayer.speech);}
   socket.emit('game-update', localPlayer);
   
@@ -105,7 +120,7 @@ P5.draw = function() {
     P5.push();
     P5.translate(localPlayer.offset.x, localPlayer.offset.y);
     PoseReader.draw_pose(localPlayer.pose,{color:localPlayer.color})
-    P5.push();
+    P5.pop();
     
     P5.push();
     P5.strokeWeight(4);
