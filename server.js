@@ -211,6 +211,7 @@ box_pickup:function(){
   
   for (var i = 0; i < room.players.length; i++){
     var pose = room.players[i].pose;
+
     if (pose == null){
       continue;
     }
@@ -221,13 +222,13 @@ box_pickup:function(){
         if (f.m_userdata && !f.m_userdata.is_static) {
           var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
           var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
-          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width * 2
+          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width * 1.2
               && !isJointed(joints, f.m_userdata.id) 
               && joints.length < 10
               && f.m_userdata.interact_cooldown <= 0
               && room.players[i].hand.length < 1
               ){
-            console.log("pickup attempt started");
+            
             var targ = new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER);
             b.SetPosition(new Box2D.Common.Math.b2Vec2(
               targ.x+f.m_userdata.width/PIXELS_PER_METER/2,
@@ -241,8 +242,8 @@ box_pickup:function(){
             def.dampingRatio = 0;
             try{
               var joint = world.CreateJoint(def);
-              universe.players[i].hand.push(f.m_userdata.id);
-              joints.push({"player_id":universe.players[i].id, "object_id":f.m_userdata.id, joint:joint})
+              room.players[i].hand.push(f.m_userdata.id);
+              joints.push({"player_id":room.players[i].id, "object_id":f.m_userdata.id, joint:joint})
               break;
             }catch (e){
               console.log("joint creation failed.");
@@ -326,9 +327,9 @@ function newConnection(socket){
 		}
 	}
 	function gameUpdate(data){
-    
+
 		for (var i = 0; i < universe.length; i++) {
-      for (var j = 0; j < universe[i].length; j++){
+      for (var j = 0; j < universe[i].players.length; j++){
         if(socket.id == universe[i].players[j].id){
           universe[i].players[j].raw_data = data;
           break;
