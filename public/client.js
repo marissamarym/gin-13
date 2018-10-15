@@ -87,11 +87,18 @@ P5.draw = function() {
     }
   }
   
+  var local_offset = {x:0, y:0}
   for (var i = 0; i < room.players.length; i++) {
     var obj = room.players[i];
     if (obj.pose != null){
+      P5.push();
+      P5.translate(obj.offset.x, obj.offset.y);
       var col =  (socket.id == obj.id) ? [255,50] : obj.raw_data.color
       PoseReader.draw_pose(obj.pose,{color:col, stroke_weight:4});
+      P5.pop();
+      if (socket.id == obj.id){
+        local_offset = obj.offset;
+      }
     }
     if (USE_SPEECH && obj.raw_data.speech != null && obj.pose != null){
       P5.push();
@@ -102,7 +109,11 @@ P5.draw = function() {
   }
   //P5.image(PoseReader.video, 0, 0, P5.width*0.2, P5.height*0.2);
   if (localPlayer.pose != null){
+    P5.push();
+    P5.translate(local_offset.x, local_offset.y);
     PoseReader.draw_pose(localPlayer.pose,{color:localPlayer.color})
+    P5.push();
+    
     P5.push();
     P5.strokeWeight(4);
     P5.stroke(255);

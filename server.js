@@ -235,7 +235,7 @@ function checkRoomSwitch(){
         continue;
       }
       if (pose.nose > CANVAS_WIDTH){
-        universe[j].players
+
       }
     }
   }
