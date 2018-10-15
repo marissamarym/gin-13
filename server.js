@@ -76,7 +76,7 @@ function emptyRoomDesc(name){
 }
 
 var initRoom = {
-  box_pickup:function(){var room_name = "box_pickup"
+  box_pickup:function(room_name){
     
     universe.push(emptyRoomDesc(room_name))
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
@@ -86,7 +86,7 @@ var initRoom = {
       createBox(worlds[room_name],Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
     }
   },
-  custom_shape:function(){var room_name = "custom_shape"
+  custom_shape:function(room_name){
   
     universe.push(emptyRoomDesc(room_name))
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
@@ -95,12 +95,12 @@ var initRoom = {
 }
 
 var describeRoom = {
-  box_pickup:function(){var room_name = "box_pickup"
+  box_pickup:function(room_name){
     var room = getRoomByName(room_name)
     room.objects = []
     describeBox2DWorld(worlds[room_name],room.objects)
   },
-  custom_shape:function(){var room_name = "custom_shape"
+  custom_shape:function(room_name){
     var room = getRoomByName(room_name)
     room.objects = []
     describeBox2DWorld(worlds[room_name],room.objects)
@@ -246,7 +246,6 @@ function objectPickup(room_name, joint_name, obj_name){
   var room = getRoomByName(room_name)
   var joints = worlds_accessory[room_name]["joints"]
   
-  cooldown(world);
   for (var i = 0; i < room.players.length; i++){
     var pose = room.players[i].pose;
 
@@ -339,8 +338,9 @@ function objectPickup(room_name, joint_name, obj_name){
 
 
 var interact = {
-box_pickup:function(){var room_name = "box_pickup";
-  objectPickup(room_name, "leftWrist", "box")
+box_pickup:function(room_name){
+  cooldown(worlds[room_name]);
+  // objectPickup(room_name, "leftWrist", "box")
   objectPickup(room_name, "rightWrist", "box")
 },
 custom_shape:function(){
