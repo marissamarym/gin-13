@@ -97,10 +97,12 @@ var initRoom = {
 var describeRoom = {
   box_pickup:function(){var room_name = "box_pickup"
     var room = getRoomByName(room_name)
+    room.objects = []
     describeBox2DWorld(worlds[room_name],room.objects)
   },
   custom_shape:function(){var room_name = "custom_shape"
     var room = getRoomByName(room_name)
+    room.objects = []
     describeBox2DWorld(worlds[room_name],room.objects)
   },  
   
@@ -130,8 +132,8 @@ function serverUpdate(){
     
     interact[universe[i].name]();
     worlds[universe[i].name].Step(1 / FPS, 10, 10);
-    universe[i].objects = []
-    describeBox2DWorld(worlds[universe[i].name], universe[i].objects);
+    
+    describeRoom[universe[i].name]();
   }
   
   
@@ -215,6 +217,30 @@ function cooldown(world){
       }
   }
 }
+
+
+function checkRoomSwitch(){
+  for (var i = 0; i < universe.length; i++){
+    for (var j = 0; j < universe[i].players.length; j++){
+      var room = universe[i];
+      var pose = room.players[i].pose;
+      if (pose == null){
+        continue;
+      }
+    }
+  }
+  
+  
+}
+
+var objectPickup(room_name, player, joint){
+  
+  
+  
+  
+}
+
+
 var interact = {
 box_pickup:function(){
   var world = worlds["box_pickup"]
