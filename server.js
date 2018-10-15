@@ -207,7 +207,6 @@ function isJointed(joints, id){
 function extractPoseOffset (pose0){
   var pose = {}
   var basePos = v3.lerp(pose0.leftHip,pose0.rightHip,0.5);
-  console.log(basePos);
   for (var k in pose0){
     pose[k] = {x:(pose0[k].x-basePos.x),
                y:(pose0[k].y-basePos.y)
@@ -226,7 +225,13 @@ function calculatePlayers(room){
     var ret = extractPoseOffset(pose0);
     
     room.players[i].pose = ret.pose;
-    room.players[i].offset = ret.offset;
+    if (room.players[i].offset == undefined){
+      room.players[i].offset = {x:CANVAS_WIDTH/2, y:0};
+    }
+    var spd = ret.pose.nose.x *0.4
+    console.log(ret.pose.nose)
+    room.players[i].offset.x = Math.min(Math.max(ret.offset.x+spd, 0), CANVAS_WIDTH);
+    room.players[i].offset.y = ret.offset.y;
   } 
 }
 
@@ -246,15 +251,17 @@ function checkRoomSwitch(){
     for (var j = universe[i].players.length-1; j>= 0; j--){
       var room = universe[i];
       var pose = room.players[j].pose;
+      var offset = room.players[j].offset;
       // console.log(room, room.players[j]);
       if (pose == null){
         continue;
       }
-      
-      if (pose.nose.x > CANVAS_WIDTH-20){
+      // console.log(offset)
+      if (offset.x > CANVAS_WIDTH-20){
         
         var p = room.players.splice(j,1)[0];
-        console.log("PLAYER "+p.id+" LEFT ROOM IDX "+i);
+        p.offset.x = 0;
+        // console.log("PLAYER "+p.id+" LEFT ROOM IDX "+i);
         universe[(i+1)%universe.length].players.push(p);
       }
     }
@@ -274,7 +281,7 @@ function objectPickup(room_name, kpt_name, obj_name){
     if (pose == null){
       continue;
     }
-    var p = pose[kpt_name];
+    var p = v3.add(pose[kpt_name],room.players[i].offset);
     
     for (var b = world.m_bodyList; b; b = b.m_next) {
       for (var f = b.m_fixtureList; f; f = f.m_next) {
@@ -337,7 +344,7 @@ function objectPickup(room_name, kpt_name, obj_name){
           f.m_userdata.interact_cooldown = 100;
         }
     }
-    var p = player.pose[kpt_name];
+    var p = v3.add(player.pose[kpt_name], player.offset);
     var joint = joints[j].joint;
     joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER));
     var reactionForce = joint.GetReactionForce(FPS);
