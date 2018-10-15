@@ -134,7 +134,7 @@ function serverUpdate(){
     
     describeRoom[universe[i].type](universe[i].name);
   }
-  
+  checkRoomSwitch();
   
 }
 
@@ -234,12 +234,15 @@ function checkRoomSwitch(){
   for (var i = 0; i < universe.length; i++){
     for (var j = universe[i].players.length-1; j> 0; j--){
       var room = universe[i];
-      var pose = room.players[i].pose;
+      var pose = room.players[j].pose;
       if (pose == null){
         continue;
       }
-      if (pose.nose > CANVAS_WIDTH){
-
+      
+      if (pose.nose.x > CANVAS_WIDTH-20){
+        
+        var p = room.players.splice(j,1);
+        universe[(i+1)%universe.length].players.push(p[0]);
       }
     }
   }

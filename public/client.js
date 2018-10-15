@@ -37,7 +37,7 @@ function warnDist(){
 }
 
 function calcMoveSpeed(pose){
-  return pose.nose.x * 0.2;
+  return pose.nose.x * 0.4;
 }
 
 
@@ -70,6 +70,7 @@ P5.draw = function() {
   
     localPlayer.pose = ret.pose
     localPlayer.offset.x += calcMoveSpeed(ret.pose);
+    localPlayer.offset.x = P5.constrain(localPlayer.offset.x, 0, CANVAS_WIDTH);
     localPlayer.offset.y = ret.offset.y
   }
   if (USE_SPEECH){SpeechBubble.update(localPlayer.speech);}
@@ -120,7 +121,6 @@ P5.draw = function() {
     P5.push();
     P5.translate(localPlayer.offset.x, localPlayer.offset.y);
     PoseReader.draw_pose(localPlayer.pose,{color:localPlayer.color})
-    P5.pop();
     
     P5.push();
     P5.strokeWeight(4);
@@ -128,6 +128,8 @@ P5.draw = function() {
     P5.noFill();
     P5.translate(localPlayer.pose.nose.x, 150);
     P5.triangle(-6,0,6,0,0,10)
+    
+    P5.pop();
     
     P5.pop();
   }
