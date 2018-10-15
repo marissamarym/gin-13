@@ -204,18 +204,29 @@ function isJointed(joints, id){
   return false;
 }
 
+function extractPoseOffset (pose0){
+  var pose = {}
+  var basePos = v3.lerp(pose0.leftHip,pose0.rightHip,0.5);
+  console.log(basePos);
+  for (var k in pose0){
+    pose[k] = {x:(pose0[k].x-basePos.x),
+               y:(pose0[k].y-basePos.y)
+              }
+  }
+  return {offset:basePos, pose:pose};
+}
 
 function calculatePlayers(room){
   for (var i = 0; i < room.players.length; i++){
     var pose0 = room.players[i].raw_data.pose;
-    var offs0 = room.players[i].raw_data.offset;
+    
     if (pose0 == null){
       continue;
     }
-    room.players[i].pose = {}
-    for (var k in pose0){
-      room.players[i].pose[k] = v3.add(pose0[k], offs0);
-    }
+    var ret = extractPoseOffset(pose0);
+    
+    room.players[i].pose = ret.pose;
+    room.players[i].offset = ret.offset;
   } 
 }
 

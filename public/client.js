@@ -1,15 +1,12 @@
 /* global describe io P5 PoseReader SpeechBubble p5*/
 
-var CANVAS_WIDTH = 640;
-var CANVAS_HEIGHT = 480;
-
 var socket;
 var room = {name:"",players:[],objects:[]};
 var P5 = window; //p5 pollutes global namespace
                  //this makes it look like that it doesn't
                  //so it feels nicer
 
-var localPlayer = {pose:null, offset:{x:CANVAS_WIDTH/2,y:0}, color:[Math.random()*255,100,255], speech:{text:"",len:0}}
+var localPlayer = {pose:null, color:[Math.random()*255,100,255], speech:{text:"",len:0}}
 var USE_SPEECH = false;
 var VIEW_ONLY = false;
 if (!window.chrome){
@@ -36,15 +33,10 @@ function warnDist(){
   
 }
 
-function calcMoveSpeed(pose){
-  return pose.nose.x * 0.4;
-}
-
-
 P5.setup = function() {
   socket = io();
 
-  P5.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+  P5.createCanvas(640, 480);
   P5.background(0);
   P5.textFont('Courier');
   
@@ -63,16 +55,8 @@ P5.setup = function() {
 }
 P5.draw = function() {
   P5.background(0);
-  localPlayer.pose = PoseReader.get_normalized()
   
-  if (localPlayer.pose != null){
-    var ret = PoseReader.extract_offset(localPlayer.pose);
-  
-    localPlayer.pose = ret.pose
-    localPlayer.offset.x += calcMoveSpeed(ret.pose);
-    localPlayer.offset.x = P5.constrain(localPlayer.offset.x, 0, CANVAS_WIDTH);
-    localPlayer.offset.y = ret.offset.y
-  }
+  localPlayer.pose = PoseReader.get_normalized();
   if (USE_SPEECH){SpeechBubble.update(localPlayer.speech);}
   socket.emit('game-update', localPlayer);
   
@@ -103,11 +87,18 @@ P5.draw = function() {
     }
   }
   
+  var local_offset = {x:0, y:0}
   for (var i = 0; i < room.players.length; i++) {
     var obj = room.players[i];
     if (obj.pose != null){
+      P5.push();
+      P5.translate(obj.offset.x, obj.offset.y);
       var col =  (socket.id == obj.id) ? [255,50] : obj.raw_data.color
       PoseReader.draw_pose(obj.pose,{color:col, stroke_weight:4});
+      P5.pop();
+      if (socket.id == obj.id){
+        local_offset = obj.offset;
+      }
     }
     if (USE_SPEECH && obj.raw_data.speech != null && obj.pose != null){
       P5.push();
@@ -119,8 +110,10 @@ P5.draw = function() {
   //P5.image(PoseReader.video, 0, 0, P5.width*0.2, P5.height*0.2);
   if (localPlayer.pose != null){
     P5.push();
-    P5.translate(localPlayer.offset.x, localPlayer.offset.y);
-    PoseReader.draw_pose(localPlayer.pose,{color:localPlayer.color})
+    P5.translate(local_offset.x, local_offset.y);
+    var ret = PoseReader.extract_offset(localPlayer.pose);
+    PoseReader.draw_pose(ret.pose,{color:localPlayer.color})
+    
     
     P5.push();
     P5.strokeWeight(4);
@@ -130,7 +123,6 @@ P5.draw = function() {
     P5.triangle(-6,0,6,0,0,10)
     
     P5.pop();
-    
     P5.pop();
   }
   warnDist();
