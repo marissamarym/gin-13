@@ -113,6 +113,8 @@ var describeRoom = {
     var room = getRoomByName(room_name)
     room.objects = []
     describeBox2DWorld(worlds[room_name],room.objects)
+    room.objects = room.objects.concat(worlds_accessory[room_name]["dots"]);
+
   },  
   
   
@@ -386,18 +388,20 @@ function freehand(room_name, kpt_name){
   var world = worlds[room_name]
   var room = getRoomByName(room_name)
   var dots = worlds_accessory[room_name]["dots"]
-  console.log(dots);
+  console.log(dots.length);
   for (var i = 0; i < room.players.length; i++){
     var pose = room.players[i].pose;
 
     if (pose == null){
       continue;
     }
+    
     var p = v3.add(pose[kpt_name],room.players[i].offset);
-    dots.push({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
+    if (length(dots) == 0 || v3.dist(d
+    dots.unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
     
   }
-  worlds_accessory[room_name]["dots"] = dots.slice(0,100);
+  worlds_accessory[room_name]["dots"] = dots.slice(0,200);
 }
   
 

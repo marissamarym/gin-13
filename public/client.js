@@ -90,8 +90,9 @@ P5.draw = function() {
     }else if (obj.name == "dot"){
       P5.push();
       P5.noStroke();
+      P5.colorMode(P5.HSB, 255);
       P5.fill.apply(this, obj.color);
-      P5.ellipse(obj.x,obj.y,10,10);
+      P5.ellipse(obj.x,obj.y,4,4);
       P5.pop()
       
     }
