@@ -113,8 +113,8 @@ var describeRoom = {
 function serverInit(){
   console.log('init');
     
-  initRoom.box_pickup("box_pickup")
-  initRoom.custom_shape("custom_shape")
+  initRoom.box_pickup("box-fling")
+  initRoom.custom_shape("custom-shapes")
   
   setInterval(serverUpdate,1000/FPS);
 }

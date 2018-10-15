@@ -1,7 +1,7 @@
 /* global describe io P5 PoseReader SpeechBubble p5*/
 
 var socket;
-var universe = {players:[],objects:[]};
+var room = {name:"",players:[],objects:[]};
 var P5 = window; //p5 pollutes global namespace
                  //this makes it look like that it doesn't
                  //so it feels nicer
@@ -46,7 +46,9 @@ P5.setup = function() {
     socket.emit('game-start', localPlayer)
   }
   socket.on('heartbeat', function(data){
-    universe = data;
+    if (data != null){
+      room = data;
+    }
   })
   
   if (VIEW_ONLY){P5.select('#status').html('VIEW ONLY - USE CHROME TO PLAY');}
@@ -58,15 +60,15 @@ P5.draw = function() {
   if (USE_SPEECH){SpeechBubble.update(localPlayer.speech);}
   socket.emit('game-update', localPlayer);
   
-  //console.log(universe);
+  // console.log(room);
   
-  for (var i = 0; i < universe.objects.length; i++) {
-    var obj = universe.objects[i];
+  for (var i = 0; i < room.objects.length; i++) {
+    var obj = room.objects[i];
     if (obj.name == "box"){
       P5.push();
       var attached = false;
-      for (var j = 0; j < universe.players.length; j++){
-        if (universe.players[j].hand.includes(obj.id)){
+      for (var j = 0; j < room.players.length; j++){
+        if (room.players[j].hand.includes(obj.id)){
           attached = true;
           break;
         }
@@ -85,8 +87,8 @@ P5.draw = function() {
     }
   }
   
-  for (var i = 0; i < universe.players.length; i++) {
-    var obj = universe.players[i];
+  for (var i = 0; i < room.players.length; i++) {
+    var obj = room.players[i];
     if (obj.pose != null){
       var col =  (socket.id == obj.id) ? [255,50] : obj.raw_data.color
       PoseReader.draw_pose(obj.pose,{color:col, stroke_weight:4});
@@ -111,6 +113,14 @@ P5.draw = function() {
     P5.pop();
   }
   warnDist();
+  
+  P5.push();
+  P5.textSize(16);
+  P5.translate(P5.width/2, 50);
+  P5.textAlign(P5.CENTER);
+  P5.fill(255,0,255)
+  P5.text("room: "+room.name, 0, 0);
+  P5.pop();
   
 }
 
