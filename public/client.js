@@ -7,7 +7,7 @@ var P5 = window; //p5 pollutes global namespace
                  //so it feels nicer
 
 var localPlayer = {pose:null, color:[Math.random()*255,100,255], speech:{text:"",len:0}}
-var USE_SPEECH = true;
+var USE_SPEECH = false;
 var VIEW_ONLY = false;
 if (!window.chrome){
   alert("Some functionalities are not supported by your browser. Please use Chrome. You'll be entering view only mode now.")

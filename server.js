@@ -71,14 +71,14 @@ function createFloorAndWall(world){
   createBox(world,CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH+20, GROUND_HEIGHT*2, true); 
 }
 
-function emptyRoomDesc(){
-  return {name:[],players:[],objects:[]}
+function emptyRoomDesc(name){
+  return {name:name,players:[],objects:[]}
 }
 
 var initRoom = {
   box_pickup:function(){var room_name = "box_pickup"
     
-    universe.push(emptyRoomDesc())
+    universe.push(emptyRoomDesc(room_name))
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
     worlds_accessory[room_name] = {"joints":[]}
     createFloorAndWall(worlds[room_name]);
@@ -88,7 +88,7 @@ var initRoom = {
   },
   custom_shape:function(){var room_name = "custom_shape"
   
-    universe.push(emptyRoomDesc())
+    universe.push(emptyRoomDesc(room_name))
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
     createFloorAndWall(worlds[room_name]);
   },
@@ -114,6 +114,7 @@ function serverUpdate(){
       continue;
     }
     calculatePlayers(universe[i]);
+    
     interact[universe[i].name]();
     worlds[universe[i].name].Step(1 / FPS, 10, 10);
     universe[i].objects = []
@@ -207,23 +208,26 @@ box_pickup:function(){
   var room  = getRoomByName("box_pickup")
   var joints = worlds_accessory["box_pickup"]["joints"]
   cooldown(world);
+  
   for (var i = 0; i < room.players.length; i++){
     var pose = room.players[i].pose;
     if (pose == null){
       continue;
     }
     var p = pose.rightWrist;
+    
     for (var b = world.m_bodyList; b; b = b.m_next) {
       for (var f = b.m_fixtureList; f; f = f.m_next) {
         if (f.m_userdata && !f.m_userdata.is_static) {
           var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
           var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
-          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width * 1.2
+          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width * 2
               && !isJointed(joints, f.m_userdata.id) 
               && joints.length < 10
               && f.m_userdata.interact_cooldown <= 0
               && room.players[i].hand.length < 1
               ){
+            console.log("pickup attempt started");
             var targ = new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER);
             b.SetPosition(new Box2D.Common.Math.b2Vec2(
               targ.x+f.m_userdata.width/PIXELS_PER_METER/2,
