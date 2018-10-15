@@ -111,6 +111,17 @@ var PoseReader = new function(){
     
   }
   
+  this.extract_offset = function(pose0){
+    var pose = {}
+    var basePos = {x:P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5), y:P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5)};
+    for (var k in pose0){
+      pose[k] = {x:(pose0[k].x-basePos.x),
+                 y:(pose0[k].y-basePos.y)
+                }
+    }
+    return {}
+  }
+  
   this.normalize = function(pose0, args){
     if (args == undefined){args = {}}
     if (args.upper_height == undefined){args.upper_height = 100}
