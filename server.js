@@ -13,7 +13,7 @@ console.log('server running')
 // GLOBALS
 //====================
 
-var universe = {rooms:[]}
+var universe = {}
 var worlds = []
 var joints = []
 var CANVAS_WIDTH = 640;
@@ -29,8 +29,6 @@ var serverTicks = 0;
 //====================
 
 var Box2D= require("./box2d");
-
-var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
 
 function createBox(world, x, y, width, height, isStatic){
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
@@ -70,19 +68,26 @@ function describeBox2DWorld(world, dest){
 function createFloorAndWall(world){
   createBox(world,-10,(CANVAS_HEIGHT-GROUND_HEIGHT)/2, 20, CANVAS_HEIGHT-GROUND_HEIGHT, true);
   createBox(world,CANVAS_WIDTH+10, (CANVAS_HEIGHT-GROUND_HEIGHT)/2, 20, CANVAS_HEIGHT-GROUND_HEIGHT, true);
-  createBox(world,CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH+20, GROUND_HEIGHT*2, true);
-  
+  createBox(world,CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH+20, GROUND_HEIGHT*2, true); 
+}
+
+function emptyRoomDesc(){
+  return {name:[],players:[],objects:[]}
 }
 
 var initRoom = {
   box_pickup:function(){
-    createFloorAndWall(world["box_pickup"]);
+    universe.push(emptyRoomDesc())
+    worlds["box_pickup"] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
+    createFloorAndWall(worlds["box_pickup"]);
     for (var i = 0; i < 4; i++){
-      createBox(world["box_pickup"],Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
+      createBox(worlds["box_pickup"],Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
     }
   },
   custom_shape:function(){
-    createFloorAndWall(world["custom_shape"]);
+    universe.push(emptyRoomDesc())
+    worlds["box_pickup"] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
+    createFloorAndWall(worlds["custom_shape"]);
   },
 }
 
@@ -90,8 +95,8 @@ var initRoom = {
 function serverInit(){
   console.log('init');
     
-  for (var k in inRoom){
-    openRoom[k]()
+  for (var k in initRoom){
+    initRoom[k]()
   }
   
   setInterval(serverUpdate,1000/FPS);
@@ -99,12 +104,18 @@ function serverInit(){
 
 
 function serverUpdate(){
-  serverTicks += 1;  
-  calculatePlayers();
-  interact();
-  world.Step(1 / FPS, 10, 10);
-  universe.objects = []
-  describeBox2DWorld();
+  serverTicks += 1;
+  
+  for (var i = 0; i < universe.length; i++){
+    if (universe[i].players.length == 0){
+      continue;
+    }
+    calculatePlayers(universe[i]);
+    interact[universe[i].name]();
+    worlds[universe[i].name].Step(1 / FPS, 10, 10);
+    universe[i].objects = []
+    describeBox2DWorld(worlds[universe[i].name], universe[i].objects);
+  }
   
   
 }
@@ -117,7 +128,7 @@ serverInit()
 
 var v3 = require('./ld-v3')
 
-function getBodyById(id){
+function getBodyById(world,id){
   for (var b = world.m_bodyList; b; b = b.m_next) {
     for (var f = b.m_fixtureList; f; f = f.m_next) {
       if (f.m_userdata && f.m_userdata.id == id) {
@@ -126,17 +137,17 @@ function getBodyById(id){
     }
   }  
 }
-function getAnotherBody(body){
+function getAnotherBody(world,body){
   for (var b = world.m_bodyList; b; b = b.m_next) {
     if (b != body){
       return b
     }
   }
 }
-function getPlayerById(id){
-  for (var i = 0; i < universe.players.length; i++){
-    if (universe.players[i].id == id){
-      return universe.players[i];
+function getPlayerById(room, id){
+  for (var i = 0; i < room.players.length; i++){
+    if (room.players[i].id == id){
+      return room.players[i];
     }
   }
 }
@@ -150,13 +161,13 @@ function isJointed(id){
 }
 
 
-function calculatePlayers(){
-  for (var i = 0; i < universe.players.length; i++){
-    var pose0 = universe.players[i].raw_data.pose;
+function calculatePlayers(room){
+  for (var i = 0; i < room.players.length; i++){
+    var pose0 = room.players[i].raw_data.pose;
     if (pose0 == null){
       continue;
     }
-    universe.players[i].pose = pose0;
+    room.players[i].pose = pose0;
   } 
 }
 
