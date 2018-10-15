@@ -228,11 +228,14 @@ function cooldown(world){
 
 function checkRoomSwitch(){
   for (var i = 0; i < universe.length; i++){
-    for (var j = 0; j < universe[i].players.length; j++){
+    for (var j = universe[i].players.length-1; j> 0; j--){
       var room = universe[i];
       var pose = room.players[i].pose;
       if (pose == null){
         continue;
+      }
+      if (pose.nose > CANVAS_WIDTH){
+        universe[j].players
       }
     }
   }
