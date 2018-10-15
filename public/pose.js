@@ -119,7 +119,7 @@ var PoseReader = new function(){
     if (args.max_x_perc == undefined){args.max_x_perc = 0.3}
     if (args.head_torso_ratio == undefined){args.head_torso_ratio = 1/3}
     if (args.ground_height == undefined){args.ground_height=20}
-    if (args.forearm_length ==
+    if (args.forearm_length == undefined){args.forearm_length = 20}
     
     var scale = args.upper_height/P5.dist(
       pose0.nose.x, pose0.nose.y , 
@@ -168,6 +168,18 @@ var PoseReader = new function(){
       pose.leftWrist.y += dis.y;
       pose.rightWrist.x += dis.x;
       pose.rightWrist.y += dis.y;
+    }
+    if (args.forearm_length != undefined){
+      function norm_forearm(side){
+        var d = P5.dist(pose[side+"Elbow"].x, pose[side+"Elbow"].y, pose[side+"Wrist"].x, pose[side+"Wrist"].y)
+        var s = args.forearm_length / d;
+        if (s > 1){
+          pose[side+"Wrist"].x = pose[side+"Elbow"].x + (pose[side+"Wrist"].x - pose[side+"Elbow"].x) * s
+          pose[side+"Wrist"].y = pose[side+"Elbow"].y + (pose[side+"Wrist"].y - pose[side+"Elbow"].y) * s
+        }
+      }
+      norm_forearm("left");
+      norm_forearm("right");
     }
     return pose
   }

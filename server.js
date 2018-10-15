@@ -1,7 +1,7 @@
 // server.js
 // where your node app starts
 
-//////////.
+///////////.
 var express = require('express'); 
 var app = express();
 var server = app.listen(process.env.PORT || 300);
@@ -390,7 +390,7 @@ function newConnection(socket){
 
 	function removePlayer(){
     for (var i = 0; i < universe.length; i++) {
-      for (var j = 0; j < universe[i].length; j++){
+      for (var j = 0; j < universe[i].players.length; j++){
         if(socket.id == universe[i].players[j].id){
           universe[i].players.splice(j, 1)
           console.log('disconnected')
