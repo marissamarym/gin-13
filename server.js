@@ -276,9 +276,10 @@ function checkRoomSwitch(){
         p.offset.x = 0;
         var next_idx = (i+1)%universe.length
         if (universe[i].players.length == 0){
-          // initRoom[universe[i].type](universe[i].name);
+          initRoom[universe[i].type](universe[i].name);
         }
         // console.log("PLAYER "+p.id+" LEFT ROOM IDX "+i);
+        p.hand = []
         universe[next_idx].players.push(p);
       }
     }
@@ -305,7 +306,7 @@ function objectPickup(room_name, kpt_name, obj_name){
         if (f.m_userdata && !f.m_userdata.is_static && f.m_userdata.name == obj_name) {
           var x = (f.m_body.m_xf.position.x * PIXELS_PER_METER);
           var y = (f.m_body.m_xf.position.y * PIXELS_PER_METER);
-          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width * 1.2
+          if (v3.dist({x:x,y:y}, p) < f.m_userdata.width * 1.6
               && !isJointed(joints, f.m_userdata.id) 
               && joints.length < 10
               && f.m_userdata.interact_cooldown <= 0
