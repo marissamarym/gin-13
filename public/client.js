@@ -1,5 +1,8 @@
 /* global describe io P5 PoseReader SpeechBubble p5*/
 
+var CANVAS_WIDTH = 640;
+var CANVAS_HEIGHT = 480;
+
 var socket;
 var room = {name:"",players:[],objects:[]};
 var P5 = window; //p5 pollutes global namespace
@@ -36,7 +39,7 @@ function warnDist(){
 P5.setup = function() {
   socket = io();
 
-  P5.createCanvas(640, 480);
+  P5.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
   P5.background(0);
   P5.textFont('Courier');
   
@@ -135,6 +138,12 @@ P5.draw = function() {
   P5.text("room: "+room.name, 0, 0);
   P5.pop();
   
+  P5.push();
+  P5.noFill();
+  P5.stroke(255,0,0);
+  P5.strokeWeight(4);
+  P5.rect(CANVAS_WIDTH-10,CANVAS_HEIGHT/2-10,20,20);
+  P5.pop();
 }
 
 

@@ -257,8 +257,9 @@ function checkRoomSwitch(){
       if (pose == null){
         continue;
       }
+      var p = v3.add(pose.rightWrist,offset);
       // console.log(offset)
-      if (offset.x > CANVAS_WIDTH-10){
+      if (v3.dist(p, {x:CANVAS_WIDTH, y:CANVAS_HEIGHT/2}) <= 20){
         
         var p = room.players.splice(j,1)[0];
         p.offset.x = 0;
