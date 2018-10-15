@@ -13,7 +13,8 @@ console.log('server running')
 // GLOBALS
 //====================
 
-var universe = {players:[], objects:[]}
+var universe = {rooms:[]}
+var worlds = []
 var joints = []
 var CANVAS_WIDTH = 640;
 var CANVAS_HEIGHT = 480;
@@ -31,7 +32,7 @@ var Box2D= require("./box2d");
 
 var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
 
-function createBox(x, y, width, height, isStatic){
+function createBox(world, x, y, width, height, isStatic){
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
 	bodyDef.type = isStatic ? Box2D.Dynamics.b2Body.b2_staticBody : Box2D.Dynamics.b2Body.b2_dynamicBody;
 	bodyDef.position.x = x / PIXELS_PER_METER;
@@ -49,7 +50,7 @@ function createBox(x, y, width, height, isStatic){
                      id:Math.floor(Math.random()*10000),interact_cooldown:0}
   return body;
 }
-function describeBox2DWorld(){
+function describeBox2DWorld(world, dest){
   for (var b = world.m_bodyList; b; b = b.m_next) {
     for (var f = b.m_fixtureList; f; f = f.m_next) {
       if (f.m_userdata) {
@@ -59,22 +60,40 @@ function describeBox2DWorld(){
         var name = f.m_userdata.name;
         var w = f.m_userdata.width;
         var h = f.m_userdata.height;
-        universe.objects.push({name:name, x:x, y:y, width:w, height:h, rotation:r, 
-                               id:f.m_userdata.id, is_static:f.m_userdata.is_static})
+        dest.push({name:name, x:x, y:y, width:w, height:h, rotation:r, 
+                   id:f.m_userdata.id, is_static:f.m_userdata.is_static})
       }
     }
   }
 }
 
+function createFloorAndWall(world){
+  createBox(world,-10,(CANVAS_HEIGHT-GROUND_HEIGHT)/2, 20, CANVAS_HEIGHT-GROUND_HEIGHT, true);
+  createBox(world,CANVAS_WIDTH+10, (CANVAS_HEIGHT-GROUND_HEIGHT)/2, 20, CANVAS_HEIGHT-GROUND_HEIGHT, true);
+  createBox(world,CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH+20, GROUND_HEIGHT*2, true);
+  
+}
+
+var initRoom = {
+  box_pickup:function(){
+    createFloorAndWall(world["box_pickup"]);
+    for (var i = 0; i < 4; i++){
+      createBox(world["box_pickup"],Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
+    }
+  },
+  custom_shape:function(){
+    createFloorAndWall(world["custom_shape"]);
+  },
+}
+
+
 function serverInit(){
   console.log('init');
-  
-  createBox(-10,(CANVAS_HEIGHT-GROUND_HEIGHT)/2, 20, CANVAS_HEIGHT-GROUND_HEIGHT, true);
-  createBox(CANVAS_WIDTH+10, (CANVAS_HEIGHT-GROUND_HEIGHT)/2, 20, CANVAS_HEIGHT-GROUND_HEIGHT, true);
-  createBox(CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH+20, GROUND_HEIGHT*2, true);
-  for (var i = 0; i < 4; i++){
-    createBox(Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
+    
+  for (var k in inRoom){
+    openRoom[k]()
   }
+  
   setInterval(serverUpdate,1000/FPS);
 }
 
