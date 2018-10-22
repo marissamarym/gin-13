@@ -131,6 +131,7 @@ var PoseReader = new function(){
     if (args.head_torso_ratio == undefined){args.head_torso_ratio = 1/3}
     if (args.ground_height == undefined){args.ground_height=20}
     if (args.forearm_length == undefined){args.forearm_length = 10}
+    if (args.thinner == undefined){args.thinner = 0.8}
     
     var scale = args.upper_height/P5.dist(
       pose0.nose.x, pose0.nose.y , 
@@ -143,6 +144,7 @@ var PoseReader = new function(){
     }else{
       xscale = 1;
     }
+    xscale *= args.thinner;
     var basePos = {x:P5.lerp(pose0.leftHip.x, pose0.rightHip.x,0.5), y:P5.lerp(pose0.leftHip.y, pose0.rightHip.y,0.5)};
     var pose = {};
     for (var k in pose0){
@@ -296,12 +298,7 @@ var PoseReader = new function(){
   
     
   this._draw_head_v2 = function(pose){
-    var ang = P5.atan2(pose.leftEar.y-pose.rightEar.y,pose.leftEar.x-pose.rightEar.x);
-    var r = P5.dist(pose.leftEar.x,pose.leftEar.y,pose.rightEar.x,pose.rightEar.y);
-    P5.arc((pose.leftEar.x+pose.rightEar.x)/2, (pose.leftEar.y+pose.rightEar.y)/2, r,r, ang, ang+P5.PI);
-    var neck = {x:(pose.leftShoulder.x + pose.rightShoulder.x)/2, y:(pose.leftShoulder.y + pose.rightShoulder.y)/2,}
-    P5.line(pose.leftEar.x,pose.leftEar.y,neck.x,neck.y);
-    P5.line(pose.rightEar.x,pose.rightEar.y,neck.x,neck.y);
+
   }
   
   this.draw_pose_v2 = function(pose, args) {
@@ -320,8 +317,12 @@ var PoseReader = new function(){
     
     P5.noFill();
 
+    var neck = {x:(pose.leftShoulder.x + pose.rightShoulder.x)/2, y:(pose.leftShoulder.y + pose.rightShoulder.y)/2,}
     
-    this._draw_bones(pose.leftShoulder, pose.rightShoulder, pose.rightHip, pose.leftHip, pose.leftShoulder);
+    this._draw_bones(neck,pose.leftHip,pose.rightHip,neck);
+    this._draw_bones(pose.leftShoulder,pose.rightShoulder);
+    
+    // this._draw_bones(pose.leftShoulder, pose.rightShoulder, pose.rightHip, pose.leftHip, pose.leftShoulder);
     // this._draw_bones(pose.leftShoulder, pose.rightHip);
     // this._draw_bones(pose.rightShoulder, pose.leftHip);
     
@@ -333,11 +334,11 @@ var PoseReader = new function(){
     
     this._draw_head_v2(pose);
     
+    P5.rect(pose.leftAnkle.x-10,pose.leftAnkle.y-10,10,10);
+    P5.rect(pose.rightAnkle.x-10,pose.rightAnkle.y-10,10,10);
+    
     var s = this.estimate_scale(pose);
     
-    P5.fill(0);
-    P5.ellipse(pose.leftEye.x, pose.leftEye.y, s*0.3, s*0.3);
-    P5.ellipse(pose.rightEye.x, pose.rightEye.y, s*0.3, s*0.3);
     P5.pop();
   }
 }
