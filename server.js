@@ -95,8 +95,8 @@ var initRoom = {
       createBox(worlds[room_name],Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
     }
   },
-  custom_shape:function(room_name){
-    createRoomIfEmpty(room_name,"custom_shape")
+  collab_canvas:function(room_name){
+    createRoomIfEmpty(room_name,"collab_canvas")
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
     createFloorAndWall(worlds[room_name]);
     worlds_accessory[room_name] = {"dots":[]}
@@ -109,7 +109,7 @@ var describeRoom = {
     room.objects = []
     describeBox2DWorld(worlds[room_name],room.objects)
   },
-  custom_shape:function(room_name){
+  collab_canvas:function(room_name){
     var room = getRoomByName(room_name)
     room.objects = []
     describeBox2DWorld(worlds[room_name],room.objects)
@@ -125,7 +125,7 @@ function serverInit(){
   console.log('init');
     
   initRoom.box_pickup("box-fling")
-  initRoom.custom_shape("custom-shapes")
+  initRoom.collab_canvas("collab-canvas")
   
   setInterval(serverUpdate,1000/FPS);
 }
@@ -372,7 +372,7 @@ function objectPickup(room_name, kpt_name, obj_name){
     joint.SetTarget(new Box2D.Common.Math.b2Vec2(p.x/PIXELS_PER_METER, p.y/PIXELS_PER_METER));
     var reactionForce = joint.GetReactionForce(FPS);
     var forceModuleSq = reactionForce.LengthSquared();
-    var maxForceSq = obj.GetMass()*20000;
+    var maxForceSq = obj.GetMass()*12000;
     if(forceModuleSq > maxForceSq){
       
       player.hand.splice(player.hand.indexOf(joints[j].object_id),1);
@@ -419,7 +419,7 @@ box_pickup:function(room_name){
   objectPickup(room_name, "leftWrist", "box")
   objectPickup(room_name, "rightWrist", "box")
 },
-custom_shape:function(room_name){
+collab_canvas:function(room_name){
   freehand(room_name,"rightWrist");
   
 }
