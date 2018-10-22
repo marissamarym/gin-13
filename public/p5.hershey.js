@@ -76,7 +76,7 @@ P5.hershey={
     for (var i = 0; i < s.length; i++){
       var entry;
       if (args.font == FONT_HERSHEY.HEITI){
-        entry = FONT_HERSHEY.DATA[s[i].charCodeAt(0)];
+        entry = FONT_HERSHEY.HEITI[s[i].charCodeAt(0)];
       }else{
         var offs = args.font[s[i].charCodeAt(0)-32]
         entry = FONT_HERSHEY.DATA[offs];
