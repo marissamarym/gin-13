@@ -11,6 +11,7 @@ body {
 canvas {
   transform-origin: top center;
   transform: scale(1.5);
+  image-rendering: optimizeSpeed;
 }
 video {
   transform-origin: top right;

@@ -96,7 +96,7 @@ P5.draw = function() {
       }else{
         P5.stroke(0,255,255);
       }
-      P5.strokeWeight(2);
+      P5.strokeWeight(1);
       P5.noFill();
       P5.translate(obj.x,obj.y);
       P5.rotate(obj.rotation);
@@ -119,7 +119,7 @@ P5.draw = function() {
       if (next_dot != undefined){
   
         P5.stroke.apply(this, obj.color);
-        P5.strokeWeight(2);
+        P5.strokeWeight(1);
         P5.noFill()
         P5.line(obj.x,obj.y,next_dot.x,next_dot.y);
         
@@ -135,7 +135,7 @@ P5.draw = function() {
       P5.push();
       P5.translate(obj.offset.x, obj.offset.y);
       var col =  (socket.id == obj.id) ? [255,50] : obj.raw_data.color
-      PoseReader.draw_pose_v2(obj.pose,{color:col, stroke_weight:2});
+      PoseReader.draw_pose_v2(obj.pose,{color:col, stroke_weight:1});
       P5.pop();
       if (socket.id == obj.id){
         local_offset = obj.offset;
@@ -157,7 +157,7 @@ P5.draw = function() {
     
     
     P5.push();
-    P5.strokeWeight(2);
+    P5.strokeWeight(1);
     P5.stroke(255);
     P5.noFill();
     P5.translate(0, -250);
@@ -181,10 +181,12 @@ P5.draw = function() {
   P5.push();
   P5.noFill();
   P5.stroke(255,0,0);
-  P5.strokeWeight(2);
+  P5.strokeWeight(1);
   P5.rect(CANVAS_WIDTH-10,CANVAS_HEIGHT/2-10,20,20);
   P5.pop();
-  P5.filter(P5.BLUR, 3);
+  
+  
+  // var canv = document.getElementById("defaultCanvas0");
   
 }
 
