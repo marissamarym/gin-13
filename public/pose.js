@@ -294,11 +294,20 @@ var PoseReader = new function(){
     
   }
   
+    
+  this._draw_head_v2 = function(pose){
+    var ang = P5.atan2(pose.leftEar.y-pose.rightEar.y,pose.leftEar.x-pose.rightEar.x);
+    var r = P5.dist(pose.leftEar.x,pose.leftEar.y,pose.rightEar.x,pose.rightEar.y);
+    P5.arc((pose.leftEar.x+pose.rightEar.x)/2, (pose.leftEar.y+pose.rightEar.y)/2, r,r, ang, ang+P5.PI);
+    var neck = {x:(pose.leftShoulder.x + pose.rightShoulder.x)/2, y:(pose.leftShoulder.y + pose.rightShoulder.y)/2,}
+    P5.line(pose.leftEar.x,pose.leftEar.y,neck.x,neck.y);
+    P5.line(pose.rightEar.x,pose.rightEar.y,neck.x,neck.y);
+  }
+  
   this.draw_pose_v2 = function(pose, args) {
     if (args == undefined){args = {}}
     if (args.color == undefined){args.color = [255,255,255]}
     if (args.stroke_weight == undefined){args.stroke_weight = 2}
-    
     
     
     P5.push();
@@ -307,22 +316,22 @@ var PoseReader = new function(){
     P5.stroke.apply(this, args.color);
     P5.strokeWeight(args.stroke_weight);
     
-    P5.strokeJoin(P5.ROUND);
+    P5.strokeJoin(P5.MITER);
     
     P5.noFill();
 
     
-    // this._draw_bones(pose.leftShoulder, pose.rightShoulder, pose.rightHip, pose.leftHip, pose.leftShoulder);
-    this._draw_bones(pose.leftShoulder, pose.rightHip);
-    this._draw_bones(pose.rightShoulder, pose.leftHip);
+    this._draw_bones(pose.leftShoulder, pose.rightShoulder, pose.rightHip, pose.leftHip, pose.leftShoulder);
+    // this._draw_bones(pose.leftShoulder, pose.rightHip);
+    // this._draw_bones(pose.rightShoulder, pose.leftHip);
     
-    this._draw_curved(pose.leftShoulder, pose.leftElbow, pose.leftWrist);
-    this._draw_curved(pose.rightShoulder, pose.rightElbow, pose.rightWrist);
+    this._draw_bones(pose.leftShoulder, pose.leftElbow, pose.leftWrist);
+    this._draw_bones(pose.rightShoulder, pose.rightElbow, pose.rightWrist);
 
-    this._draw_curved(pose.leftHip, pose.leftKnee, pose.leftAnkle);
-    this._draw_curved(pose.rightHip, pose.rightKnee, pose.rightAnkle);
+    this._draw_bones(pose.leftHip, pose.leftKnee, pose.leftAnkle);
+    this._draw_bones(pose.rightHip, pose.rightKnee, pose.rightAnkle);
     
-    this._draw_head(pose);
+    this._draw_head_v2(pose);
     
     var s = this.estimate_scale(pose);
     

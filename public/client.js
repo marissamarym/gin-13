@@ -187,12 +187,13 @@ P5.draw = function() {
   
   
   var canv = document.getElementById("defaultCanvas0");
-  var scale = window.innerHeight/P5.height;
-  var scale_str = "scale("+scale+");";
-  // while(canv.style.transform != scale_str){
-    canv.style.transform = scale_str;
-    console.log(canv.style.transform);
-  // }
+  var ctx = canv.getContext('2d');
+  var imgData=ctx.getImageData(0,0,P5.width,P5.height);
+  
+  var scale = 0.9*window.innerHeight/P5.height;
+  var scale_str = "scale("+scale+")";
+  canv.style.transform = scale_str;
+  console.log(canv.style.transform);
   
 }
 

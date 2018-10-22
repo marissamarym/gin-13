@@ -67,7 +67,7 @@ function describeBox2DWorld(world, dest){
 
 function createFloorAndWall(world){
   createBox(world,-10,(CANVAS_HEIGHT-GROUND_HEIGHT)/2, 20, CANVAS_HEIGHT-GROUND_HEIGHT, true);
-  createBox(world,CANVAS_WIDTH+10, (CANVAS_HEIGHT-GROUND_HEIGHT)/2, 20, CANVAS_HEIGHT-GROUND_HEIGHT, true);
+  createBox(world,CANVAS_WIDTH+9, (CANVAS_HEIGHT-GROUND_HEIGHT)/2, 20, CANVAS_HEIGHT-GROUND_HEIGHT, true);
   createBox(world,CANVAS_WIDTH/2,CANVAS_HEIGHT,CANVAS_WIDTH+20, GROUND_HEIGHT*2, true); 
 }
 
