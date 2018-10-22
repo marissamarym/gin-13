@@ -10,7 +10,7 @@ var P5 = window; //p5 pollutes global namespace
                  //so it feels nicer
 
 var localPlayer = {pose:null, color:[Math.random()*255,100,255], speech:{text:"",len:0}}
-var USE_SPEECH = false;
+var USE_SPEECH = true;
 var VIEW_ONLY = false;
 if (!window.chrome){
   alert("Some functionalities are not supported by your browser. Please use Chrome. You'll be entering view only mode now.")
@@ -144,7 +144,7 @@ P5.draw = function() {
     }
     if (USE_SPEECH && obj.raw_data.speech != null && obj.pose != null){
       P5.push();
-      P5.translate(obj.pose.nose.x, obj.pose.nose.y-60);
+      P5.translate(obj.offset.x+obj.pose.nose.x, obj.offset.y+obj.pose.nose.y-60);
       SpeechBubble.draw_speech(obj.raw_data.speech);
       P5.pop();
     }

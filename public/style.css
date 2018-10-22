@@ -5,7 +5,7 @@ body {
   font-family: "Courier", monospace;
   margin: 2em;
   background-color:black;
-  color:cyan;
+  color:grey;
   text-align:center;
 }
 canvas {

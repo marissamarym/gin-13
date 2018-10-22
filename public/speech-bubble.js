@@ -19,7 +19,7 @@ var SpeechBubble = new function(){
         if (speech.text.indexOf(result) == -1
         &&  this.recognizer.resultString.length > 0){
           speech.text = result;
-          speech.len = result.length*4;
+          speech.len = result.length*8;
         }else{
           speech.len = speech.text.length*4;
         }
@@ -33,20 +33,21 @@ var SpeechBubble = new function(){
   }
   this.draw_speech = function(speech, args){
     if (args == undefined){args = {}}
-    if (args.color == undefined){args.color = [255,255,0]}
-    if (args.stroke_weight == undefined){args.stroke_weight = 2}
+    if (args.color == undefined){args.color = [255,255,255]}
+    if (args.stroke_weight == undefined){args.stroke_weight = 1}
     
     P5.push();
-    P5.textSize(16);
-    P5.textAlign(P5.LEFT);
-    P5.textFont("Courier");
+    // P5.textSize(16);
+    // P5.textAlign(P5.LEFT);
+    // P5.textFont("Courier");
     
     var t = speech.text.slice(0,Math.ceil(speech.len))
     if (t.length == 0){
       P5.pop();
       return;
     }
-    var w = P5.textWidth(t);
+    // var w = P5.textWidth(t);
+    var w = P5.hershey.estimateTextWidth(t)*0.5;
     var h = 30
     var dx = 5
     var dy = -30
@@ -66,9 +67,13 @@ var SpeechBubble = new function(){
     P5.arc(w,0,h,h,-P5.HALF_PI,P5.HALF_PI)
     P5.line(0,-h/2,w,-h/2);
     P5.line(o,h/2,w,h/2);
-    P5.fill.apply(this, args.color);
-    P5.noStroke();
-    P5.text(t, 0, +5);
+    P5.stroke.apply(this, args.color);
+    P5.noFill();
+    P5.strokeWeight(args.stroke_weight*2);
+    // P5.translate(0,5);
+    P5.scale(0.5);
+    // P5.text(t, 0, +5);
+    P5.hershey.putText(t,{noise:0.8});
     P5.pop()
     
     P5.pop();
