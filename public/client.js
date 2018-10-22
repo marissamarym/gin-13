@@ -153,7 +153,7 @@ P5.draw = function() {
     P5.push();
     P5.translate(local_offset.x, local_offset.y);
     var ret = PoseReader.extract_offset(localPlayer.pose);
-    PoseReader.draw_pose_v2(ret.pose,{color:localPlayer.color})
+    PoseReader.draw_pose_v2(ret.pose,{color:localPlayer.color,stroke_weight:1})
     
     
     P5.push();
@@ -186,7 +186,13 @@ P5.draw = function() {
   P5.pop();
   
   
-  // var canv = document.getElementById("defaultCanvas0");
+  var canv = document.getElementById("defaultCanvas0");
+  var scale = window.innerHeight/P5.height;
+  var scale_str = "scale("+scale+");";
+  // while(canv.style.transform != scale_str){
+    canv.style.transform = scale_str;
+    console.log(canv.style.transform);
+  // }
   
 }
 
