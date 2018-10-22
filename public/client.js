@@ -22,14 +22,17 @@ function warnDist(){
     var d = P5.dist(PoseReader.get().leftShoulder.x,PoseReader.get().leftShoulder.y,
                     PoseReader.get().rightShoulder.x,PoseReader.get().rightShoulder.y);
     P5.push();
-    P5.textSize(16);
-    P5.translate(P5.width/2, P5.height);
-    P5.textAlign(P5.CENTER);
-    P5.fill(255)
+
+    P5.translate(P5.width/2, P5.height-10);
+
+    P5.stroke(255);
+    P5.noFill();
+    P5.strokeWeight(2);
+    P5.scale(0.5);
     if (d > P5.width*0.5){
-      P5.text("SHOW YOUR LIMBS!", 0, 0);
+      P5.hershey.putText("SHOW YOUR LIMBS!", {align:"center"});
     }else if (d > P5.width*0.3){
-      P5.text("JUST A BIT FURTHER!", 0, 0);
+      P5.hershey.putText("JUST A BIT FURTHER!", {align:"center"});
     }
     P5.pop();
   }  
@@ -166,11 +169,13 @@ P5.draw = function() {
   warnDist();
   
   P5.push();
-  P5.textSize(16);
+  P5.strokeWeight(2);
   P5.translate(P5.width/2, 50);
-  P5.textAlign(P5.CENTER);
-  P5.fill(255,0,255)
-  P5.text("room: "+room.name, 0, 0);
+  P5.scale(0.5);
+  P5.stroke(255,0,255);
+  P5.noFill();
+  
+  P5.hershey.putText("room: "+room.name,{align:"center",noise:10});
   P5.pop();
   
   P5.push();
@@ -181,16 +186,6 @@ P5.draw = function() {
   P5.pop();
   
   
-  P5.push();
-  P5.stroke(255);
-  P5.strokeWeight(1);
-  P5.noFill();
-  P5.translate(P5.width/2,P5.height/2);
-  P5.rect(-1,-1,1,1);
-  // P5.scale(10);
-  P5.hershey.putText("HELLO WORLD!");
-  
-  P5.pop();
 }
 
 

@@ -2,20 +2,26 @@
 var P5 = window;
 
 P5.hershey={
-  putChar : function(c,args){
-    if (args == undefined){args = {}}
-    if (args.font == undefined){args.font = FONT_HERSHEY.SIMPLEX}
-    if (args.noise == undefined){args.noise = 2}
+  parseBound : function(entry){
     var ordR = "R".charCodeAt(0);
-    var offs = args.font[""+c.charCodeAt(0)-32]
-    var entry = FONT_HERSHEY.DATA[offs];
-    if (entry == undefined){
-      return;
-    }
-    var cksum = 1*entry.slice(0,3);
     var bound = entry.slice(3,5);
     var xmin = 1*bound[0].charCodeAt(0)-ordR;
     var xmax = 1*bound[1].charCodeAt(0)-ordR;
+    return [xmin,xmax]
+  },
+  
+  putChar : function(c,args){
+    if (args == undefined){args = {}}
+    if (args.font == undefined){args.font = FONT_HERSHEY.SIMPLEX}
+    if (args.noise == undefined){args.noise = 0}
+    var ordR = "R".charCodeAt(0);
+    var offs = args.font[c.charCodeAt(0)-32]
+    var entry = FONT_HERSHEY.DATA[offs];
+    if (entry == undefined){
+      return 0;
+    }
+    var cksum = 1*entry.slice(0,3);
+    var [xmin,xmax] = P5.hershey.parseBound(entry);
     var content = entry.slice(5);
     P5.push();
     P5.translate(-xmin,0);
@@ -40,7 +46,15 @@ P5.hershey={
     return xmax-xmin;
   },
   putText : function (s, args){
+    if (args == undefined){args = {}}
+    if (args.align == undefined){args.align = "left"};
     P5.push();
+    if (args.align == "left"){
+    }else if (args.align == "center"){
+      P5.translate(-P5.hershey.estimateTextWidth(s,args)/2,0);
+    }else if (args.align == "right"){
+      P5.translate(-P5.hershey.estimateTextWidth(s,args),0);
+    }
     for (var i = 0; i < s.length; i++){
       var x = P5.hershey.putChar(s[i],args);
       P5.translate(x,0);
@@ -48,6 +62,18 @@ P5.hershey={
     P5.pop();
   },
   estimateTextWidth : function (s, args){
-    for (var i 
+    if (args == undefined){args = {}}
+    if (args.font == undefined){args.font = FONT_HERSHEY.SIMPLEX};
+    var sum = 0;
+    for (var i = 0; i < s.length; i++){
+      var offs = args.font[s[i].charCodeAt(0)-32];
+      var entry = FONT_HERSHEY.DATA[offs];
+      if (entry == undefined){
+        return 0;
+      }
+      var [xmin,xmax] = P5.hershey.parseBound(entry);
+      sum += (xmax-xmin)
+    }
+    return sum;
   }
 }
