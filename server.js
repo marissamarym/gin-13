@@ -394,7 +394,7 @@ function freehand(room_name, kpt_name){
   var world = worlds[room_name]
   var room = getRoomByName(room_name)
   var dots = worlds_accessory[room_name]["dots"]
-  console.log(dots.length);
+  // console.log(dots.length);
   for (var i = 0; i < room.players.length; i++){
     var pose = room.players[i].pose;
 

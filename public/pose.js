@@ -312,7 +312,7 @@ var PoseReader = new function(){
     P5.noFill();
 
     
-    this._draw_bones(pose.leftShoulder, pose.rightShoulder, pose.rightHip, pose.leftHip, pose.leftShoulder);
+    // this._draw_bones(pose.leftShoulder, pose.rightShoulder, pose.rightHip, pose.leftHip, pose.leftShoulder);
     this._draw_bones(pose.leftShoulder, pose.rightHip);
     this._draw_bones(pose.rightShoulder, pose.leftHip);
     
