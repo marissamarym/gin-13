@@ -160,7 +160,7 @@ P5.draw = function() {
     P5.strokeWeight(4);
     P5.stroke(255);
     P5.noFill();
-    P5.translate(localPlayer.pose.nose.x, 150);
+    P5.translate(ret.pose.nose.x, 150);
     P5.triangle(-6,0,6,0,0,10)
     
     P5.pop();

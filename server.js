@@ -240,7 +240,12 @@ function calculatePlayers(room){
       room.players[i].offset = {x:CANVAS_WIDTH/2, y:0};
       console.log("reset");
     }
-    var spd = ret.pose.nose.x *0.3
+    var spd = 0;
+    if (ret.pose.nose.x > 0){
+      spd = Math.max(ret.pose.nose.x-10,0) *0.3
+    }else{
+      spd = Math.min(ret.pose.nose.x+10,0) *0.3
+    }
 
     room.players[i].offset.x = Math.min(Math.max(room.players[i].offset.x+spd, 0), CANVAS_WIDTH);
     room.players[i].offset.y = ret.offset.y;

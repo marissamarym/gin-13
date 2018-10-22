@@ -271,22 +271,21 @@ var PoseReader = new function(){
       if (j == 0){p0 = P[j];}else{p0 = this._midpt(P[j],P[j+1]);}
       p1 = P[j+1];
       if (j == P.length-3){p2 = P[j+2];}else{p2 = this._midpt(P[j+1],P[j+2]);}
-      var pl = 20;
+      var pl = 5;
       for (var i = 0; i < pl+(j==P.length-3); i+= 1){
         var t = i/pl;
         var u = (Math.pow (1 - t, 2) + 2 * t * (1 - t) * w + t * t);
-        console.log(t,u,p0,p1,p2);
         plist.push({
-          x:(Math.pow(1-t,2)*p0[0]+2*t*(1-t)*p1[0]*w+t*t*p2[0])/u,
-          y:(Math.pow(1-t,2)*p0[1]+2*t*(1-t)*p1[1]*w+t*t*p2[1])/u,
-          z:(Math.pow(1-t,2)*p0[2]+2*t*(1-t)*p1[2]*w+t*t*p2[2])/u});
+          x:(Math.pow(1-t,2)*p0.x+2*t*(1-t)*p1.x*w+t*t*p2.x)/u,
+          y:(Math.pow(1-t,2)*p0.y+2*t*(1-t)*p1.y*w+t*t*p2.y)/u,
+          z:(Math.pow(1-t,2)*p0.z+2*t*(1-t)*p1.z*w+t*t*p2.z)/u});
       }
     }
     return plist;
   }
   
   this._draw_curved = function(){
-    var bez = this._bezier(arguments);
+    var bez = this._bezier(arguments,3);
     P5.beginShape();
     for (var i = 0; i < bez.length; i++){
       P5.vertex(bez[i].x,bez[i].y);
@@ -314,12 +313,14 @@ var PoseReader = new function(){
 
     
     this._draw_bones(pose.leftShoulder, pose.rightShoulder, pose.rightHip, pose.leftHip, pose.leftShoulder);
+    this._draw_bones(pose.leftShoulder, pose.rightHip);
+    this._draw_bones(pose.rightShoulder, pose.leftHip);
     
     this._draw_curved(pose.leftShoulder, pose.leftElbow, pose.leftWrist);
     this._draw_curved(pose.rightShoulder, pose.rightElbow, pose.rightWrist);
 
-    this._draw_bones(pose.leftHip, pose.leftKnee, pose.leftAnkle);
-    this._draw_bones(pose.rightHip, pose.rightKnee, pose.rightAnkle);
+    this._draw_curved(pose.leftHip, pose.leftKnee, pose.leftAnkle);
+    this._draw_curved(pose.rightHip, pose.rightKnee, pose.rightAnkle);
     
     this._draw_head(pose);
     
