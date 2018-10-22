@@ -296,7 +296,20 @@ var PoseReader = new function(){
   
     
   this._draw_head_v2 = function(pose){
-    
+    var ang = P5.atan2(pose.leftEar.y-pose.rightEar.y,pose.leftEar.x-pose.rightEar.x);
+    var r = P5.dist(pose.leftEar.x,pose.leftEar.y,pose.rightEar.x,pose.rightEar.y);
+    // P5.arc((pose.leftEar.x+pose.rightEar.x)/2, (pose.leftEar.y+pose.rightEar.y)/2, r,r, 0, P5.PI*1.99);
+    P5.push();
+    P5.translate((pose.leftEar.x+pose.rightEar.x)/2, (pose.leftEar.y+pose.rightEar.y)/2);
+    P5.beginShape();
+    var reso = 20;
+    for (var i = 0; i < reso; i++){
+      var a = (i/(reso-1))*2*P5.PI;
+      var rr = r*(0.2+0.8*P5.noise(a%(P5.PI*2),P5.frameCount*0.5))*0.8;
+      P5.vertex(Math.cos(a)*rr,Math.sin(a)*rr);
+    }
+    P5.endShape();
+    P5.pop();
   }
   
   this._draw_hand_v2 = function(pose,side){
