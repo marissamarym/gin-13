@@ -299,16 +299,28 @@ var PoseReader = new function(){
     var ang = P5.atan2(pose.leftEar.y-pose.rightEar.y,pose.leftEar.x-pose.rightEar.x);
     var r = P5.dist(pose.leftEar.x,pose.leftEar.y,pose.rightEar.x,pose.rightEar.y);
     // P5.arc((pose.leftEar.x+pose.rightEar.x)/2, (pose.leftEar.y+pose.rightEar.y)/2, r,r, 0, P5.PI*1.99);
+    var p0 = {x:(pose.leftEar.x+pose.rightEar.x)/2, y:(pose.leftEar.y+pose.rightEar.y)/2}
     P5.push();
-    P5.translate((pose.leftEar.x+pose.rightEar.x)/2, (pose.leftEar.y+pose.rightEar.y)/2);
+    P5.translate(p0.x,p0.y);
     P5.beginShape();
-    var reso = 20;
+    var reso = 8;
+    var rr = r * 0.6;
     for (var i = 0; i < reso; i++){
-      var a = (i/(reso-1))*2*P5.PI;
-      var rr = r*(0.2+0.8*P5.noise(a%(P5.PI*2),P5.frameCount*0.5))*0.8;
+      var a = (i/(reso-1))*2*P5.PI+P5.frameCount*0.1;
+      // var rr = r*(0.2+0.8*P5.noise(a%(P5.PI*2),P5.frameCount*0.5))*0.8;
+      
       P5.vertex(Math.cos(a)*rr,Math.sin(a)*rr);
     }
     P5.endShape();
+  
+    function draw_eye(side){
+      var p = pose[side+"Eye"];
+      var a = P5.atan2(p.y-p0.y,p.x-p0.x)
+      var pr = P5.min(P5.dist(p0.x,p0.y,p.x,p.y),rr);
+      P5.ellipse(pr*P5.cos(a), p0.y+pr*P5.sin(a), 2,2);
+    }
+    draw_eye("left");
+    draw_eye("right");
     P5.pop();
   }
   
@@ -322,6 +334,7 @@ var PoseReader = new function(){
     P5.line(-5,0,3,8*(side == "right"? -1 : 1));
     P5.rect(-5,-2,15,4);
     P5.pop();
+    
   }
   
   this.draw_pose_v2 = function(pose, args) {
@@ -373,6 +386,7 @@ var PoseReader = new function(){
     this._draw_hand_v2(pose,"left")
     this._draw_hand_v2(pose,"right")
     var s = this.estimate_scale(pose);
+    
     
     P5.pop();
   }
