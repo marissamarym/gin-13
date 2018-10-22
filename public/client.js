@@ -93,7 +93,7 @@ P5.draw = function() {
         }
       }
       if (attached){
-        P5.stroke(0,255,255);
+        P5.stroke(255,0,0);
       }else{
         P5.stroke(255);
       }
