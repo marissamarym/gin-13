@@ -179,6 +179,17 @@ P5.draw = function() {
   P5.strokeWeight(4);
   P5.rect(CANVAS_WIDTH-10,CANVAS_HEIGHT/2-10,20,20);
   P5.pop();
+  
+  
+  P5.push();
+  P5.stroke(255);
+  P5.noFill();
+  P5.translate(P5.width/2,P5.height/2);
+  P5.rect(-20,-20,20,20);
+  P5.scale(10);
+  P5.hershey.drawChr("A");
+  
+  P5.pop();
 }
 
 
