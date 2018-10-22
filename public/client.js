@@ -183,6 +183,7 @@ P5.draw = function() {
   
   P5.push();
   P5.stroke(255);
+  P5.strokeWeight(1);
   P5.noFill();
   P5.translate(P5.width/2,P5.height/2);
   P5.rect(-1,-1,1,1);
