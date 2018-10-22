@@ -26,6 +26,7 @@ P5.hershey={
     P5.push();
     P5.translate(-xmin,0);
     P5.beginShape();
+    console.log(entry);
     for (var i = 0; i < content.length; i+=2){
       var digit = content.slice(i,i+2);
       if (digit == " R"){
@@ -35,8 +36,9 @@ P5.hershey={
         var x = digit[0].charCodeAt(0)-ordR;
         var y = digit[1].charCodeAt(0)-ordR;
         if (args.noise != 0){
-          x += P5.noise(x*0.1,y*0.1,P5.frameCount*0.1+offs)*args.noise;
-          y += P5.noise(P5.frameCount*0.1+offs,y*0.1,x*0.1)*args.noise;
+          x+= P5.randomGaussian(0,args.noise);
+          // x += P5.noise(x*0.5,y*0.5,P5.frameCount*0.5+offs)*args.noise;
+          // y += P5.noise(P5.frameCount*0.1+offs,y*0.1,x*0.1)*args.noise;
         }
         P5.vertex(x,y);
       }

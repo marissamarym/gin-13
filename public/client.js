@@ -169,13 +169,13 @@ P5.draw = function() {
   warnDist();
   
   P5.push();
-  P5.strokeWeight(2);
+  P5.strokeWeight(1);
   P5.translate(P5.width/2, 50);
-  P5.scale(0.5);
-  P5.stroke(255,0,255);
+  P5.scale(1);
+  P5.stroke(255);
   P5.noFill();
   
-  P5.hershey.putText("room: "+room.name,{align:"center",noise:10});
+  P5.hershey.putText("room: "+room.name,{font:FONT_HERSHEY.SCRIPT_SIMPLEX,align:"center",noise:2});
   P5.pop();
   
   P5.push();
