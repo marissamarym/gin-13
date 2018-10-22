@@ -185,9 +185,9 @@ P5.draw = function() {
   P5.stroke(255);
   P5.noFill();
   P5.translate(P5.width/2,P5.height/2);
-  P5.rect(-20,-20,20,20);
-  P5.scale(10);
-  P5.hershey.drawChr("A");
+  P5.rect(-1,-1,1,1);
+  // P5.scale(10);
+  P5.hershey.putText("HELLO WORLD!");
   
   P5.pop();
 }
