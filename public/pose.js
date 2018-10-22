@@ -130,7 +130,7 @@ var PoseReader = new function(){
     if (args.max_x_perc == undefined){args.max_x_perc = 0.3}
     if (args.head_torso_ratio == undefined){args.head_torso_ratio = 1/3}
     if (args.ground_height == undefined){args.ground_height=20}
-    if (args.forearm_length == undefined){args.forearm_length = 10}
+    if (args.forearm_length == undefined){args.forearm_length = 1.5}
     if (args.thinner == undefined){args.thinner = 0.7}
     
     var scale = args.upper_height/P5.dist(
@@ -185,11 +185,9 @@ var PoseReader = new function(){
     if (args.forearm_length != undefined){
       function norm_forearm(side){
         var d = P5.dist(pose[side+"Elbow"].x, pose[side+"Elbow"].y, pose[side+"Wrist"].x, pose[side+"Wrist"].y)
-        var s = args.forearm_length / d;
-        if (s > 1){
-          pose[side+"Wrist"].x = pose[side+"Elbow"].x + (pose[side+"Wrist"].x - pose[side+"Elbow"].x) * s
-          pose[side+"Wrist"].y = pose[side+"Elbow"].y + (pose[side+"Wrist"].y - pose[side+"Elbow"].y) * s
-        }
+        pose[side+"Wrist"].x = pose[side+"Elbow"].x + (pose[side+"Wrist"].x - pose[side+"Elbow"].x) * args.forearm_length;
+        pose[side+"Wrist"].y = pose[side+"Elbow"].y + (pose[side+"Wrist"].y - pose[side+"Elbow"].y) * args.forearm_length
+        
       }
       norm_forearm("left");
       norm_forearm("right");
@@ -298,12 +296,19 @@ var PoseReader = new function(){
   
     
   this._draw_head_v2 = function(pose){
-
+    
   }
   
   this._draw_hand_v2 = function(pose,side){
     var elbow = pose[side+"Elbow"];
     var wrist = pose[side+"Wrist"];
+    var ang = Math.atan2(wrist.y-elbow.y,wrist.x-elbow.x);
+    P5.push();
+    P5.translate(wrist.x,wrist.y);
+    P5.rotate(ang);
+    P5.line(-5,0,3,8*(side == "right"? -1 : 1));
+    P5.rect(-5,-2,15,4);
+    P5.pop();
   }
   
   this.draw_pose_v2 = function(pose, args) {
@@ -349,11 +354,11 @@ var PoseReader = new function(){
     
     this._draw_head_v2(pose);
     
-    P5.rect(pose.leftAnkle.x-10,pose.leftAnkle.y-5,10,5);
-    P5.rect(pose.rightAnkle.x-10,pose.rightAnkle.y-5,10,5);
+    P5.rect(pose.leftAnkle.x-15,pose.leftAnkle.y-5,15,5);
+    P5.rect(pose.rightAnkle.x-15,pose.rightAnkle.y-5,15,5);
   
-    this.draw_hand_v2(pose,"left")
-    this.draw_hand_v2(pose,"right")
+    this._draw_hand_v2(pose,"left")
+    this._draw_hand_v2(pose,"right")
     var s = this.estimate_scale(pose);
     
     P5.pop();

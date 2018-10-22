@@ -191,7 +191,7 @@ P5.draw = function() {
   var scale = 0.9*window.innerHeight/P5.height;
   var scale_str = "scale("+scale+")";
   canv.style.transform = scale_str;
-  console.log(canv.style.transform);
+  // console.log(canv.style.transform);
   
 }
 
