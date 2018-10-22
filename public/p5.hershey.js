@@ -17,12 +17,12 @@ P5.hershey={
     var ordR = "R".charCodeAt(0);
     var entry;
     if (args.font == FONT_HERSHEY.HEITI){
-      entry = FONT_HERSHEY.DATA[c.charCodeAt(0)];
+      entry = FONT_HERSHEY.HEITI[c.charCodeAt(0)];
     }else{
       var offs = args.font[c.charCodeAt(0)-32]
       entry = FONT_HERSHEY.DATA[offs];
     }
-    
+    // console.log(entry);
     if (entry == undefined){
       return 0;
     }
@@ -32,7 +32,7 @@ P5.hershey={
     P5.push();
     P5.translate(-xmin,0);
     P5.beginShape();
-    console.log(entry);
+    
     for (var i = 0; i < content.length; i+=2){
       var digit = content.slice(i,i+2);
       if (digit == " R"){
