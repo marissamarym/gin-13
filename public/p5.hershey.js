@@ -15,8 +15,14 @@ P5.hershey={
     if (args.font == undefined){args.font = FONT_HERSHEY.SIMPLEX}
     if (args.noise == undefined){args.noise = 0}
     var ordR = "R".charCodeAt(0);
-    var offs = args.font[c.charCodeAt(0)-32]
-    var entry = FONT_HERSHEY.DATA[offs];
+    var entry;
+    if (args.font == FONT_HERSHEY.HEITI){
+      entry = FONT_HERSHEY.DATA[c.charCodeAt(0)];
+    }else{
+      var offs = args.font[c.charCodeAt(0)-32]
+      entry = FONT_HERSHEY.DATA[offs];
+    }
+    
     if (entry == undefined){
       return 0;
     }
@@ -26,7 +32,7 @@ P5.hershey={
     P5.push();
     P5.translate(-xmin,0);
     P5.beginShape();
-    // console.log(offs);
+    console.log(entry);
     for (var i = 0; i < content.length; i+=2){
       var digit = content.slice(i,i+2);
       if (digit == " R"){
@@ -68,8 +74,13 @@ P5.hershey={
     if (args.font == undefined){args.font = FONT_HERSHEY.SIMPLEX};
     var sum = 0;
     for (var i = 0; i < s.length; i++){
-      var offs = args.font[s[i].charCodeAt(0)-32];
-      var entry = FONT_HERSHEY.DATA[offs];
+      var entry;
+      if (args.font == FONT_HERSHEY.HEITI){
+        entry = FONT_HERSHEY.DATA[s[i].charCodeAt(0)];
+      }else{
+        var offs = args.font[s[i].charCodeAt(0)-32]
+        entry = FONT_HERSHEY.DATA[offs];
+      }
       if (entry == undefined){
         return 0;
       }

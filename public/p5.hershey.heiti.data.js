@@ -1,5 +1,7 @@
-var FONT_HERSHEY_HEITI = {}
-var FONT_HERSHEY_HEITI.DATA = {
+if (FONT_HERSHEY == undefined){
+  var FONT_HERSHEY = {};
+}
+FONT_HERSHEY.HEITI = {
 "19968":"  32rBTbT",
 "19969":"  72rCCbC RRCS`Lb",
 "19970":" 152rCCbC RQ`[` RHQ]Q][Ya RNCLIIO",
