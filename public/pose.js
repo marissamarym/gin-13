@@ -248,11 +248,47 @@ var PoseReader = new function(){
     P5.pop();
   }
   
+  this._midpt = function(){
+    var plist = (arguments.length == 1) ? 
+      arguments[0] : Array.apply(null, arguments)
+    return plist.reduce(function(acc,v){
+      return {x:v.x/plist.length+acc.x,
+              y:v.y/plist.length+acc.y,
+              z:v.z/plist.length+acc.z}
+    },{x:0,y:0,z:0})
+  }
+  
+  this._bezier = function(P, w){
+    w = (w == undefined) ? 1 : w
+    if (P.length == 2){
+      P = [P[0],this._midpt(P[0],P[1]),P[1]];
+    }
+    var plist = [];
+    for (var j = 0; j < P.length-2; j++){
+      var p0; var p1; var p2;
+      if (j == 0){p0 = P[j];}else{p0 = this._midpt(P[j],P[j+1]);}
+      p1 = P[j+1];
+      if (j == P.length-3){p2 = P[j+2];}else{p2 = this._midpt(P[j+1],P[j+2]);}
+      var pl = 20;
+      for (var i = 0; i < pl+(j==P.length-3); i+= 1){
+        var t = i/pl;
+        var u = (Math.pow (1 - t, 2) + 2 * t * (1 - t) * w + t * t);
+        plist.push({
+          x:(Math.pow(1-t,2)*p0[0]+2*t*(1-t)*p1[0]*w+t*t*p2[0])/u,
+          y(Math.pow(1-t,2)*p0[1]+2*t*(1-t)*p1[1]*w+t*t*p2[1])/u,
+          (Math.pow(1-t,2)*p0[2]+2*t*(1-t)*p1[2]*w+t*t*p2[2])/u});
+      }
+    }
+    return plist;
+  }
+  
   
   this.draw_pose_v2 = function(pose, args) {
     if (args == undefined){args = {}}
     if (args.color == undefined){args.color = [255,255,255]}
-    if (args.stroke_weight == undefined){args.stroke_weight = 4}
+    if (args.stroke_weight == undefined){args.stroke_weight = 2}
+    
+    
     
     P5.push();
     
@@ -267,9 +303,8 @@ var PoseReader = new function(){
     
     this._draw_bones(pose.leftShoulder, pose.rightShoulder, pose.rightHip, pose.leftHip, pose.leftShoulder);
     
-    this._draw_bones(pose.leftShoulder, pose.leftElbow, pose.leftWrist);
-    
-    this._draw_bones(pose.rightShoulder, pose.rightElbow, pose.rightWrist);
+    this._draw_curved(pose.leftShoulder, pose.leftElbow, pose.leftWrist);
+    this._draw_curved(pose.rightShoulder, pose.rightElbow, pose.rightWrist);
 
     this._draw_bones(pose.leftHip, pose.leftKnee, pose.leftAnkle);
     this._draw_bones(pose.rightHip, pose.rightKnee, pose.rightAnkle);
