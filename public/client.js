@@ -1,4 +1,4 @@
-/* global describe io P5 PoseReader SpeechBubble p5*/
+/* global describe io P5 PoseReader SpeechBubble p5 FONT_HERSHEY*/
 
 var CANVAS_WIDTH = 640;
 var CANVAS_HEIGHT = 480;
@@ -175,7 +175,7 @@ P5.draw = function() {
   P5.stroke(255);
   P5.noFill();
   
-  P5.hershey.putText("room: "+room.name,{font:FONT_HERSHEY.SCRIPT_SIMPLEX,align:"center",noise:2});
+  P5.hershey.putText("room: "+room.name,{font:FONT_HERSHEY.SIMPLEX,align:"center",noise:0.5});
   P5.pop();
   
   P5.push();
