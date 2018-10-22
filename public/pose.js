@@ -314,10 +314,16 @@ var PoseReader = new function(){
     P5.endShape();
   
     function draw_eye(side){
-      var p = pose[side+"Eye"];
+      var p = {x:pose[side+"Eye"].x, y:pose[side+"Eye"].y+5};
       var a = P5.atan2(p.y-p0.y,p.x-p0.x)
-      var pr = P5.min(P5.dist(p0.x,p0.y,p.x,p.y),rr);
-      P5.ellipse(pr*P5.cos(a), p0.y+pr*P5.sin(a), 2,2);
+      var pr = P5.min(P5.dist(p0.x,p0.y,p.x,p.y),rr*0.7);
+      P5.push();
+      P5.translate(pr*P5.cos(a), pr*P5.sin(a))
+      // P5.ellipse(0,0, 5,5);
+      P5.rotate(P5.frameCount*0.1);
+      P5.line(-1,-1,1,1);
+      P5.line(1,-1,-1,1);
+      P5.pop();
     }
     draw_eye("left");
     draw_eye("right");
