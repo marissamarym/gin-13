@@ -23,16 +23,16 @@ function warnDist(){
                     PoseReader.get().rightShoulder.x,PoseReader.get().rightShoulder.y);
     P5.push();
 
-    P5.translate(P5.width/2, P5.height-10);
+    P5.translate(P5.width/2, P5.height);
 
     P5.stroke(255);
     P5.noFill();
     P5.strokeWeight(2);
     P5.scale(0.5);
     if (d > P5.width*0.5){
-      P5.hershey.putText("SHOW YOUR LIMBS!", {align:"center"});
+      P5.hershey.putText("SHOW YOUR LIMBS!", {align:"center",noise:0.5});
     }else if (d > P5.width*0.3){
-      P5.hershey.putText("JUST A BIT FURTHER!", {align:"center"});
+      P5.hershey.putText("JUST A BIT FURTHER!", {align:"center",noise:0.5});
     }
     P5.pop();
   }  
@@ -73,6 +73,7 @@ P5.setup = function() {
 }
 P5.draw = function() {
   P5.background(0);
+  P5.shearY(-P5.radians(5));
   
   localPlayer.pose = PoseReader.get_normalized();
   if (USE_SPEECH){SpeechBubble.update(localPlayer.speech);}
@@ -92,9 +93,9 @@ P5.draw = function() {
         }
       }
       if (attached){
-        P5.stroke(255);
-      }else{
         P5.stroke(0,255,255);
+      }else{
+        P5.stroke(255);
       }
       P5.strokeWeight(1);
       P5.noFill();
