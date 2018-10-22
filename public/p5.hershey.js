@@ -1,12 +1,11 @@
-/* global describe FONT_HERSHEY_SIMPLEX*/
+/* global describe FONT_HERSHEY*/
 var P5 = window;
 
 P5.hershey={
   drawChr : function(c){
     var ordR = "R".charCodeAt(0);
-    var ord = ""+c.charCodeAt(0)
-    console.log(ord);
-    var entry = FONT_HERSHEY_SIMPLEX[ord];
+    var offs = FONT_HERSHEY.SIMPLEX[""+c.charCodeAt(0)-32]
+    var entry = FONT_HERSHEY.DATA[offs];
 
     if (entry == undefined){
       return;
