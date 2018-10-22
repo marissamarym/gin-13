@@ -240,10 +240,41 @@ var PoseReader = new function(){
     
     this._draw_head(pose);
     
-    // this._draw_bones(pose.nose, pose.leftEye);
-    // this._draw_bones(pose.nose, pose.rightEye);
-    // this._draw_bones(pose.leftEye, pose.leftEar);
-    // this._draw_bones(pose.rightEye, pose.rightEar);
+    var s = this.estimate_scale(pose);
+    
+    P5.fill(0);
+    P5.ellipse(pose.leftEye.x, pose.leftEye.y, s*0.3, s*0.3);
+    P5.ellipse(pose.rightEye.x, pose.rightEye.y, s*0.3, s*0.3);
+    P5.pop();
+  }
+  
+  
+  this.draw_pose_v2 = function(pose, args) {
+    if (args == undefined){args = {}}
+    if (args.color == undefined){args.color = [255,255,255]}
+    if (args.stroke_weight == undefined){args.stroke_weight = 4}
+    
+    P5.push();
+    
+    P5.colorMode(P5.HSB, 255);
+    P5.stroke.apply(this, args.color);
+    P5.strokeWeight(args.stroke_weight);
+    
+    P5.strokeJoin(P5.ROUND);
+    
+    P5.noFill();
+
+    
+    this._draw_bones(pose.leftShoulder, pose.rightShoulder, pose.rightHip, pose.leftHip, pose.leftShoulder);
+    
+    this._draw_bones(pose.leftShoulder, pose.leftElbow, pose.leftWrist);
+    
+    this._draw_bones(pose.rightShoulder, pose.rightElbow, pose.rightWrist);
+
+    this._draw_bones(pose.leftHip, pose.leftKnee, pose.leftAnkle);
+    this._draw_bones(pose.rightHip, pose.rightKnee, pose.rightAnkle);
+    
+    this._draw_head(pose);
     
     var s = this.estimate_scale(pose);
     
