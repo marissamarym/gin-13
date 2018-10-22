@@ -135,7 +135,7 @@ P5.draw = function() {
     if (obj.pose != null){
       P5.push();
       P5.translate(obj.offset.x, obj.offset.y);
-      var col =  (socket.id == obj.id) ? [255,50] : obj.raw_data.color
+      var col = (socket.id == obj.id) ? [255,50] : obj.raw_data.color
       PoseReader.draw_pose_v2(obj.pose,{color:col, stroke_weight:1});
       P5.pop();
       if (socket.id == obj.id){

@@ -1,7 +1,7 @@
 // server.js
 // where your node app starts
 
-///////////.
+////////////.
 var express = require('express'); 
 var app = express();
 var server = app.listen(process.env.PORT || 300);
