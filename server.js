@@ -92,8 +92,8 @@ function createPolygon(world,vertices,isStatic){
 
 	var fixDef = new Box2D.Dynamics.b2FixtureDef;
  	fixDef.density = 1.0;
- 	fixDef.friction = 0.01;
- 	fixDef.restitution = 0.5;
+ 	fixDef.friction = 0.05;
+ 	fixDef.restitution = 0.2;
   
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
   fixDef.shape.SetAsArray(w_vertices,w_vertices.length);
@@ -458,9 +458,17 @@ function shapeCanvas(room_name, kpt_name, bbox){
 
         dots[pid].unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
         if (dots[pid].length >= 5){
-          if (v3.dist(dots[pid][dots[pid].length-1],dots[pid][0]) < 10){
-            createPolygon(world,dots[pid],false);
-            console.log("new object created!");
+          if (v3.dist(dots[pid][dots[pid].length-1],dots[pid][0]) < 20){
+            try{
+              var ret = createPolygon(world,dots[pid],false);
+              if (ret != undefined){
+                console.log("shape creation successful");
+              }else{
+                throw "";
+              }
+            }catch(err){
+              console.log("shape creation failed.")
+            }
             dots[pid] = [];
           }
           
@@ -496,7 +504,7 @@ var initRoom = {
     createRoomIfEmpty(room_name,"custom_shape")
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
     createFloorAndWall(worlds[room_name]);
-    worlds_accessory[room_name] = {"dots":{}}
+    worlds_accessory[room_name] = {"dots":{}, ""}
   },
 }
 
@@ -516,7 +524,7 @@ var describeRoom = {
     var room = getRoomByName(room_name)
     room.objects = []
     describeBox2DWorld(worlds[room_name],room.objects)
-    console.log(room.objects);
+    // console.log(room.objects);
     for (var k in worlds_accessory[room_name]["dots"]){
       room.objects = room.objects.concat(worlds_accessory[room_name]["dots"][k]);
     }

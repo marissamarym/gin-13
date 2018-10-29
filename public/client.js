@@ -121,7 +121,12 @@ P5.draw = function() {
       P5.noFill();
       P5.translate(obj.x,obj.y);
       P5.rotate(obj.rotation);
-      P5.rect(-obj.width/2,-obj.height/2,obj.width,obj.height);
+      // P5.rect(-obj.width/2,-obj.height/2,obj.width,obj.height);
+      P5.beginShape();
+      for (var j = 0; j < obj.vertices.length; j++){
+        P5.vertex(obj.vertices[j].x,obj.vertices[j].y);
+      }
+      P5.endShape(P5.CLOSE);
       P5.pop();
       
     }else if (obj.name == "dot"){
