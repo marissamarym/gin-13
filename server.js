@@ -49,7 +49,7 @@ function createBox(world, x, y, width, height, isStatic){
   return body;
 }
 
-function createPolygon(world,vertices){
+function createPolygon(world,x,y,width,height,vertices,isStatic){
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
 	bodyDef.type = isStatic ? Box2D.Dynamics.b2Body.b2_staticBody : Box2D.Dynamics.b2Body.b2_dynamicBody;
 	bodyDef.position.x = x / PIXELS_PER_METER;
@@ -61,9 +61,11 @@ function createPolygon(world,vertices){
  	fixDef.restitution = 0.8;
   
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
-  fixDef.shape.SetAsBox(width / PIXELS_PER_METER / 2, height / PIXELS_PER_METER / 2);
+  
+  
+  
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef); 
-  body.m_userdata = {name:"box",width:width,height:height,is_static:isStatic,
+  body.m_userdata = {name:"polygon",width:width,height:height,vertices:vertices,is_static:isStatic,
                      id:Math.floor(Math.random()*10000),interact_cooldown:0}
   return body;  
 }
@@ -79,6 +81,7 @@ function describeBox2DWorld(world, dest){
         var w = f.m_userdata.width;
         var h = f.m_userdata.height;
         dest.push({name:name, x:x, y:y, width:w, height:h, rotation:r, 
+                   vertices:f.m_userdata.vertices,
                    id:f.m_userdata.id, is_static:f.m_userdata.is_static})
       }
     }
