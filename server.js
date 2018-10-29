@@ -48,6 +48,26 @@ function createBox(world, x, y, width, height, isStatic){
                      id:Math.floor(Math.random()*10000),interact_cooldown:0}
   return body;
 }
+
+function createPolygon(world,vertices){
+	var bodyDef = new Box2D.Dynamics.b2BodyDef;
+	bodyDef.type = isStatic ? Box2D.Dynamics.b2Body.b2_staticBody : Box2D.Dynamics.b2Body.b2_dynamicBody;
+	bodyDef.position.x = x / PIXELS_PER_METER;
+	bodyDef.position.y = y / PIXELS_PER_METER;
+
+	var fixDef = new Box2D.Dynamics.b2FixtureDef;
+ 	fixDef.density = 1.5;
+ 	fixDef.friction = 0.01;
+ 	fixDef.restitution = 0.8;
+  
+  fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
+  fixDef.shape.SetAsBox(width / PIXELS_PER_METER / 2, height / PIXELS_PER_METER / 2);
+	var body = world.CreateBody(bodyDef).CreateFixture(fixDef); 
+  body.m_userdata = {name:"box",width:width,height:height,is_static:isStatic,
+                     id:Math.floor(Math.random()*10000),interact_cooldown:0}
+  return body;  
+}
+
 function describeBox2DWorld(world, dest){
   for (var b = world.m_bodyList; b; b = b.m_next) {
     for (var f = b.m_fixtureList; f; f = f.m_next) {
@@ -380,7 +400,9 @@ function shape_canvas(room_name, kpt_name, bbox){
   var world = worlds[room_name]
   var room = getRoomByName(room_name)
   var dots = worlds_accessory[room_name]["dots"]
+  
   for (var i = 0; i < room.players.length; i++){
+    var pid = room.plyers[i].id;
     var pose = room.players[i].pose;
 
     if (pose == null){
@@ -389,9 +411,18 @@ function shape_canvas(room_name, kpt_name, bbox){
     
     var p = v3.add(pose[kpt_name],room.players[i].offset);
     
-    if (p.x )
-    if (dots.length == 0 || v3.dist(dots[0],p) > 5){
-      dots.unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
+    if (bbox.x < p.x && p.x < bbox.y + bbox.width && bbox.y < p.y && p.y < bbox.y + bbox.height){
+      if (dots.length == 0 || v3.dist(dots[0],p) > 5){
+        if (! (pid in dots)){
+          dots[pid] = []
+        }
+        dots[pid].unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
+        if (dots[pid].length >= 3){
+          if (v3.dist(dots[pid][dots[pid].length-1],dots[pid][0]) < 10){
+            createPolygon(world,dots[pid]);
+          }
+        }
+      }
     }
     
   }
@@ -443,7 +474,9 @@ var describeRoom = {
     var room = getRoomByName(room_name)
     room.objects = []
     describeBox2DWorld(worlds[room_name],room.objects)
-    room.objects = room.objects.concat(worlds_accessory[room_name]["dots"]);
+    for (var k in worlds_accessory[room_name]["dots"]){
+      room.objects = room.objects.concat(worlds_accessory[room_name][k]["dots"]);
+    }
   },  
   
   
