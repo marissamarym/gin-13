@@ -176,10 +176,8 @@ P5.draw = function() {
   P5.stroke(255);
   P5.noFill();
   
-  P5.hershey.putText("room: "+room.name,{font:FONT_HERSHEY.SIMPLEX,align:"center",noise:0.5});
+  P5.hershey.putText("room: "+room.name,{align:"center",noise:0.5});
   
-  // P5.translate(0,50);
-  // P5.hershey.putText("黄令東",{font:FONT_HERSHEY.HEITI,align:"center",noise:0.5});
   P5.pop();
   
   P5.push();

@@ -101,6 +101,12 @@ var initRoom = {
     createFloorAndWall(worlds[room_name]);
     worlds_accessory[room_name] = {"dots":[]}
   },
+  custom_shape:function(room_name){
+    createRoomIfEmpty(room_name,"cs")
+    worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
+    createFloorAndWall(worlds[room_name]);
+    worlds_accessory[room_name] = {"dots":[]}
+  },
 }
 
 var describeRoom = {
@@ -391,6 +397,29 @@ function objectPickup(room_name, kpt_name, obj_name){
 
 
 function freehand(room_name, kpt_name){
+  var world = worlds[room_name]
+  var room = getRoomByName(room_name)
+  var dots = worlds_accessory[room_name]["dots"]
+  // console.log(dots.length);
+  for (var i = 0; i < room.players.length; i++){
+    var pose = room.players[i].pose;
+
+    if (pose == null){
+      continue;
+    }
+    
+    var p = v3.add(pose[kpt_name],room.players[i].offset);
+    if (dots.length == 0 || v3.dist(dots[0],p) > 5){
+      dots.unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
+    }
+    
+  }
+  worlds_accessory[room_name]["dots"] = dots.slice(0,200);
+}
+
+
+
+function shape_canvas(room_name, kpt_name, bbox){
   var world = worlds[room_name]
   var room = getRoomByName(room_name)
   var dots = worlds_accessory[room_name]["dots"]
