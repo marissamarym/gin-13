@@ -81,6 +81,9 @@ function createPolygon(world,vertices,isStatic){
       w_vertices.push(v1);
     }
   }
+  if (w_vertices.length <= 3){
+    return;
+  }
   
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
 	bodyDef.type = isStatic ? Box2D.Dynamics.b2Body.b2_staticBody : Box2D.Dynamics.b2Body.b2_dynamicBody;
@@ -447,16 +450,19 @@ function shapeCanvas(room_name, kpt_name, bbox){
     var p = v3.add(pose[kpt_name],room.players[i].offset);
     
     if (bbox.x < p.x && p.x < bbox.y + bbox.width && bbox.y < p.y && p.y < bbox.y + bbox.height){
-      if (dots.length == 0 || v3.dist(dots[0],p) > 5){
-        if (! (pid in dots)){
-          dots[pid] = []
-        }
+      if (! (pid in dots)){
+        dots[pid] = []
+      }
+      if (dots[pid].length == 0 || v3.dist(dots[pid][0],p) > 5){
+
         dots[pid].unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
-        if (dots[pid].length >= 3){
-          if (v3.dist(dots[pid][dots[pid].length-1],dots[pid][0]) < 10){
+        if (dots[pid].length >= 5){
+          if (v3.dist(dots[pid][dots[pid].length-1],dots[pid][0]) < 5){
             createPolygon(world,dots[pid]);
+            console.log("new object created!");
+            dots[pid] = [];
           }
-          dots[pid] = [];
+          
         }
       }
     }
@@ -489,7 +495,7 @@ var initRoom = {
     createRoomIfEmpty(room_name,"custom_shape")
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
     createFloorAndWall(worlds[room_name]);
-    worlds_accessory[room_name] = {"dots":[]}
+    worlds_accessory[room_name] = {"dots":{}}
   },
 }
 
@@ -512,6 +518,7 @@ var describeRoom = {
     for (var k in worlds_accessory[room_name]["dots"]){
       room.objects = room.objects.concat(worlds_accessory[room_name]["dots"][k]);
     }
+    // console.log(room.objects);
   },  
   
   
