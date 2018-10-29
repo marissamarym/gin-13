@@ -3144,6 +3144,7 @@ Box2D.postDefs = [];
          this.m_normals[i].SetV(b2Math.CrossVF(edge, 1.0));
          this.m_normals[i].Normalize();
       }
+      
       this.m_centroid = b2PolygonShape.ComputeCentroid(this.m_vertices, this.m_vertexCount);
    }
    b2PolygonShape.AsVector = function (vertices, vertexCount) {

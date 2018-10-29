@@ -71,9 +71,15 @@ function createPolygon(world,vertices,isStatic){
     n_vertices.push({x:vertices[i].x-x, y:vertices[i].y-y})
   }
   
-  for (var i = 0; i < vertices.length; i++){
-    w_vertices.push({x: n_vertices[i].x / PIXELS_PER_METER, 
-                     y: n_vertices[i].y / PIXELS_PER_METER});
+  for (var i = 0; i < n_vertices.length; i++){
+    var v0 = {x: n_vertices[i].x / PIXELS_PER_METER, 
+              y: n_vertices[i].y / PIXELS_PER_METER}
+    var v1 = {x: n_vertices[(i+1)%n_vertices.length].x / PIXELS_PER_METER, 
+              y: n_vertices[(i+1)%n_vertices.length].y / PIXELS_PER_METER}
+    
+    if (v3.dist(v0,v1) > Number.MIN_VALUE){
+      w_vertices.push(v1);
+    }
   }
   
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
