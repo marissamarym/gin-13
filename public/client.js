@@ -30,9 +30,9 @@ function warnDist(){
     P5.strokeWeight(2);
     P5.scale(0.5);
     if (d > P5.width*0.5){
-      P5.hershey.putText("SHOW YOUR LIMBS!", {align:"center",noise:0.5});
+      P5.hershey.putText("LEASE STEP FURTHER BACK!", {align:"center",noise:0.5});
     }else if (d > P5.width*0.3){
-      P5.hershey.putText("JUST A BIT FURTHER!", {align:"center",noise:0.5});
+      P5.hershey.putText("PLEASE STEP FURTHER BACK!", {align:"center",noise:0.5});
     }
     P5.pop();
   }  

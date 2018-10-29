@@ -85,53 +85,12 @@ function createRoomIfEmpty(room_name,room_type){
   }
 }
 
-var initRoom = {
-  box_pickup:function(room_name){
-    createRoomIfEmpty(room_name,"box_pickup")
-    worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
-    worlds_accessory[room_name] = {"joints":[]}
-    createFloorAndWall(worlds[room_name]);
-    for (var i = 0; i < 4; i++){
-      createBox(worlds[room_name],Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
-    }
-  },
-  collab_canvas:function(room_name){
-    createRoomIfEmpty(room_name,"collab_canvas")
-    worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
-    createFloorAndWall(worlds[room_name]);
-    worlds_accessory[room_name] = {"dots":[]}
-  },
-  custom_shape:function(room_name){
-    createRoomIfEmpty(room_name,"cs")
-    worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
-    createFloorAndWall(worlds[room_name]);
-    worlds_accessory[room_name] = {"dots":[]}
-  },
-}
-
-var describeRoom = {
-  box_pickup:function(room_name){
-    var room = getRoomByName(room_name)
-    room.objects = []
-    describeBox2DWorld(worlds[room_name],room.objects)
-  },
-  collab_canvas:function(room_name){
-    var room = getRoomByName(room_name)
-    room.objects = []
-    describeBox2DWorld(worlds[room_name],room.objects)
-    room.objects = room.objects.concat(worlds_accessory[room_name]["dots"]);
-
-  },  
-  
-  
-}
-
-
 function serverInit(){
   console.log('init');
     
   initRoom.box_pickup("box-fling")
   initRoom.collab_canvas("collab-canvas")
+  initRoom.custom_shape("custom-shape")
   
   setInterval(serverUpdate,1000/FPS);
 }
@@ -146,7 +105,7 @@ function serverUpdate(){
     }
     calculatePlayers(universe[i]);
     
-    interact[universe[i].type](universe[i].name);
+    interactRoom[universe[i].type](universe[i].name);
     worlds[universe[i].name].Step(1 / FPS, 10, 10);
     
     describeRoom[universe[i].type](universe[i].name);
@@ -154,8 +113,6 @@ function serverUpdate(){
   checkRoomSwitch();
   
 }
-
-serverInit()
 
 //====================
 // PLAYING STUFF
@@ -423,7 +380,6 @@ function shape_canvas(room_name, kpt_name, bbox){
   var world = worlds[room_name]
   var room = getRoomByName(room_name)
   var dots = worlds_accessory[room_name]["dots"]
-  // console.log(dots.length);
   for (var i = 0; i < room.players.length; i++){
     var pose = room.players[i].pose;
 
@@ -432,6 +388,8 @@ function shape_canvas(room_name, kpt_name, bbox){
     }
     
     var p = v3.add(pose[kpt_name],room.players[i].offset);
+    
+    if (p.x )
     if (dots.length == 0 || v3.dist(dots[0],p) > 5){
       dots.unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
     }
@@ -441,17 +399,66 @@ function shape_canvas(room_name, kpt_name, bbox){
 }
   
 
+//====================
+// ROOM SPECIFIC STUFF
+//====================
 
-var interact = {
-box_pickup:function(room_name){
-  cooldown(worlds[room_name]);
-  objectPickup(room_name, "leftWrist", "box")
-  objectPickup(room_name, "rightWrist", "box")
-},
-collab_canvas:function(room_name){
-  freehand(room_name,"rightWrist");
+var initRoom = {
+  box_pickup:function(room_name){
+    createRoomIfEmpty(room_name,"box_pickup")
+    worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
+    worlds_accessory[room_name] = {"joints":[]}
+    createFloorAndWall(worlds[room_name]);
+    for (var i = 0; i < 4; i++){
+      createBox(worlds[room_name],Math.random()*CANVAS_WIDTH, Math.random()*CANVAS_HEIGHT, 55+i*5,55+i*5, false);
+    }
+  },
+  collab_canvas:function(room_name){
+    createRoomIfEmpty(room_name,"collab_canvas")
+    worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
+    createFloorAndWall(worlds[room_name]);
+    worlds_accessory[room_name] = {"dots":[]}
+  },
+  custom_shape:function(room_name){
+    createRoomIfEmpty(room_name,"custom_shape")
+    worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
+    createFloorAndWall(worlds[room_name]);
+    worlds_accessory[room_name] = {"dots":[]}
+  },
+}
+
+var describeRoom = {
+  box_pickup:function(room_name){
+    var room = getRoomByName(room_name)
+    room.objects = []
+    describeBox2DWorld(worlds[room_name],room.objects)
+  },
+  collab_canvas:function(room_name){
+    var room = getRoomByName(room_name)
+    room.objects = []
+    describeBox2DWorld(worlds[room_name],room.objects)
+    room.objects = room.objects.concat(worlds_accessory[room_name]["dots"]);
+  },  
+  custom_shape:function(room_name){
+    var room = getRoomByName(room_name)
+    room.objects = []
+    describeBox2DWorld(worlds[room_name],room.objects)
+    room.objects = room.objects.concat(worlds_accessory[room_name]["dots"]);
+  },  
+  
   
 }
+
+var interactRoom = {
+  box_pickup:function(room_name){
+    cooldown(worlds[room_name]);
+    objectPickup(room_name, "leftWrist", "box")
+    objectPickup(room_name, "rightWrist", "box")
+  },
+  collab_canvas:function(room_name){
+    freehand(room_name,"rightWrist");
+
+  }
 }
 
 
@@ -506,6 +513,8 @@ function newConnection(socket){
 		}
 	}
 }	
+
+serverInit()
 
 io.sockets.on('connection', newConnection);
 
