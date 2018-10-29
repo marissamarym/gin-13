@@ -434,7 +434,6 @@ function freehand(room_name, kpt_name){
 }
 
 
-
 function shapeCanvas(room_name, kpt_name, bbox){
   var world = worlds[room_name]
   var room = getRoomByName(room_name)
@@ -449,31 +448,39 @@ function shapeCanvas(room_name, kpt_name, bbox){
     }
     
     var p = v3.add(pose[kpt_name],room.players[i].offset);
+    if (! (pid in dots)){
+      dots[pid] = []
+    }
+    
+    var attemptCreation = function(){
+      try{
+        var ret = createPolygon(world,dots[pid],false);
+        if (ret != undefined){
+          console.log("shape creation successful");
+        }else{
+          throw "";
+        }
+      }catch(err){
+        console.log("shape creation failed.")
+      }
+      dots[pid] = [];
+    }
     
     if (bbox.x < p.x && p.x < bbox.y + bbox.width && bbox.y < p.y && p.y < bbox.y + bbox.height){
-      if (! (pid in dots)){
-        dots[pid] = []
-      }
+      
       if (dots[pid].length == 0 || v3.dist(dots[pid][0],p) > 5){
 
         dots[pid].unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
         if (dots[pid].length >= 5){
           if (v3.dist(dots[pid][dots[pid].length-1],dots[pid][0]) < 20){
-            try{
-              var ret = createPolygon(world,dots[pid],false);
-              if (ret != undefined){
-                console.log("shape creation successful");
-              }else{
-                throw "";
-              }
-            }catch(err){
-              console.log("shape creation failed.")
-            }
-            dots[pid] = [];
+            attemptCe
           }
           
         }
       }
+    }else{
+      
+      
     }
     
   }
@@ -504,7 +511,7 @@ var initRoom = {
     createRoomIfEmpty(room_name,"custom_shape")
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
     createFloorAndWall(worlds[room_name]);
-    worlds_accessory[room_name] = {"dots":{}, ""}
+    worlds_accessory[room_name] = {"dots":{}, "canvas":{x:450,y:200,width:200,height:200}}
   },
 }
 
@@ -524,11 +531,14 @@ var describeRoom = {
     var room = getRoomByName(room_name)
     room.objects = []
     describeBox2DWorld(worlds[room_name],room.objects)
-    // console.log(room.objects);
     for (var k in worlds_accessory[room_name]["dots"]){
       room.objects = room.objects.concat(worlds_accessory[room_name]["dots"][k]);
     }
-    // console.log(room.objects);
+    var bbox = worlds_accessory[room_name]["canvas"];
+    room.objects = room.objects.concat({
+      x:bbox.x,y:bbox.y,
+      name:"box",width:bbox.width,height:bbox.height,rotation:0,is_static:true,id:-1,
+    });
   },  
   
   
@@ -545,7 +555,9 @@ var interactRoom = {
 
   },
   custom_shape:function(room_name){
-    shapeCanvas(room_name,"rightWrist",{x:0,y:0,width:CANVAS_WIDTH,height:CANVAS_HEIGHT});
+    var bbox = worlds_accessory[room_name]["canvas"];
+    shapeCanvas(room_name,"rightWrist",{
+      x:bbox.x,y:bbox.y,width:bbox.width,height:bbox.height});
   }
 }
 
