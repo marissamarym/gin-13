@@ -146,9 +146,10 @@ function createRoomIfEmpty(room_name,room_type){
 function serverInit(){
   console.log('init');
     
-  initRoom.custom_shape("custom-shape")
+  
   initRoom.box_pickup("box-fling")
   initRoom.collab_canvas("collab-canvas")
+  initRoom.custom_shape("custom-shape")
   
   
   setInterval(serverUpdate,1000/FPS);
