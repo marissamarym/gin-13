@@ -91,20 +91,19 @@ function createPolygon(world,vertices,isStatic){
 	bodyDef.position.y = y / PIXELS_PER_METER;
 
 	var fixDef = new Box2D.Dynamics.b2FixtureDef;
- 	fixDef.density = 1.5;
+ 	fixDef.density = 1.0;
  	fixDef.friction = 0.01;
- 	fixDef.restitution = 0.8;
+ 	fixDef.restitution = 0.5;
   
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
   fixDef.shape.SetAsArray(w_vertices,w_vertices.length);
   
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef); 
-  body.m_userdata = {name:"rect",width:width,height:height,vertices:n_vertices,is_static:isStatic,
+  body.m_userdata = {name:"polygon",width:width,height:height,vertices:n_vertices,is_static:isStatic,
                      id:Math.floor(Math.random()*10000),interact_cooldown:0}
-  console.log ("polygon creation successful");
   return body;  
 }
-
+ 
 function describeBox2DWorld(world, dest){
   for (var b = world.m_bodyList; b; b = b.m_next) {
     for (var f = b.m_fixtureList; f; f = f.m_next) {
@@ -115,6 +114,7 @@ function describeBox2DWorld(world, dest){
         var name = f.m_userdata.name;
         var w = f.m_userdata.width;
         var h = f.m_userdata.height;
+        // if (f.m_userdata.vertices != undefined){console.log(x,y,w,h,r)}
         dest.push({name:name, x:x, y:y, width:w, height:h, rotation:r, 
                    vertices:f.m_userdata.vertices,
                    id:f.m_userdata.id, is_static:f.m_userdata.is_static})
@@ -459,7 +459,7 @@ function shapeCanvas(room_name, kpt_name, bbox){
         dots[pid].unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
         if (dots[pid].length >= 5){
           if (v3.dist(dots[pid][dots[pid].length-1],dots[pid][0]) < 10){
-            createPolygon(world,dots[pid]);
+            createPolygon(world,dots[pid],false);
             console.log("new object created!");
             dots[pid] = [];
           }
@@ -516,6 +516,7 @@ var describeRoom = {
     var room = getRoomByName(room_name)
     room.objects = []
     describeBox2DWorld(worlds[room_name],room.objects)
+    console.log(room.objects);
     for (var k in worlds_accessory[room_name]["dots"]){
       room.objects = room.objects.concat(worlds_accessory[room_name]["dots"][k]);
     }

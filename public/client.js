@@ -103,6 +103,27 @@ P5.draw = function() {
       P5.rotate(obj.rotation);
       P5.rect(-obj.width/2,-obj.height/2,obj.width,obj.height);
       P5.pop();
+    }else if (obj.name == "polygon"){
+      P5.push();
+      var attached = false;
+      for (var j = 0; j < room.players.length; j++){
+        if (room.players[j].hand.includes(obj.id)){
+          attached = true;
+          break;
+        }
+      }
+      if (attached){
+        P5.stroke(255,0,0);
+      }else{
+        P5.stroke(255);
+      }
+      P5.strokeWeight(1);
+      P5.noFill();
+      P5.translate(obj.x,obj.y);
+      P5.rotate(obj.rotation);
+      P5.rect(-obj.width/2,-obj.height/2,obj.width,obj.height);
+      P5.pop();
+      
     }else if (obj.name == "dot"){
       P5.push();
       P5.noStroke();
