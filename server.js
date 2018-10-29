@@ -87,10 +87,10 @@ function createPolygon(world,vertices,isStatic){
  	fixDef.restitution = 0.8;
   
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
-  fixDef.shape.b2PolygonShape.prototype.SetAsArray(w_vertices);
+  fixDef.shape.SetAsArray(w_vertices,w_vertices.length);
   
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef); 
-  body.m_userdata = {name:"polygon",width:width,height:height,vertices:n_vertices,is_static:isStatic,
+  body.m_userdata = {name:"rect",width:width,height:height,vertices:n_vertices,is_static:isStatic,
                      id:Math.floor(Math.random()*10000),interact_cooldown:0}
   return body;  
 }
@@ -425,13 +425,13 @@ function freehand(room_name, kpt_name){
 
 
 
-function shape_canvas(room_name, kpt_name, bbox){
+function shapeCanvas(room_name, kpt_name, bbox){
   var world = worlds[room_name]
   var room = getRoomByName(room_name)
   var dots = worlds_accessory[room_name]["dots"]
   
   for (var i = 0; i < room.players.length; i++){
-    var pid = room.plyers[i].id;
+    var pid = room.players[i].id;
     var pose = room.players[i].pose;
 
     if (pose == null){
@@ -450,12 +450,12 @@ function shape_canvas(room_name, kpt_name, bbox){
           if (v3.dist(dots[pid][dots[pid].length-1],dots[pid][0]) < 10){
             createPolygon(world,dots[pid]);
           }
+          dots[pid] = [];
         }
       }
     }
     
   }
-  worlds_accessory[room_name]["dots"] = dots.slice(0,200);
 }
   
 
@@ -504,7 +504,7 @@ var describeRoom = {
     room.objects = []
     describeBox2DWorld(worlds[room_name],room.objects)
     for (var k in worlds_accessory[room_name]["dots"]){
-      room.objects = room.objects.concat(worlds_accessory[room_name][k]["dots"]);
+      room.objects = room.objects.concat(worlds_accessory[room_name]["dots"][k]);
     }
   },  
   
@@ -520,6 +520,9 @@ var interactRoom = {
   collab_canvas:function(room_name){
     freehand(room_name,"rightWrist");
 
+  },
+  custom_shape:function(room_name){
+    shapeCanvas(room_name,"rightWrist",{x:0,y:0,width:CANVAS_WIDTH,height:CANVAS_HEIGHT});
   }
 }
 
