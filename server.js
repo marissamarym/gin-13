@@ -49,7 +49,33 @@ function createBox(world, x, y, width, height, isStatic){
   return body;
 }
 
-function createPolygon(world,x,y,width,height,vertices,isStatic){
+function createPolygon(world,vertices,isStatic){
+  var n_vertices = []
+  var w_vertices = []
+  var xmin = CANVAS_WIDTH;
+  var xmax = 0;
+  var ymin = CANVAS_HEIGHT;
+  var ymax = 0;
+
+  for (var i = 0; i < vertices.length; i++){
+    if (vertices[i].x < xmin){xmin = vertices[i].x;}
+    if (vertices[i].x > xmax){xmax = vertices[i].x;}
+    if (vertices[i].y < ymin){ymin = vertices[i].y;}
+    if (vertices[i].y > ymax){ymax = vertices[i].y;}
+  }
+  var width = xmax-xmin;
+  var height = ymax-ymin;
+  var x = (xmin+xmax)/2;
+  var y = (ymin+ymax)/2;
+  for (var i = 0; i < vertices.length; i++){
+    n_vertices.push({x:vertices[i].x-x, y:vertices[i].y-y})
+  }
+  
+  for (var i = 0; i < vertices.length; i++){
+    w_vertices.push({x: n_vertices[i].x / PIXELS_PER_METER, 
+                     y: n_vertices[i].y / PIXELS_PER_METER});
+  }
+  
 	var bodyDef = new Box2D.Dynamics.b2BodyDef;
 	bodyDef.type = isStatic ? Box2D.Dynamics.b2Body.b2_staticBody : Box2D.Dynamics.b2Body.b2_dynamicBody;
 	bodyDef.position.x = x / PIXELS_PER_METER;
@@ -61,11 +87,10 @@ function createPolygon(world,x,y,width,height,vertices,isStatic){
  	fixDef.restitution = 0.8;
   
   fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
-  
-  
+  fixDef.shape.b2PolygonShape.prototype.SetAsArray(w_vertices);
   
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef); 
-  body.m_userdata = {name:"polygon",width:width,height:height,vertices:vertices,is_static:isStatic,
+  body.m_userdata = {name:"polygon",width:width,height:height,vertices:n_vertices,is_static:isStatic,
                      id:Math.floor(Math.random()*10000),interact_cooldown:0}
   return body;  
 }
@@ -111,9 +136,10 @@ function createRoomIfEmpty(room_name,room_type){
 function serverInit(){
   console.log('init');
     
+  initRoom.custom_shape("custom-shape")
   initRoom.box_pickup("box-fling")
   initRoom.collab_canvas("collab-canvas")
-  initRoom.custom_shape("custom-shape")
+  
   
   setInterval(serverUpdate,1000/FPS);
 }
