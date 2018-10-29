@@ -3694,9 +3694,10 @@ Box2D.postDefs = [];
       if (restitution2 === undefined) restitution2 = 0;
       return restitution1 > restitution2 ? restitution1 : restitution2;
    }
-   b2Settings.b2Assert = function (who, a) {
+   b2Settings.b2Assert = function (cause, a) {
       if (!a) {
-         console.log("assertion failed @ "+who);
+         console.log("assertion failed: "+cause);
+         ASSERTION_ERROR();
          throw "Assertion Failed";
       }
    }

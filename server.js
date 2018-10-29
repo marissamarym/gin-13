@@ -101,6 +101,7 @@ function createPolygon(world,vertices,isStatic){
 	var body = world.CreateBody(bodyDef).CreateFixture(fixDef); 
   body.m_userdata = {name:"rect",width:width,height:height,vertices:n_vertices,is_static:isStatic,
                      id:Math.floor(Math.random()*10000),interact_cooldown:0}
+  console.log ("polygon creation successful");
   return body;  
 }
 
@@ -457,7 +458,7 @@ function shapeCanvas(room_name, kpt_name, bbox){
 
         dots[pid].unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
         if (dots[pid].length >= 5){
-          if (v3.dist(dots[pid][dots[pid].length-1],dots[pid][0]) < 5){
+          if (v3.dist(dots[pid][dots[pid].length-1],dots[pid][0]) < 10){
             createPolygon(world,dots[pid]);
             console.log("new object created!");
             dots[pid] = [];
