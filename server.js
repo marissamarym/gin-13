@@ -465,22 +465,21 @@ function shapeCanvas(room_name, kpt_name, bbox){
       }
       dots[pid] = [];
     }
-    
-    if (bbox.x < p.x && p.x < bbox.y + bbox.width && bbox.y < p.y && p.y < bbox.y + bbox.height){
+    // console.log(bbox.x < p.x , p.x < bbox.x + bbox.width , bbox.y < p.y , p.y < bbox.y + bbox.height)
+    if (bbox.x < p.x && p.x < bbox.x + bbox.width && bbox.y < p.y && p.y < bbox.y + bbox.height){
       
       if (dots[pid].length == 0 || v3.dist(dots[pid][0],p) > 5){
-
         dots[pid].unshift({name:"dot",x:p.x,y:p.y,color:room.players[i].raw_data.color});
         if (dots[pid].length >= 5){
           if (v3.dist(dots[pid][dots[pid].length-1],dots[pid][0]) < 20){
-            attemptCe
+            attemptCreation();
           }
-          
         }
       }
     }else{
-      
-      
+      if (dots[pid].length){
+        attemptCreation(); 
+      }
     }
     
   }
@@ -511,7 +510,7 @@ var initRoom = {
     createRoomIfEmpty(room_name,"custom_shape")
     worlds[room_name] = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8));
     createFloorAndWall(worlds[room_name]);
-    worlds_accessory[room_name] = {"dots":{}, "canvas":{x:450,y:200,width:200,height:200}}
+    worlds_accessory[room_name] = {"joints":[],"dots":{}, "canvas":{x:350,y:150,width:200,height:200}}
   },
 }
 
@@ -536,7 +535,7 @@ var describeRoom = {
     }
     var bbox = worlds_accessory[room_name]["canvas"];
     room.objects = room.objects.concat({
-      x:bbox.x,y:bbox.y,
+      x:bbox.x+bbox.width/2,y:bbox.y+bbox.height/2,
       name:"box",width:bbox.width,height:bbox.height,rotation:0,is_static:true,id:-1,
     });
   },  
@@ -558,6 +557,8 @@ var interactRoom = {
     var bbox = worlds_accessory[room_name]["canvas"];
     shapeCanvas(room_name,"rightWrist",{
       x:bbox.x,y:bbox.y,width:bbox.width,height:bbox.height});
+    
+    objectPickup(room_name, "leftWrist", "polygon")
   }
 }
 
