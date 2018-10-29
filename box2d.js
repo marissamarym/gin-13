@@ -1352,7 +1352,7 @@ Box2D.postDefs = [];
             simplex.Solve3();
             break;
          default:
-            b2Settings.b2Assert(false);
+            b2Settings.b2Assert(arguments.callee.toString(), false);
          }
          if (simplex.m_count == 3) {
             break;
@@ -1443,7 +1443,7 @@ Box2D.postDefs = [];
          }
          break;
       default:
-         b2Settings.b2Assert(false);
+         b2Settings.b2Assert(arguments.callee.toString(), false);
       }
    }
    b2DistanceProxy.prototype.GetSupport = function (d) {
@@ -1475,7 +1475,7 @@ Box2D.postDefs = [];
    }
    b2DistanceProxy.prototype.GetVertex = function (index) {
       if (index === undefined) index = 0;
-      b2Settings.b2Assert(0 <= index && index < this.m_count);
+      b2Settings.b2Assert(arguments.callee.toString(), 0 <= index && index < this.m_count);
       return this.m_vertices[index];
    }
    b2DynamicTree.b2DynamicTree = function () {};
@@ -1502,7 +1502,7 @@ Box2D.postDefs = [];
       this.FreeNode(proxy);
    }
    b2DynamicTree.prototype.MoveProxy = function (proxy, aabb, displacement) {
-      b2Settings.b2Assert(proxy.IsLeaf());
+      b2Settings.b2Assert(arguments.callee.toString(), proxy.IsLeaf());
       if (proxy.aabb.Contains(aabb)) {
          return false;
       }
@@ -1965,7 +1965,7 @@ Box2D.postDefs = [];
       this.m_proxyA = proxyA;
       this.m_proxyB = proxyB;
       var count = parseInt(cache.count);
-      b2Settings.b2Assert(0 < count && count < 3);
+      b2Settings.b2Assert(arguments.callee.toString(), 0 < count && count < 3);
       var localPointA;
       var localPointA1;
       var localPointA2;
@@ -2168,7 +2168,7 @@ Box2D.postDefs = [];
             return seperation;
          }
       default:
-         b2Settings.b2Assert(false);
+         b2Settings.b2Assert(arguments.callee.toString(), false);
          return 0.0;
       }
    }
@@ -2189,7 +2189,7 @@ Box2D.postDefs = [];
       this.m_vertices[2] = this.m_v3;
    }
    b2Simplex.prototype.ReadCache = function (cache, proxyA, transformA, proxyB, transformB) {
-      b2Settings.b2Assert(0 <= cache.count && cache.count <= 3);
+      b2Settings.b2Assert(arguments.callee.toString(), 0 <= cache.count && cache.count <= 3);
       var wALocal;
       var wBLocal;
       this.m_count = cache.count;
@@ -2249,28 +2249,28 @@ Box2D.postDefs = [];
             }
          }
       default:
-         b2Settings.b2Assert(false);
+         b2Settings.b2Assert(arguments.callee.toString(), false);
          return new b2Vec2();
       }
    }
    b2Simplex.prototype.GetClosestPoint = function () {
       switch (this.m_count) {
       case 0:
-         b2Settings.b2Assert(false);
+         b2Settings.b2Assert(arguments.callee.toString(), false);
          return new b2Vec2();
       case 1:
          return this.m_v1.w;
       case 2:
          return new b2Vec2(this.m_v1.a * this.m_v1.w.x + this.m_v2.a * this.m_v2.w.x, this.m_v1.a * this.m_v1.w.y + this.m_v2.a * this.m_v2.w.y);
       default:
-         b2Settings.b2Assert(false);
+         b2Settings.b2Assert(arguments.callee.toString(), false);
          return new b2Vec2();
       }
    }
    b2Simplex.prototype.GetWitnessPoints = function (pA, pB) {
       switch (this.m_count) {
       case 0:
-         b2Settings.b2Assert(false);
+         b2Settings.b2Assert(arguments.callee.toString(), false);
          break;
       case 1:
          pA.SetV(this.m_v1.wA);
@@ -2287,14 +2287,14 @@ Box2D.postDefs = [];
          pB.y = pA.y = this.m_v1.a * this.m_v1.wA.y + this.m_v2.a * this.m_v2.wA.y + this.m_v3.a * this.m_v3.wA.y;
          break;
       default:
-         b2Settings.b2Assert(false);
+         b2Settings.b2Assert(arguments.callee.toString(), false);
          break;
       }
    }
    b2Simplex.prototype.GetMetric = function () {
       switch (this.m_count) {
       case 0:
-         b2Settings.b2Assert(false);
+         b2Settings.b2Assert(arguments.callee.toString(), false);
          return 0.0;
       case 1:
          return 0.0;
@@ -2303,7 +2303,7 @@ Box2D.postDefs = [];
       case 3:
          return b2Math.CrossVV(b2Math.SubtractVV(this.m_v2.w, this.m_v1.w), b2Math.SubtractVV(this.m_v3.w, this.m_v1.w));
       default:
-         b2Settings.b2Assert(false);
+         b2Settings.b2Assert(arguments.callee.toString(), false);
          return 0.0;
       }
    }
@@ -2418,8 +2418,8 @@ Box2D.postDefs = [];
       var proxyB = input.proxyB;
       var sweepA = input.sweepA;
       var sweepB = input.sweepB;
-      b2Settings.b2Assert(sweepA.t0 == sweepB.t0);
-      b2Settings.b2Assert(1.0 - sweepA.t0 > Number.MIN_VALUE);
+      b2Settings.b2Assert(arguments.callee.toString(), sweepA.t0 == sweepB.t0);
+      b2Settings.b2Assert(arguments.callee.toString(), 1.0 - sweepA.t0 > Number.MIN_VALUE);
       var radius = proxyA.m_radius + proxyB.m_radius;
       var tolerance = input.tolerance;
       var alpha = 0.0;
@@ -3127,7 +3127,7 @@ Box2D.postDefs = [];
    b2PolygonShape.prototype.SetAsVector = function (vertices, vertexCount) {
       if (vertexCount === undefined) vertexCount = 0;
       if (vertexCount == 0) vertexCount = vertices.length;
-      b2Settings.b2Assert(2 <= vertexCount);
+      b2Settings.b2Assert(arguments.callee.toString(), 2 <= vertexCount);
       this.m_vertexCount = vertexCount;
       this.Reserve(vertexCount);
       var i = 0;
@@ -3140,7 +3140,7 @@ Box2D.postDefs = [];
          var i1 = parseInt(i);
          var i2 = parseInt(i + 1 < this.m_vertexCount ? i + 1 : 0);
          var edge = b2Math.SubtractVV(this.m_vertices[i2], this.m_vertices[i1]);
-         b2Settings.b2Assert(edge.LengthSquared() > Number.MIN_VALUE);
+         b2Settings.b2Assert(arguments.callee.toString(), edge.LengthSquared() > Number.MIN_VALUE);
          this.m_normals[i].SetV(b2Math.CrossVF(edge, 1.0));
          this.m_normals[i].Normalize();
       }
@@ -3694,9 +3694,9 @@ Box2D.postDefs = [];
       if (restitution2 === undefined) restitution2 = 0;
       return restitution1 > restitution2 ? restitution1 : restitution2;
    }
-   b2Settings.b2Assert = function (a) {
+   b2Settings.b2Assert = function (who, a) {
       if (!a) {
-         console.log(b2Settings.b2Assert.caller.name);
+         console.log("assertion failed @ "+who);
          throw "Assertion Failed";
       }
    }
@@ -4694,7 +4694,7 @@ Box2D.postDefs = [];
       data.center.SetV(this.m_sweep.localCenter);
    }
    b2Body.prototype.SetMassData = function (massData) {
-      b2Settings.b2Assert(this.m_world.IsLocked() == false);
+      b2Settings.b2Assert(arguments.callee.toString(), this.m_world.IsLocked() == false);
       if (this.m_world.IsLocked() == true) {
          return;
       }
@@ -4752,7 +4752,7 @@ Box2D.postDefs = [];
       if (this.m_I > 0.0 && (this.m_flags & b2Body.e_fixedRotationFlag) == 0) {
          this.m_I -= this.m_mass * (center.x * center.x + center.y * center.y);
          this.m_I *= this.m_inertiaScale;
-         b2Settings.b2Assert(this.m_I > 0);
+         b2Settings.b2Assert(arguments.callee.toString(), this.m_I > 0);
          this.m_invI = 1.0 / this.m_I;
       }
       else {
@@ -6345,7 +6345,7 @@ Box2D.postDefs = [];
                   bB.m_sweep.Advance(t0);
                }
                toi = c.ComputeTOI(bA.m_sweep, bB.m_sweep);
-               b2Settings.b2Assert(0.0 <= toi && toi <= 1.0);
+               b2Settings.b2Assert(arguments.callee.toString(), 0.0 <= toi && toi <= 1.0);
                if (toi > 0.0 && toi < 1.0) {
                   toi = (1.0 - toi) * t0 + toi;
                   if (toi > 1) toi = 1;
@@ -6968,7 +6968,7 @@ Box2D.postDefs = [];
          var vBY = bodyB.m_linearVelocity.y;
          var wA = bodyA.m_angularVelocity;
          var wB = bodyB.m_angularVelocity;
-         b2Settings.b2Assert(manifold.m_pointCount > 0);
+         b2Settings.b2Assert(arguments.callee.toString(), manifold.m_pointCount > 0);
          b2ContactSolver.s_worldManifold.Initialize(manifold, bodyA.m_xf, radiusA, bodyB.m_xf, radiusB);
          var normalX = b2ContactSolver.s_worldManifold.m_normal.x;
          var normalY = b2ContactSolver.s_worldManifold.m_normal.y;
@@ -7376,8 +7376,8 @@ Box2D.postDefs = [];
    b2PolyAndCircleContact.Destroy = function (contact, allocator) {}
    b2PolyAndCircleContact.prototype.Reset = function (fixtureA, fixtureB) {
       this.__super.Reset.call(this, fixtureA, fixtureB);
-      b2Settings.b2Assert(fixtureA.GetType() == b2Shape.e_polygonShape);
-      b2Settings.b2Assert(fixtureB.GetType() == b2Shape.e_circleShape);
+      b2Settings.b2Assert(arguments.callee.toString(), fixtureA.GetType() == b2Shape.e_polygonShape);
+      b2Settings.b2Assert(arguments.callee.toString(), fixtureB.GetType() == b2Shape.e_circleShape);
    }
    b2PolyAndCircleContact.prototype.Evaluate = function () {
       var bA = this.m_fixtureA.m_body;
@@ -7395,8 +7395,8 @@ Box2D.postDefs = [];
    b2PolyAndEdgeContact.Destroy = function (contact, allocator) {}
    b2PolyAndEdgeContact.prototype.Reset = function (fixtureA, fixtureB) {
       this.__super.Reset.call(this, fixtureA, fixtureB);
-      b2Settings.b2Assert(fixtureA.GetType() == b2Shape.e_polygonShape);
-      b2Settings.b2Assert(fixtureB.GetType() == b2Shape.e_edgeShape);
+      b2Settings.b2Assert(arguments.callee.toString(), fixtureA.GetType() == b2Shape.e_polygonShape);
+      b2Settings.b2Assert(arguments.callee.toString(), fixtureB.GetType() == b2Shape.e_edgeShape);
    }
    b2PolyAndEdgeContact.prototype.Evaluate = function () {
       var bA = this.m_fixtureA.GetBody();
@@ -7431,7 +7431,7 @@ Box2D.postDefs = [];
       }
    }
    b2PositionSolverManifold.prototype.Initialize = function (cc) {
-      b2Settings.b2Assert(cc.pointCount > 0);
+      b2Settings.b2Assert(arguments.callee.toString(), cc.pointCount > 0);
       var i = 0;
       var clipPointX = 0;
       var clipPointY = 0;
@@ -8566,7 +8566,7 @@ Box2D.postDefs = [];
    }
    b2Joint.Destroy = function (joint, allocator) {}
    b2Joint.prototype.b2Joint = function (def) {
-      b2Settings.b2Assert(def.bodyA != def.bodyB);
+      b2Settings.b2Assert(arguments.callee.toString(), def.bodyA != def.bodyB);
       this.m_type = def.type;
       this.m_prev = null;
       this.m_next = null;
