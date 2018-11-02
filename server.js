@@ -14,53 +14,41 @@ var io = socket(server);
 var serverData = {};
 var clientsData = {};
 
-function getClientAccessData(id){
+function getDataForClient(id){
   return serverData;
 }
 
 function newConnection(socket){
 	console.log('new connection: ' + socket.id);
-	socket.on('client-start', startClient);
-	socket.on('client-update', updateClient);
-	socket.on('disconnect', endClient);
+	socket.on('client-start', onClientRequestStart);
+	socket.on('client-update', onClientSendUpdate);
+	socket.on('disconnect', onClientRequestExit);
 
-	function startClient(data){
-		console.log(socket.id)
+	function onClientRequestStart(){
 		
-
-		setInterval(heartbeat, 50)
+    var self_id = socket.id;
+    
+		setInterval(heartbeat, 50);
 
 		function heartbeat(){
-			io.sockets.emit('heartbeat', room)
+			io.sockets.emit('heartbeat', getDataForClient(self_id));
 		}
     
 	}
-	function gameUpdate(data){
-
-		for (var i = 0; i < universe.length; i++) {
-      for (var j = 0; j < universe[i].players.length; j++){
-        if(socket.id == universe[i].players[j].id){
-          universe[i].players[j].raw_data = data;
-          break;
-        }
-      }
-		}
+	function onClientSendUpdate(data){
+    clientsData[socket.id] = data;
 	}
-
-	function removePlayer(){
-    for (var i = 0; i < universe.length; i++) {
-      for (var j = 0; j < universe[i].players.length; j++){
-        if(socket.id == universe[i].players[j].id){
-          universe[i].players.splice(j, 1)
-          console.log('disconnected')
-          break;
-        }
+	function onClientRequestExit(){
+    for (var k in clientsData) {
+      if(socket.id == k){
+        clientsData[k] = undefined;
+        console.log(k+' disconnected');
+        break;
       }
 		}
 	}
 }	
 
-serverInit()
 
 io.sockets.on('connection', newConnection);
 

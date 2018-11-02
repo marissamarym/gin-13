@@ -6,7 +6,7 @@ var socket = io();
 
 
 function main(){
-  socket.emit('client-start', clientData)
+  socket.emit('client-start')
   socket.on('server-update', function(data){
     if (data != null){
       serverData = data;
