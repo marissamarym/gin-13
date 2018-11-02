@@ -34,7 +34,7 @@ function main(){
     if (clientData.messages == undefined){
       clientData.messages = [];
     }
-    clientData.messages.push({id:socket.id,text:inp.value,secret:Math.random()});
+    clientData.messages.push({id:socket.id,text:inp.value});
     socket.emit('client-update',clientData);
   }
 }

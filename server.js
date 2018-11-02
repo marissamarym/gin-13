@@ -20,17 +20,7 @@ function updateServerData(id){
 }
 
 function getDataForClient(id){
-  var data = {};
-  if (serverData.messages){
-    data.messages = [];
-    for (var i = 0; i < serverData.messages.length; i++){
-      data.messages[i] = {};
-      data.messages[i].id = serverData.messages[i].id;
-      data.messages[i].text = serverData.messages[i].text;
-      data.messages[i].secret = (id == serverData.messages[i].id) ? serverData.messages[i].secret : "*****";
-    }
-  }
-  return data;
+  return serverData;
 }
 
 function newConnection(socket){
@@ -42,11 +32,11 @@ function newConnection(socket){
 	function onClientStart(){
 		
     var self_id = socket.id;
-    
+    var self_socket = socket;
 		setInterval(heartbeat, 500);
 		function heartbeat(){
       console.log(self_id);
-			io.sockets.emit('server-update', getDataForClient(self_id));
+			self_socket.emit('server-update', getDataForClient(self_id));
 		} 
 	}
   
