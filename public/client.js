@@ -10,7 +10,7 @@ function displayData(data){
   }
   var result = "";
   for (var i = 0; i < data.messages.length; i++){
-    result += data.messages[i].id + " ("+ data.messages[i].secret + "):<br>"
+    result += data.messages[i].id + " ("+ data.messages[i].timestamp + "):<br>"
     result += "<b>"+data.messages[i].text + "</b><br><br>"
   }
   return result;
@@ -34,7 +34,7 @@ function main(){
     if (clientData.messages == undefined){
       clientData.messages = [];
     }
-    clientData.messages.push({id:socket.id,text:inp.value});
+    clientData.messages.push({id:socket.id,text:inp.value,timestamp:new Date()});
     socket.emit('client-update',clientData);
   }
 }
