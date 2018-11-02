@@ -1,28 +1,24 @@
 /* global describe io */
 
-var forwData = {};
-var backData = {};
+var clientData = {};
+var serverData = {};
 var socket = io();
 
 
 function main(){
-
-  socket.emit('game-start', forwData)
-
-  socket.on('heartbeat', function(data){
+  socket.emit('client-start', clientData)
+  socket.on('server-update', function(data){
     if (data != null){
-      backData = data;
+      serverData = data;
     }
   })
-  function loop(t){
-    socket.emit('game-update', forwData); 
-    window.requestAnimationFrame(loop);  
+  function loop(){
+    socket.emit('client-update', clientData); 
+    setTimeout(loop,100); 
   }
-
   loop();
-
 }
 
 
-
+main();
 
