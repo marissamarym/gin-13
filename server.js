@@ -13,6 +13,7 @@ var io = socket(server);
 
 var serverData = {};
 var clientsData = {};
+var serverStatus = {};
 
 function getDataForClient(id){
   return serverData;
@@ -20,24 +21,25 @@ function getDataForClient(id){
 
 function newConnection(socket){
 	console.log('new connection: ' + socket.id);
-	socket.on('client-start', onClientRequestStart);
-	socket.on('client-update', onClientSendUpdate);
+  socket.on('client-start', onClientStart);
+	socket.on('client-update', onClientUpdate);
 	socket.on('disconnect', onClientRequestExit);
 
-	function onClientRequestStart(){
+	function onClientStart(){
 		
     var self_id = socket.id;
     
 		setInterval(heartbeat, 50);
-
 		function heartbeat(){
-			io.sockets.emit('heartbeat', getDataForClient(self_id));
-		}
-    
+			io.sockets.emit('server-heartbeat', serverStatus);
+		} 
 	}
-	function onClientSendUpdate(data){
+  
+	function onClientUpdate(data){
     clientsData[socket.id] = data;
+    io.sockets.emit('server-respond',getDataForClient(socket.id));
 	}
+  
 	function onClientRequestExit(){
     for (var k in clientsData) {
       if(socket.id == k){
