@@ -10,8 +10,8 @@ function displayData(data){
   }
   var result = "";
   for (var i = 0; i < data.messages.length; i++){
-    result += data.messages[i].id + "("+ data.messages[i].secret + "):\n"
-    result += data.messages[i].text + "\n\n"
+    result += data.messages[i].id + " ("+ data.messages[i].secret + "):<br>"
+    result += "<b>"+data.messages[i].text + "</b><br><br>"
   }
   return result;
 }
@@ -31,7 +31,7 @@ function main(){
   var inp = document.getElementById("input0");
   
   btn.onclick = function(){
-    if (clientData.texts == undefined){
+    if (clientData.messages == undefined){
       clientData.messages = [];
     }
     clientData.messages.push({id:socket.id,text:inp.value,secret:Math.random()});

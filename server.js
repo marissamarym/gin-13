@@ -20,7 +20,17 @@ function updateServerData(id){
 }
 
 function getDataForClient(id){
-  return serverData;
+  var data = {};
+  if (serverData.messages){
+    data.messages = [];
+    for (var i = 0; i < serverData.messages.length; i++){
+      data.messages[i] = {};
+      data.messages[i].id = serverData.messages[i].id;
+      data.messages[i].text = serverData.messages[i].text;
+      data.messages[i].secret = (id == data.messages[i].id) ? serverData.messages[i].secret : "*****";
+    }
+  }
+  return data;
 }
 
 function newConnection(socket){
