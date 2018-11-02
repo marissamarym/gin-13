@@ -1,7 +1,7 @@
 // server.js
 // where your node app starts
 
-/////////////.
+/////////////.///
 var express = require('express'); 
 var app = express();
 var server = app.listen(process.env.PORT || 300);
@@ -27,7 +27,7 @@ function getDataForClient(id){
       data.messages[i] = {};
       data.messages[i].id = serverData.messages[i].id;
       data.messages[i].text = serverData.messages[i].text;
-      data.messages[i].secret = (id == data.messages[i].id) ? serverData.messages[i].secret : "*****";
+      data.messages[i].secret = (id == serverData.messages[i].id) ? serverData.messages[i].secret : "*****";
     }
   }
   return data;
@@ -43,8 +43,9 @@ function newConnection(socket){
 		
     var self_id = socket.id;
     
-		setInterval(heartbeat, 50);
+		setInterval(heartbeat, 500);
 		function heartbeat(){
+      console.log(self_id);
 			io.sockets.emit('server-update', getDataForClient(self_id));
 		} 
 	}
