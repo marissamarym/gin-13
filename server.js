@@ -15,6 +15,13 @@ var serverData = {};
 var clientsData = {};
 var serverStatus = {};
 
+function updateServerData(){
+  serverData = {}
+  for (var k in clientsData){
+    serverData[k] = clientsData[k];
+  }
+}
+
 function getDataForClient(id){
   return serverData;
 }
@@ -31,13 +38,13 @@ function newConnection(socket){
     
 		setInterval(heartbeat, 50);
 		function heartbeat(){
-			io.sockets.emit('server-heartbeat', serverStatus);
+			io.sockets.emit('server-update', getDataForClient(self_id));
 		} 
 	}
   
 	function onClientUpdate(data){
     clientsData[socket.id] = data;
-    io.sockets.emit('server-respond',getDataForClient(socket.id));
+    updateServerData();
 	}
   
 	function onClientRequestExit(){
