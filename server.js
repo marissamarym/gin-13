@@ -15,11 +15,8 @@ var serverData = {};
 var clientsData = {};
 var serverStatus = {};
 
-function updateServerData(){
-  serverData = {}
-  for (var k in clientsData){
-    serverData[k] = clientsData[k];
-  }
+function updateServerData(id){
+  serverData = clientsData[id];
 }
 
 function getDataForClient(id){
@@ -30,7 +27,7 @@ function newConnection(socket){
 	console.log('new connection: ' + socket.id);
   socket.on('client-start', onClientStart);
 	socket.on('client-update', onClientUpdate);
-	socket.on('disconnect', onClientRequestExit);
+	socket.on('disconnect', onClientExit);
 
 	function onClientStart(){
 		
@@ -44,10 +41,10 @@ function newConnection(socket){
   
 	function onClientUpdate(data){
     clientsData[socket.id] = data;
-    updateServerData();
+    updateServerData(socket.id);
 	}
   
-	function onClientRequestExit(){
+	function onClientExit(){
     for (var k in clientsData) {
       if(socket.id == k){
         clientsData[k] = undefined;

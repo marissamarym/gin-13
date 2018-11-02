@@ -9,19 +9,21 @@ function main(){
   socket.emit('client-start')
 
   socket.on('server-update', function(data){
-    if (data != null){
-      serverData = data;
-      
-    }
+    serverData = data;
+    clientData = data;
+    document.getElementById("text0").innerHTML = JSON.stringify(serverData);
   })
-  var btn = document.getElementById("button0")
+  var btn = null;
+  var btn = document.getElementById("button0");
+  var inp = document.getElementById("input0");
+  
   btn.onclick = function(){
-    
-    
-    socket.emit('client-update', clientData); 
+    if (clientData.texts == undefined){
+      clientData.texts = [];
+    }
+    clientData.texts.push(inp.value);
   }
 }
 
-
-main();
+document.main();
 
