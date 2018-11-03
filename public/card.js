@@ -126,8 +126,9 @@ function renderCards(){
       set_class += " card-sel";
     }
     
-    //var moving = ((mouseDownInfo.state == "multimove" || mouseDownInfo.state == "single") && issel)
-    var vis = visible(cards[i]);//&& (!moving);
+    var moving = ((mouseDownInfo.state == "multimove" || mouseDownInfo.state == "single") && issel);
+    var stopped = (Math.abs(cards[i].targ.x-cards[i].x) < 2) && (Math.abs(cards[i].targ.y-cards[i].y) < 2);
+    var vis = visible(cards[i]) && (!moving) && stopped;
     
     if (!vis){
       set_class += " card-back";
@@ -225,7 +226,7 @@ function cardMain(commitCallback){
       cd.resolve_dl = 10;
       targs.push({x:cd.targ.x,y:cd.targ.y,z:cd.z});
     }
-    commitCallback({cards:cards2ids(mouseSel.cards), targ:screen2desk({x:mouseX,y:mouseY})});
+    commitCallback({cards:cards2ids(mouseSel.cards), targs:targs});
   }
   
   var desk = document.getElementById("desk");

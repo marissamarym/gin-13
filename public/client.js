@@ -71,7 +71,7 @@ window.onload = function(){
   window.cardMain(function(data){
     socket.emit('client-update',{
       op:"movc",id:socket.id,
-      cards:data.cards, targ:data.targ,
+      cards:data.cards, targs:data.targs,
       timestamp:new Date(),
     });
   });
