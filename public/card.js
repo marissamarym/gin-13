@@ -149,12 +149,16 @@ function renderCards(){
     }
 
     var set_class = "card"
+    var issel = mouseSel.cards.indexOf(cards[i]) != -1
     
-    if (mouseDownInfo.state != "single" && mouseSel.cards.indexOf(cards[i]) != -1){
+    if (mouseDownInfo.state != "single" && issel){
       set_class += " card-sel";
     }
     
-    if (!visible(cards[i])){
+    //var moving = ((mouseDownInfo.state == "multimove" || mouseDownInfo.state == "single") && issel)
+    var vis = visible(cards[i]);//&& (!moving);
+    
+    if (!vis){
       set_class += " card-back";
     }
 
