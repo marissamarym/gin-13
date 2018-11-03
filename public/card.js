@@ -174,7 +174,7 @@ function renderCards(){
 
 }
 function animateCards(){
-  var spd = 0.05
+  var spd = 0.3
   for (var i = 0; i < cards.length; i++){
     cards[i].x = cards[i].x * (1-spd) + cards[i].targ.x * spd;
     cards[i].y = cards[i].y * (1-spd) + cards[i].targ.y * spd; 
