@@ -28,6 +28,7 @@ function updateServerData(data){
   var room = rooms[locatePlayer(data.id)];
   if (room == undefined){
     console.log("err: player id belongs to no room: "+data.id);
+    return;
   }
   if (data.op == "msg"){
     console.log("received!",data);

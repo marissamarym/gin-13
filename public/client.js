@@ -50,20 +50,21 @@ function main(){
       op:"name",id:socket.id,
       text:document.getElementById("name-inp").value,
     });
+    
   }
   
   document.getElementById("msg-btn").onclick = function(){
-    console.log("send!");
     socket.emit('client-update',{
       op:"msg",id:socket.id,
       text:document.getElementById("msg-inp").value,
       timestamp:new Date(),
     });
+    console.log("send!");
     
   }
 
 }
 window.onload = function(){
   main();
-  cardMain();
+  //cardMain();
 };
