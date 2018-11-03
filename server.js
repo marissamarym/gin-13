@@ -10,20 +10,30 @@ console.log('server running')
 
 var io = require('socket.io')(server);
 
-var rooms = {{id="lobby",messages:[],players:{}}};
+var rooms = {"lobby":{messages:[],players:{}}};
+
+function locatePlayer(id){
+  for (var k in rooms){
+    if (id in rooms[k].players){
+      return k;
+    }
+  }
+}
 
 function updateServerData(data){
+  var room = rooms[locatePlayer(data.id)];
   if (data.op == "msg"){
-    serverData.messages.push(data);
+    room.messages.push(data);
     
   }else if (data.op == "name"){
-    serverData.players[data.id].name = data.text;
+    room.players[data.id].name = data.text;
     console.log("set name: "+data.id + "="+data.text);
   }
 }
 
 function getDataForClient(id){
-  return serverData;
+  var room = rooms[locatePlayer(id)];
+  return room;
 }
 
 function newConnection(socket){
@@ -34,11 +44,11 @@ function newConnection(socket){
 
 	function onClientStart(){
 		
-    serverData.players[socket.id]= ({name:socket.id});
+    rooms.lobby.players[socket.id]= ({name:socket.id});
     
     var self_id = socket.id;
     var self_socket = socket;
-		setInterval(heartbeat, 500);
+		setInterval(heartbeat, 200);
 		function heartbeat(){
 			self_socket.emit('server-update', getDataForClient(self_id));
 		} 
@@ -49,11 +59,8 @@ function newConnection(socket){
 	}
   
 	function onClientExit(){
-    for (var i = serverData.players.length-1; i >= 0; i--){
-      if (serverData.players[i].id == socket.id){
-        serverData.players.splice(i,1);
-      }
-    }
+    var room = rooms[locatePlayer(socket.id)];
+    delete room.players[socket.id];
     console.log(socket.id+' disconnected');
 	}
 }	
