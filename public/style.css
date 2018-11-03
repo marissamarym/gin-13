@@ -66,6 +66,16 @@ body{
   -moz-user-select: none;
 }
 
+.areabox{
+  border: 1px dashed white;
+  position: absolute;
+  color: white;
+  font-family: monospace;
+  font-size:22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
 #panel{
   background-color: lightgrey;
   position: absolute;

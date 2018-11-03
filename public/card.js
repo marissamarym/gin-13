@@ -106,6 +106,11 @@ function getMouseRect(mdinfo){
   return {x:sx,y:sy,w:sw,h:sh};
 }
 
+function visible(p){
+  return AREA[DESK_ROT].x < p.x && p.x < AREA[DESK_ROT].x + AREA[DESK_ROT].w
+      && AREA[DESK_ROT].y < p.y && p.y < AREA[DESK_ROT].y + AREA[DESK_ROT].h;
+}
+
 
 function renderCards(){
   
@@ -141,7 +146,9 @@ function renderCards(){
     
     if (mouseDownInfo.state != "single" && mouseSel.cards.indexOf(cards[i]) != -1){
       set_class += " card-sel";
-    }if (cards[i].y < HEIGHT/2){
+    }
+    
+    if (!visible(cards[i])){
       set_class += " card-back";
     }
 
@@ -175,6 +182,15 @@ function renderCards(){
   selbox.style.top = sy + "px";
   selbox.style.width = sw + "px";
   selbox.style.height = sh + "px";
+  
+  for (var k in AREA){
+    var ab = document.getElementById("areabox-"+k);
+    var ret = getMouseRect({
+      p0:desk2screen(AREA[k]),
+      p1:desk2screen({x:AREA[k].x+AREA[k].w, y:AREA[k].y+AREA[k].h})
+    })
+    ab.style.left = AREA[k]
+  }
   
 
 }
