@@ -1,5 +1,6 @@
 body{
-  background: url("https://www.toptal.com/designers/subtlepatterns/patterns/binding_dark.png");
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMCcgaGVpZ2h0PScxMCc+CiAgPHJlY3Qgd2lkdGg9JzEwJyBoZWlnaHQ9JzEwJyBmaWxsPScjMTExJy8+CiAgPHBhdGggZD0nTTAgMEwxMCAxMFpNMTAgMEwwIDEwWicgc3Ryb2tlLXdpZHRoPScwLjUnIHN0cm9rZT0nIzIyMicvPgo8L3N2Zz4=");
+  background-repeat: repeat;
 }
 
 #desk{
