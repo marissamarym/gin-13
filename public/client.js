@@ -30,7 +30,6 @@ function main(){
     var newhtml = displayData(serverData);
     document.getElementById("room-list").innerHTML = "<b>open rooms:</b>\n"+serverData.room_list.join("\n");
     if (document.getElementById("msg-disp").innerHTML != newhtml){
-      BUSY = false;
       document.getElementById("msg-disp").innerHTML = newhtml
       document.getElementById("msg-disp").scrollTop = document.getElementById("msg-disp").scrollHeight;
     }

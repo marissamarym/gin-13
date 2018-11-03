@@ -8,6 +8,12 @@ var CARD_HEIGHT = 70;
 var WIDTH = 800;
 var HEIGHT = 800;
 var DESK_ROT = 1;
+var AREA = {
+  0:{x:100,y:700,w:600,h:100},
+  1:{x:700,y:100,w:100,h:600},
+  2:{x:100,y:  0,w:600,h:100},
+  3:{x:  0,y:100,w:100,h:600},
+}
 
 var mouseDownInfo = {cardId:"",t:0,p0:{x:0,y:0},p1:{x:0,y:0},state:"none"};
 var mouseSel = {cards:[]};
