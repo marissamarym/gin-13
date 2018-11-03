@@ -9,10 +9,10 @@ var WIDTH = 800;
 var HEIGHT = 800;
 var DESK_ROT = 1;
 var AREA = {
-  0:{x:100,y:700,w:600,h:100},
-  1:{x:700,y:100,w:100,h:600},
-  2:{x:100,y:  0,w:600,h:100},
-  3:{x:  0,y:100,w:100,h:600},
+  0:{x:150,y:650,w:500,h:150},
+  1:{x:650,y:150,w:150,h:500},
+  2:{x:150,y:  0,w:500,h:150},
+  3:{x:  0,y:150,w:150,h:500},
 }
 
 var mouseDownInfo = {cardId:"",t:0,p0:{x:0,y:0},p1:{x:0,y:0},state:"none"};
@@ -98,7 +98,7 @@ function getCardById(id){
   }
 }
 
-function getMouseRect(mdinfo){
+function corners2rect(mdinfo){
   var sw = Math.abs(mdinfo.p1.x-mdinfo.p0.x);
   var sh = Math.abs(mdinfo.p1.y-mdinfo.p0.y);
   var sx = Math.min(mdinfo.p1.x,mdinfo.p0.x);
@@ -166,7 +166,7 @@ function renderCards(){
   var sw = 0, sh = 0, sx = -1000, sy = -1000;
   if (mouseDownInfo.state == "multiselect"){
     selbox.innerHTML = mouseSel.cards.length;
-    var ret = getMouseRect({
+    var ret = corners2rect({
       p0:desk2screen(mouseDownInfo.p0), 
       p1:desk2screen(mouseDownInfo.p1)
     });
@@ -185,11 +185,14 @@ function renderCards(){
   
   for (var k in AREA){
     var ab = document.getElementById("areabox-"+k);
-    var ret = getMouseRect({
+    var ret = corners2rect({
       p0:desk2screen(AREA[k]),
       p1:desk2screen({x:AREA[k].x+AREA[k].w, y:AREA[k].y+AREA[k].h})
     })
-    ab.style.left = AREA[k]
+    ab.style.left = ret.x+"px";
+    ab.style.top = ret.y+"px";
+    ab.style.width = (ret.w-ab.style.margin*2)+"px";
+    ab.style.height = (ret.h-ab.style.margin*2)+"px";
   }
   
 
@@ -238,7 +241,7 @@ function cardMain(){
     if (mouseDownInfo.state == "multiselect"){
       mouseDownInfo.p1 = screen2desk({x:mouseX,y:mouseY})
     
-      var ret = getMouseRect(mouseDownInfo);
+      var ret = corners2rect(mouseDownInfo);
 
       for (var i = 0; i < cards.length; i++){
         var cx = cards[i].x;

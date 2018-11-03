@@ -67,6 +67,7 @@ body{
 }
 
 .areabox{
+  margin: 10px;
   border: 1px dashed white;
   position: absolute;
   color: white;
