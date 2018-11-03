@@ -71,16 +71,16 @@ function newDeck() {
         suit:SUIT[i], 
         rank:RANK[j], 
         x: Math.random()*WIDTH, 
-        y: Math.random()*HEIGHT,
+        y: Math.random()*HEIGHT, z: 0,
         targ: {x:0,y:0},
       })
     }
   }
   deck.push({suit:"red",rank:"joker", 
-             x: Math.random()*WIDTH, y: Math.random()*HEIGHT,
+             x: Math.random()*WIDTH, y: Math.random()*HEIGHT, z:0,
              targ: {x:0,y:0}});
   deck.push({suit:"black",rank:"joker",
-             x: Math.random()*WIDTH, y: Math.random()*HEIGHT,
+             x: Math.random()*WIDTH, y: Math.random()*HEIGHT, z:0,
              targ: {x:0,y:0}});
   function makeId(card){
     return card.suit+"-"+card.rank+"-"+randId();
@@ -231,12 +231,13 @@ function cardResolve(ncards){
       cards.push(ncards[i]);
     }
     else{
-      cd.targ.x = 
+      if (mouseSel.cards.indexOf(cd) == -1){
+        cd.targ.x = ncards[i].x;
+        cd.targ.y = ncards[i].y;
+      }
     }
-  
   }
 }
-
 
 
 function cardMain(commitCallback){
@@ -255,7 +256,8 @@ function cardMain(commitCallback){
         if (!mouseSel.cards.length){
           mouseDownInfo.state = "single";
           mouseSel.cards = [getCardById(mouseDownInfo.cardId)];
-          document.getElementById(mouseDownInfo.cardId).style.zIndex = ""+(maxZIndex+1);
+          mouseSel.cards[0].z = max
+          // document.getElementById(mouseDownInfo.cardId).style.zIndex = ""+(maxZIndex+1);
         }
       }else{
         if (!mouseSel.cards.length){
@@ -266,7 +268,7 @@ function cardMain(commitCallback){
         }
       }
     }else if (mouseDownInfo.state == "multimove"){
-      commit();
+      //commit();
       mouseSel.cards = [];
       mouseDownInfo.state = "none";
     }
@@ -331,7 +333,7 @@ function cardMain(commitCallback){
   }
   desk.onmouseup = function(event){
     if (mouseDownInfo.state == "single"){
-      commit();
+      // commit();
       mouseSel.cards = [];
       mouseDownInfo.state = "none";
     }else if (mouseDownInfo.state == "multiselect"){

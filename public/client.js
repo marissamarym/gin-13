@@ -33,6 +33,7 @@ function main(){
       document.getElementById("msg-disp").innerHTML = newhtml
       document.getElementById("msg-disp").scrollTop = document.getElementById("msg-disp").scrollHeight;
     }
+    window.cardResolve(serverData.cards);
     
   })
 //   document.getElementById('room-inp').value = "lobby";
