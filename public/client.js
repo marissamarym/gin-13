@@ -36,6 +36,8 @@ function main(){
     }
     
   })
+  document.getElementById('room-inp').value = "lobby";
+  document.getElementById('name-inp').value = socket.id;
   
   document.getElementById("room-btn").onclick = function(){
     socket.emit('client-update',{

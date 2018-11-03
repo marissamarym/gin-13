@@ -13,7 +13,7 @@ var io = require('socket.io')(server);
 var rooms = {"lobby":newRoom("lobby")};
 
 function newRoom(name){
-  return {messages:[],players:{}};
+  return {name:name, messages:[],players:{}};
 }
 
 function locatePlayer(id){
@@ -26,6 +26,9 @@ function locatePlayer(id){
 
 function updateServerData(data){
   var room = rooms[locatePlayer(data.id)];
+  if (room == undefined){
+    console.log("err: player belongs to no room");
+  }
   if (data.op == "msg"){
     room.messages.push(data);
     
@@ -34,18 +37,17 @@ function updateServerData(data){
     console.log("set name: "+data.id + "="+data.text);
   
   }else if (data.op == "room"){
-    if (data.text in rooms){
-      
+    if (!(data.text in rooms)){
+      rooms[data.text] = newRoom(data.text);
     }
-    
-    rooms[data.text] = 
+    rooms[data.text].players[data.id] = room.players[data.id]; 
     delete room.players[data.id];
   }
 }
 
 function getDataForClient(id){
   var room = rooms[locatePlayer(id)];
-  return room;
+  return Object.assign({}, room, {"room_list":Object.keys(rooms)});
 }
 
 function newConnection(socket){
