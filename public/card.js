@@ -8,7 +8,6 @@ var CARD_HEIGHT = 70;
 var WIDTH = 800;
 var HEIGHT = 800;
 var DESK_ROT = 1;
-var BUSY = false;
 
 var mouseDownInfo = {cardId:"",t:0,p0:{x:0,y:0},p1:{x:0,y:0},state:"none"};
 var mouseSel = {cards:[]};

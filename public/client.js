@@ -55,7 +55,6 @@ function main(){
   }
   
   document.getElementById("msg-btn").onclick = function(){
-    BUSY = true;
     socket.emit('client-update',{
       op:"msg",id:socket.id,
       text:document.getElementById("msg-inp").value,
@@ -68,5 +67,9 @@ function main(){
 }
 window.onload = function(){
   main();
-  cardMain();
+  window.cardMain();
+  var viewportupdate = function(){
+    document.getElementById("main").left = window.innerWidth/2-(window.WIDTH+400);
+    document.getElementById("main").left = window.innerWidth/2-(window.HEIGHT+400);
+  }
 };
