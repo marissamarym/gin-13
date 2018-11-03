@@ -6,6 +6,7 @@
   cursor: crosshair;
   left:0px;
   top:0px;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
 .card{
@@ -67,6 +68,7 @@
   padding: 10px;
   font-family: monospace;
   width: calc(100%-80px);
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
 #msg-panel{
@@ -81,4 +83,11 @@
 }
 #msg-inp{
   width:100%;
+}
+
+#msg-ctrl{
+  width:100%;
+}
+#msg-btn{
+  width:80%;
 }
