@@ -10,10 +10,12 @@ console.log('server running')
 
 var io = require('socket.io')(server);
 
-var serverData = {};
+var serverData = {messages:[]};
 
-function updateServerData(id){
-  serverData = clientsData[id];
+function updateServerData(data){
+  if (data.op == "msg"){
+    serverData.messages.push(data);
+  }
 }
 
 function getDataForClient(id){
@@ -37,18 +39,11 @@ function newConnection(socket){
 	}
   
 	function onClientUpdate(data){
-    clientsData[socket.id] = data;
-    updateServerData(socket.id);
+    updateServerData(data);
 	}
   
 	function onClientExit(){
-    for (var k in clientsData) {
-      if(socket.id == k){
-        clientsData[k] = undefined;
-        console.log(k+' disconnected');
-        break;
-      }
-		}
+    console.log(socket.id+' disconnected');
 	}
 }	
 
