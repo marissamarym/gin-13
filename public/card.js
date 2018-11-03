@@ -191,8 +191,8 @@ function renderCards(){
     })
     ab.style.left = ret.x+"px";
     ab.style.top = ret.y+"px";
-    ab.style.width = (ret.w-ab.style.margin*2)+"px";
-    ab.style.height = (ret.h-ab.style.margin*2)+"px";
+    ab.style.width = (ret.w-20)+"px";
+    ab.style.height = (ret.h-20)+"px";
   }
   
 
