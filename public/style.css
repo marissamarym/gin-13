@@ -1,3 +1,69 @@
-/* styles */
-/* called by your view template */
+#desk{
+  background-color: seagreen;
+  width: 800px;
+  height: 800px;
+  position: absolute;
+  cursor: crosshair;
+  left:0px;
+  top:0px;
+}
+
+.card{
+/* actual: width 50 height 70 */
+  padding: 5px;
+  width: 40px;
+  height: 60px;
+  position: absolute;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+/*  text-align: center;*/
+  font-size: 24px;
+  line-height: 20px;
+  font-family: monospace;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  cursor: pointer;
+}
+
+.card.card-sel{
+  cursor: grabbing;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+}
+
+.card.card-back{
+  border: 1px solid #877;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc3JyBoZWlnaHQ9JzcnPgogIDxyZWN0IHdpZHRoPSc3JyBoZWlnaHQ9JzcnIGZpbGw9JyNmZmYnLz4KICA8cGF0aCBkPSdNMCAwTDcgN1pNNyAwTDAgN1onIHN0cm9rZS13aWR0aD0nMC41JyBzdHJva2U9JyM4NzcnLz4KPC9zdmc+");
+  background-repeat: repeat;
+  font-size: 0px;
+}
+
+.card:hover{
+  box-shadow: 3px 3px 2px rgba(0,0,0,0.25); 
+  transform: translate(-1px,-1px);
+}
+.card:active{
+  cursor: grabbing;
+  box-shadow: 5px 5px 2px rgba(0,0,0,0.15); 
+}
+
+#selbox{
+  border: 1px solid white;
+  background-color: rgba(255,255,255,0.1);
+  position: absolute;
+  color: white;
+  font-family: monospace;
+  font-size:22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+#panel{
+  position: absolute;
+  left:800px;
+  top:0px;
+  margin: 10px;
+  font-family: monospace;
+}
+
 

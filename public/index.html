@@ -1,33 +1,43 @@
 <!DOCTYPE html>    
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+<script src="/card.js"></script>
 <script src="/client.js"></script>
+
 
 <html lang="en">
   <head>
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-    <h1>
-      min-chat
-    </h1>
-    <p><i>Minimum chat-room demo using socket.io</i></p>
-    <div id="room-list"></div>
-    <div id="msg-disp" style="height:500px; overflow:scroll;"></div>
 
-    Room:
-    <input id="room-inp" size="10"/>
-    <button id="room-btn">GO</button>
+    <div id="desk">    
+      <div id="selbox"></div>
+    </div>
     
-    Name:
-    <input id="name-inp" size="10"/>
-    <button id="name-btn">OK</button>
-    
-    Message:
-    <input id="msg-inp" size="30"/>
-    <button id="msg-btn">Send</button>
-    
-    <div id="debug"></div>
+    <div id="panel">
+      <div id="room-list"></div>
+      
+      <div>
+        Room:
+        <input id="room-inp" size="10"/>
+        <button id="room-btn">GO</button>
+
+        Name:
+        <input id="name-inp" size="10"/>
+        <button id="name-btn">OK</button>
+      </div>
+
+      
+      <div>
+        <div id="msg-disp" style="height:500px; overflow:scroll;"></div>
+
+        Message:
+        <input id="msg-inp" size="30"/>
+        <button id="msg-btn">Send</button>
+      </div>
+    </div>
+
     
   </body>
 </html>

@@ -3,9 +3,6 @@
 var serverData = {};
 var socket = io();
 
-
-
-
 function displayData(data){
   if (!data.messages){
     return ".";
@@ -31,7 +28,7 @@ function main(){
     serverData = data;
     //document.getElementById("debug").innerHTML = `<font size="0.1">`+JSON.stringify(serverData)+`</font>`;
     var newhtml = displayData(serverData);
-    document.getElementById("room-list").innerHTML = "<b>open rooms: </b>"+serverData.room_list.join(", ");
+    document.getElementById("room-list").innerHTML = "<b>open rooms:</b>\n"+serverData.room_list.join("\n");
     if (document.getElementById("msg-disp").innerHTML != newhtml){
       document.getElementById("msg-disp").innerHTML = newhtml
       document.getElementById("msg-disp").scrollTop = document.getElementById("msg-disp").scrollHeight;
@@ -65,4 +62,7 @@ function main(){
   }
 
 }
-window.onload = main;
+window.onload = function(){
+  main();
+  cardMain();
+};
