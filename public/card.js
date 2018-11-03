@@ -170,7 +170,8 @@ function renderCards(){
 
     elt.style.left = (txy.x-CARD_WIDTH/2)+"px";
     elt.style.top = (txy.y-CARD_HEIGHT/2)+"px";
-    maxZIndex = Math.max(maxZIndex, Number(elt.style.zIndex));
+    elt.style.zIndex = cards[i].z;
+    maxZIndex = Math.max(maxZIndex, cards[i].z);
 
   }
   
@@ -234,6 +235,7 @@ function cardResolve(ncards){
       if (mouseSel.cards.indexOf(cd) == -1){
         cd.targ.x = ncards[i].x;
         cd.targ.y = ncards[i].y;
+        cd.z = ncards[i].z;
       }
     }
   }
@@ -256,7 +258,7 @@ function cardMain(commitCallback){
         if (!mouseSel.cards.length){
           mouseDownInfo.state = "single";
           mouseSel.cards = [getCardById(mouseDownInfo.cardId)];
-          mouseSel.cards[0].z = max
+          mouseSel.cards[0].z = maxZIndex + 1;
           // document.getElementById(mouseDownInfo.cardId).style.zIndex = ""+(maxZIndex+1);
         }
       }else{
@@ -337,8 +339,10 @@ function cardMain(commitCallback){
       mouseSel.cards = [];
       mouseDownInfo.state = "none";
     }else if (mouseDownInfo.state == "multiselect"){
+      
       for (var i = 0; i < mouseSel.cards.length; i++){
-        document.getElementById(mouseSel.cards[i].id).style.zIndex = maxZIndex + i;
+        mouseSel.cards[i].z = maxZIndex + i*10;
+        //document.getElementById(mouseSel.cards[i].id).style.zIndex = maxZIndex + i;
       }
       if (mouseSel.cards.length){
         mouseDownInfo.state = "multimove";
