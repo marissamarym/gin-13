@@ -109,8 +109,10 @@ function corners2rect(mdinfo){
 }
 
 function visible(p){
-  return AREA[DESK_ROT].x < p.x && p.x < AREA[DESK_ROT].x + AREA[DESK_ROT].w
-      && AREA[DESK_ROT].y < p.y && p.y < AREA[DESK_ROT].y + AREA[DESK_ROT].h;
+  return (AREA[DESK_ROT].x < p.x && p.x < AREA[DESK_ROT].x + AREA[DESK_ROT].w
+       && AREA[DESK_ROT].y < p.y && p.y < AREA[DESK_ROT].y + AREA[DESK_ROT].h)
+      ||( AREA.front.x < p.x && p.x < AREA.front.x + AREA.front.w
+       && AREA.front.y < p.y && p.y < AREA.front.y + AREA.front.h);
 }
 
 
