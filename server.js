@@ -60,7 +60,9 @@ function newConnection(socket){
   
 	function onClientExit(){
     var room = rooms[locatePlayer(socket.id)];
-    delete room.players[socket.id];
+    if (room != undefined){
+      delete room.players[socket.id];
+    }
     console.log(socket.id+' disconnected');
 	}
 }	
