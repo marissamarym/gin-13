@@ -9,7 +9,7 @@
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;
+/*   font-size: 24px; */
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -93,9 +93,9 @@ body{
   border: 1px dashed white;
   border-radius: 3px;
   position: absolute;
-  color: white;
+  color: rgba(255,255,255,0.5);
   font-family: monospace;
-  font-size:22px;
+  font-size:18px;
   -webkit-user-select: none;
   -moz-user-select: none;
 }

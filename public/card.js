@@ -7,7 +7,7 @@ var CARD_WIDTH = 50;
 var CARD_HEIGHT = 70;
 var WIDTH = 800;
 var HEIGHT = 800;
-var DESK_ROT = 1;
+var DESK_ROT = 0;
 var AREA = {
   0:{x:150,y:650,w:500,h:150},
   1:{x:650,y:150,w:150,h:500},
@@ -70,21 +70,23 @@ function newDeck() {
       deck.push({
         suit:SUIT[i], 
         rank:RANK[j], 
-        x: 0, 
-        y: 0,
-        targ: {x:Math.random()*800,y:Math.random()*800},
+        x: Math.random()*WIDTH, 
+        y: Math.random()*HEIGHT,
+        targ: {x:0,y:0},
       })
     }
   }
-  deck.push({suit:"red",rank:"joker", x: 0, y: 0,
-             targ: {x:Math.random()*800,y:Math.random()*800}});
-  deck.push({suit:"black",rank:"joker", x: 0, y: 0,
-             targ: {x:Math.random()*800,y:Math.random()*800}});
+  deck.push({suit:"red",rank:"joker", 
+             x: Math.random()*WIDTH, y: Math.random()*HEIGHT,
+             targ: {x:0,y:0}});
+  deck.push({suit:"black",rank:"joker",
+             x: Math.random()*WIDTH, y: Math.random()*HEIGHT,
+             targ: {x:0,y:0}});
   function makeId(card){
     return card.suit+"-"+card.rank+"-"+randId();
   }
   for (var i = 0; i < deck.length; i++){
-    deck[i].targ.x = WIDTH/2+i*1;
+    deck[i].targ.x = WIDTH/2+10+CARD_HEIGHT/2+i*1;
     deck[i].targ.y = HEIGHT/2-i*1;
     deck[i].id = makeId(deck[i]);
   }
@@ -300,6 +302,10 @@ function cardMain(){
   }
   
   cards = newDeck()//.concat(newDeck());
+  
+  document.getElementById("rot").onclick = function(){
+    DESK_ROT = (DESK_ROT + 1) % 4
+  }
   
   function animloop(){
     animateCards();
