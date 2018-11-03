@@ -2,6 +2,20 @@
 // where your node app starts
 
 /////////////./////
+//https://www.npmjs.com/package/btoa
+function btoa(str) {
+  var buffer;
+
+  if (str instanceof Buffer) {
+    buffer = str;
+  } else {
+    buffer = Buffer.from(str.toString(), 'binary');
+  }
+
+  return buffer.toString('base64');
+}
+
+/////////
 
 
 var SUIT = ["diamond","club","heart","spade"]
@@ -110,6 +124,7 @@ function getDataForClient(id){
   return Object.assign({}, room, {"room_list":Object.keys(rooms)});
 }
 
+
 function newConnection(socket){
 	console.log('new connection: ' + socket.id);
   socket.on('client-start', onClientStart);
@@ -118,7 +133,8 @@ function newConnection(socket){
 
 	function onClientStart(){
 		
-    rooms.lobby.players[socket.id]= ({name:socket.id});
+    var headcnt = Object.keys(rooms.lobby.players).length;
+    rooms.lobby.players[socket.id]= ({name:socket.id, idx:headcnt});
     
     var self_id = socket.id;
     var self_socket = socket;

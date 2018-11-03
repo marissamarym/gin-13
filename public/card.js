@@ -224,6 +224,20 @@ function cards2ids(cds){
   return result;
 }
 
+function cardResolve(ncards){
+  for (var i = 0; i < ncards.length; i++){
+    var cd = getCardById(ncards[i].id);
+    if (cd == undefined){
+      cards.push(ncards[i]);
+    }
+    else{
+      cd.targ.x = 
+    }
+  
+  }
+}
+
+
 
 function cardMain(commitCallback){
   var commit = function(){
@@ -333,11 +347,9 @@ function cardMain(commitCallback){
     
   }
   
-  cards = newDeck()//.concat(newDeck());
-  
-  document.getElementById("rot").onclick = function(){
-    DESK_ROT = (DESK_ROT + 1) % 4
-  }
+//   document.getElementById("rot").onclick = function(){
+//     DESK_ROT = (DESK_ROT + 1) % 4
+//   }
   
   function animloop(){
     animateCards();
