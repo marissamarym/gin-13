@@ -13,6 +13,8 @@ var AREA = {
   1:{x:650,y:150,w:150,h:500},
   2:{x:150,y:  0,w:500,h:150},
   3:{x:  0,y:150,w:150,h:500},
+  front:{x:150,y:150,w:250,h:500},
+  back: {x:400,y:150,w:250,h:500},
 }
 
 var mouseDownInfo = {cardId:"",t:0,p0:{x:0,y:0},p1:{x:0,y:0},state:"none"};
