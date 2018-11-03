@@ -30,6 +30,7 @@ function updateServerData(data){
     console.log("err: player id belongs to no room: "+data.id);
   }
   if (data.op == "msg"){
+    console.log("received!",data);
     room.messages.push(data);
     
   }else if (data.op == "name"){
@@ -65,7 +66,7 @@ function newConnection(socket){
     
     var self_id = socket.id;
     var self_socket = socket;
-		setInterval(heartbeat, 200);
+		setInterval(heartbeat, 100);
 		function heartbeat(){
 			self_socket.emit('server-update', getDataForClient(self_id));
 		} 

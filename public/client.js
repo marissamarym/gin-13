@@ -53,6 +53,7 @@ function main(){
   }
   
   document.getElementById("msg-btn").onclick = function(){
+    console.log("send!");
     socket.emit('client-update',{
       op:"msg",id:socket.id,
       text:document.getElementById("msg-inp").value,

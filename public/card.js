@@ -281,6 +281,12 @@ function cardMain(){
     renderCards();
     window.setInterval(renderloop,100);
   }
-  animloop();
-  renderloop();
+  function loop(){
+    animateCards();
+    renderCards();
+    window.setInterval(loop,100);
+  }
+  //animloop();
+  //renderloop();
+  loop()
 }
