@@ -30,6 +30,7 @@ function main(){
     var newhtml = displayData(serverData);
     document.getElementById("room-list").innerHTML = "<b>open rooms:</b>\n"+serverData.room_list.join("\n");
     if (document.getElementById("msg-disp").innerHTML != newhtml){
+      BUSY = false;
       document.getElementById("msg-disp").innerHTML = newhtml
       document.getElementById("msg-disp").scrollTop = document.getElementById("msg-disp").scrollHeight;
     }
@@ -54,17 +55,18 @@ function main(){
   }
   
   document.getElementById("msg-btn").onclick = function(){
+    BUSY = true;
     socket.emit('client-update',{
       op:"msg",id:socket.id,
       text:document.getElementById("msg-inp").value,
       timestamp:new Date(),
     });
-    console.log("send!");
+    
     
   }
 
 }
 window.onload = function(){
   main();
-  //cardMain();
+  cardMain();
 };
