@@ -140,6 +140,7 @@ function renderCards(){
     elt.style.left = (txy.x-CARD_WIDTH/2)+"px";
     elt.style.top = (txy.y-CARD_HEIGHT/2)+"px";
     elt.style.zIndex = ""+cards[i].z;
+    console.log(cards[i].z);
     maxZIndex = Math.max(maxZIndex, cards[i].z);
 
   }
@@ -183,7 +184,10 @@ function animateCards(){
   var spd = 0.3
   for (var i = 0; i < cards.length; i++){
     cards[i].x = cards[i].x * (1-spd) + cards[i].targ.x * spd;
-    cards[i].y = cards[i].y * (1-spd) + cards[i].targ.y * spd; 
+    cards[i].y = cards[i].y * (1-spd) + cards[i].targ.y * spd;
+    if (cards[i].resolve_dl > 0){
+      cards[i].resolve_dl -= 1;
+    }
   }
 }
 function cards2ids(cds){
@@ -202,9 +206,11 @@ function cardResolve(ncards){
     }
     else{
       if (mouseSel.cards.indexOf(cd) == -1){
-        cd.targ.x = ncards[i].x;
-        cd.targ.y = ncards[i].y;
-        cd.z = ncards[i].z;
+        if (cd.resolve_dl <= 0){
+          cd.targ.x = ncards[i].x;
+          cd.targ.y = ncards[i].y;
+          cd.z = ncards[i].z;
+        }
       }
     }
   }
@@ -213,6 +219,12 @@ function cardResolve(ncards){
 
 function cardMain(commitCallback){
   var commit = function(){
+    var targs = [];
+    for (var i = 0; i < mouseSel.cards.length; i++){
+      var cd = mouseSel.cards[i];
+      cd.resolve_dl = 10;
+      targs.push({x:cd.targ.x,y:cd.targ.y,z:cd.z});
+    }
     commitCallback({cards:cards2ids(mouseSel.cards), targ:screen2desk({x:mouseX,y:mouseY})});
   }
   
@@ -310,7 +322,6 @@ function cardMain(commitCallback){
     }else if (mouseDownInfo.state == "multiselect"){
       
       for (var i = 0; i < mouseSel.cards.length; i++){
-        console.log(maxZIndex);
         mouseSel.cards[i].z = maxZIndex+i;
       }
       if (mouseSel.cards.length){

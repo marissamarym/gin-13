@@ -15,7 +15,7 @@ function btoa(str) {
   return buffer.toString('base64');
 }
 
-/////////
+///////////
 
 
 var SUIT = ["diamond","club","heart","spade"]
@@ -43,14 +43,15 @@ function newDeck() {
         x: 0, 
         y: 0, z:0,
         targ: {x:0,y:0},
+        resolve_dl: 0,
       })
     }
   }
   deck.push({suit:"red",rank:"joker", 
-             x:0, y:0, z:0,
+             x:0, y:0, z:0, resolve_dl: 0,
              targ: {x:0,y:0}});
   deck.push({suit:"black",rank:"joker",
-             x: 0, y: 0, z:0,
+             x: 0, y: 0, z:0, resolve_dl: 0,
              targ: {x:0,y:0}});
   function makeId(card){
     return card.suit+"-"+card.rank+"-"+randId();
@@ -114,9 +115,10 @@ function updateServerData(data){
         console.log("err: moving a card that does not exist",data.cards[i]);
         continue;
       }
-      cd.x = data.targ.x;
-      cd.y = data.targ.y;
-      cd.z = data.cards[i].z;
+      
+      cd.x = data.targs[i].x;
+      cd.y = data.targs[i].y;
+      cd.z = data.targs[i].z;
     }
   
   }else if (data.op == "msg"){
@@ -158,7 +160,7 @@ function newConnection(socket){
     
     var self_id = socket.id;
     var self_socket = socket;
-		setInterval(heartbeat, 100);
+		setInterval(heartbeat, 200);
 		function heartbeat(){
 			self_socket.emit('server-update', getDataForClient(self_id));
 		} 
