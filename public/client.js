@@ -1,6 +1,5 @@
 /* global describe io */
 
-var clientData = {};
 var serverData = {};
 var socket = io();
 
@@ -23,7 +22,6 @@ function main(){
 
   socket.on('server-update', function(data){
     serverData = data;
-    clientData = data;
     document.getElementById("text0").innerHTML = displayData(serverData);
   })
   var btn = null;
@@ -31,11 +29,7 @@ function main(){
   var inp = document.getElementById("input0");
   
   btn.onclick = function(){
-    if (clientData.messages == undefined){
-      clientData.messages = [];
-    }
-    clientData.messages.push({id:socket.id,text:inp.value,timestamp:new Date()});
-    socket.emit('client-update',clientData);
+    socket.emit('client-update',{op:"msg",id:socket.id,text:inp.value,timestamp:new Date()});
   }
 }
 window.onload = main;

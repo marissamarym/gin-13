@@ -8,12 +8,9 @@ var server = app.listen(process.env.PORT || 300);
 app.use(express.static('public'));
 console.log('server running')
 
-var socket = require('socket.io');
-var io = socket(server);
+var io = require('socket.io')(server);
 
 var serverData = {};
-var clientsData = {};
-var serverStatus = {};
 
 function updateServerData(id){
   serverData = clientsData[id];
@@ -35,7 +32,6 @@ function newConnection(socket){
     var self_socket = socket;
 		setInterval(heartbeat, 500);
 		function heartbeat(){
-      console.log(self_id);
 			self_socket.emit('server-update', getDataForClient(self_id));
 		} 
 	}
