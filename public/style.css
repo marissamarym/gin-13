@@ -93,9 +93,9 @@ body{
   border: 1px dashed white;
   border-radius: 3px;
   position: absolute;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.7);
   font-family: monospace;
-  font-size:18px;
+  font-size:16px;
   -webkit-user-select: none;
   -moz-user-select: none;
 }

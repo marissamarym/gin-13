@@ -12,7 +12,7 @@ function displayData(data){
     var player = data.players[data.messages[i].id]
     var name = (player != undefined) ? player.name : data.messages[i].id;
     var isme = (socket.id == data.messages[i].id) ? " (You) " : "";
-    result += "<li><b>" + name + isme + "</b> [id="+data.messages[i].id+"] @"+ data.messages[i].timestamp + ":<br>"
+    result += "<li><b>" + name + isme + "</b> @"+ data.messages[i].timestamp + ":<br>"
     result += "<pre>"+data.messages[i].text + "</pre></li>"
   }
   result += "</ul>"
@@ -39,7 +39,8 @@ function main(){
     for (var k in serverData.players){
       var p = serverData.players[k];
       var ab = document.getElementById("areabox-"+p.idx);
-      ab.innerHTML = p.name;
+      var isme = (k == socket.id)? " (YOU)" : "";
+      ab.innerHTML = `<div style="padding:5px">PLAYER `+(p.idx+1)+": "+p.name+isme+`</div>`
     }
     
     
@@ -66,7 +67,7 @@ function main(){
     socket.emit('client-update',{
       op:"msg",id:socket.id,
       text:document.getElementById("msg-inp").value,
-      timestamp:new Date(),
+      timestamp:(new Date()).getTime(),
     });
     
     
@@ -79,7 +80,7 @@ window.onload = function(){
     socket.emit('client-update',{
       op:"movc",id:socket.id,
       cards:data.cards, targs:data.targs,
-      timestamp:new Date(),
+      timestamp:(new Date()).getTime(),
     });
   });
   var viewportupdate = function(){
