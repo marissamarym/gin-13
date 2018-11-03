@@ -219,7 +219,7 @@ function animateCards(){
 
 
 
-function cardMain(){
+function cardMain(commitCallback){
   var desk = document.getElementById("desk");
   desk.onmousedown = function(event){
     mouseX = event.clientX-desk.getBoundingClientRect().left;
@@ -242,6 +242,7 @@ function cardMain(){
         }
       }
     }else if (mouseDownInfo.state == "multimove"){
+      comm
       mouseSel.cards = [];
       mouseDownInfo.state = "none";
     }
