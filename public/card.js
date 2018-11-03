@@ -110,11 +110,13 @@ function corners2rect(mdinfo){
   return {x:sx,y:sy,w:sw,h:sh};
 }
 
+function inArea(p,area){
+  return area.x < p.x && p.x < area.x + area.w
+      && area.y < p.y && p.y < area.y + area.h;
+}
+
 function visible(p){
-  return (AREA[DESK_ROT].x < p.x && p.x < AREA[DESK_ROT].x + AREA[DESK_ROT].w
-       && AREA[DESK_ROT].y < p.y && p.y < AREA[DESK_ROT].y + AREA[DESK_ROT].h)
-      ||( AREA.front.x < p.x && p.x < AREA.front.x + AREA.front.w
-       && AREA.front.y < p.y && p.y < AREA.front.y + AREA.front.h);
+  return inArea(p,AREA[DESK_ROT]) || inArea(p,AREA.front);
 }
 
 
@@ -270,10 +272,24 @@ function cardMain(){
       }
     }else{
       if (mouseSel.cards.length){
-        var spread = Math.min(20*mouseSel.cards.length, 500);
+        var txy = screen2desk({x:mouseX,y:mouseY});
+        var area = undefined;
+        var aw = 500;
+        for (var k in AREA){
+          if (inArea(txy,AREA[k])){
+            var ret = corners2rect({
+              p0:desk2screen(AREA[k]),
+              p1:desk2screen({x:AREA[k].x+AREA[k].w, y:AREA[k].y+AREA[k].h})
+            })
+            aw = ret.w;
+            break;
+          }
+        }
+        
+        var spread = Math.min(20*mouseSel.cards.length, aw-CARD_WIDTH);
 
         for (var i = 0; i < mouseSel.cards.length; i++){
-          var txy = screen2desk({x:mouseX,y:mouseY});
+          
           var dxy = {x:(i/mouseSel.cards.length)*spread-spread/2,y:0};
           dxy.x += WIDTH/2;
           dxy.y += HEIGHT/2;
