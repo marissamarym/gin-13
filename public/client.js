@@ -7,15 +7,16 @@ function displayData(data){
   if (!data.messages){
     return ".";
   }
-  var result = "<ul>";
+  var result = "";
   for (var i = 0; i < data.messages.length; i++){
     var player = data.players[data.messages[i].id]
     var name = (player != undefined) ? player.name : data.messages[i].id;
     var isme = (socket.id == data.messages[i].id) ? " (You) " : "";
-    result += "<li><b>" + name + isme + "</b> @"+ data.messages[i].timestamp + ":<br>"
-    result += "<pre>"+data.messages[i].text + "</pre></li>"
+    var time = (new Date(data.messages[i].timestamp)).toTimeString().split(" ")[0];
+    result += "<div><b>" + name + isme + "</b> ["+ time + "]:<br>"
+    result += "<pre>"+data.messages[i].text + "</pre></div>"
   }
-  result += "</ul>"
+  result += ""
   return result;
 }
 
@@ -39,7 +40,7 @@ function main(){
     for (var k in serverData.players){
       var p = serverData.players[k];
       var ab = document.getElementById("areabox-"+p.idx);
-      var isme = (k == socket.id)? " (YOU)" : "";
+      var isme = (k == socket.id)? " (You)" : "";
       ab.innerHTML = `<div style="padding:5px">PLAYER `+(p.idx+1)+": "+p.name+isme+`</div>`
     }
     

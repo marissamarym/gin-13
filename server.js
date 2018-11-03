@@ -15,7 +15,7 @@ function btoa(str) {
   return buffer.toString('base64');
 }
 
-///////////
+////////////
 
 
 var SUIT = ["diamond","club","heart","spade"]
