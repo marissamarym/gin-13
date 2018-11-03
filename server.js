@@ -27,7 +27,7 @@ function locatePlayer(id){
 function updateServerData(data){
   var room = rooms[locatePlayer(data.id)];
   if (room == undefined){
-    console.log("err: player belongs to no room");
+    console.log("err: player id belongs to no room: "+data.id);
   }
   if (data.op == "msg"){
     room.messages.push(data);
@@ -39,9 +39,12 @@ function updateServerData(data){
   }else if (data.op == "room"){
     if (!(data.text in rooms)){
       rooms[data.text] = newRoom(data.text);
+      console.log("new room opened: "+data.text);
     }
-    rooms[data.text].players[data.id] = room.players[data.id]; 
-    delete room.players[data.id];
+    if (locatePlayer(data.id) != data.text){
+      rooms[data.text].players[data.id] = room.players[data.id]; 
+      delete room.players[data.id];
+    }
   }
 }
 
