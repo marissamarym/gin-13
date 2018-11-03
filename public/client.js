@@ -24,12 +24,20 @@ function main(){
     serverData = data;
     document.getElementById("text0").innerHTML = displayData(serverData);
   })
-  var btn = null;
-  var btn = document.getElementById("button0");
-  var inp = document.getElementById("input0");
   
-  btn.onclick = function(){
-    socket.emit('client-update',{op:"msg",id:socket.id,text:inp.value,timestamp:new Date()});
+  document.getElementById("name-btn").onclick = function(){
+    socket.emit('client-update',{
+      op:"name",id:socket.id,
+      text:document.getElementById("name-inp").value,
+    });
+  }
+  
+  document.getElementById("msg-btn").onclick = function(){
+    socket.emit('client-update',{
+      op:"msg",id:socket.id,
+      text:document.getElementById("msg-inp").value,
+      timestamp:new Date(),
+    });
   }
 }
 window.onload = main;

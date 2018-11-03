@@ -10,11 +10,14 @@ console.log('server running')
 
 var io = require('socket.io')(server);
 
-var serverData = {messages:[]};
+var serverData = {messages:[],players:[]};
 
 function updateServerData(data){
   if (data.op == "msg"){
     serverData.messages.push(data);
+  }
+  if (data.op == "name"){
+    serverData.players[data.id].name = data;
   }
 }
 
@@ -30,6 +33,8 @@ function newConnection(socket){
 
 	function onClientStart(){
 		
+    serverData.players.push({id:socket.id, name:socket.id});
+    
     var self_id = socket.id;
     var self_socket = socket;
 		setInterval(heartbeat, 500);
@@ -43,6 +48,11 @@ function newConnection(socket){
 	}
   
 	function onClientExit(){
+    for (var i = serverData.players.length-1; i >= 0; i--){
+      if (serverData.players[i].id == socket.id){
+        serverData.players.splice(i,1);
+      }
+    }
     console.log(socket.id+' disconnected');
 	}
 }	
