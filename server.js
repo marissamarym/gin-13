@@ -41,16 +41,16 @@ function newDeck() {
         suit:SUIT[i], 
         rank:RANK[j], 
         x: 0, 
-        y: 0,
+        y: 0, z:0,
         targ: {x:0,y:0},
       })
     }
   }
   deck.push({suit:"red",rank:"joker", 
-             x:0, y:0,
+             x:0, y:0, z:0,
              targ: {x:0,y:0}});
   deck.push({suit:"black",rank:"joker",
-             x: 0, y: 0,
+             x: 0, y: 0, z:0,
              targ: {x:0,y:0}});
   function makeId(card){
     return card.suit+"-"+card.rank+"-"+randId();
@@ -64,6 +64,13 @@ function newDeck() {
   return deck;
 }
 
+function getCardById(cards,id){
+  for (var i = 0; i < cards.length; i++){
+    if (cards[i].id == id){
+      return cards[i];
+    }
+  }
+}
 
 
 
@@ -99,8 +106,21 @@ function updateServerData(data){
     console.log("err: player id belongs to no room: "+data.id);
     return;
   }
-  if (data.op == "msg"){
-    console.log("received!",data);
+  if (data.op == "movc"){
+    console.log("card-move received: ",data);
+    for (var i = 0; i < data.cards.length; i++){
+      var cd = getCardById(room.cards, data.cards[i]);
+      if (cd == undefined){
+        console.log("err: moving a card that does not exist",data.cards[i]);
+        continue;
+      }
+      cd.x = data.cards[i].x;
+      cd.y = data.cards[i].y;
+      cd.z = data.cards[i].z;
+    }
+  
+  }else if (data.op == "msg"){
+    console.log("msg received:",data);
     room.messages.push(data);
     
   }else if (data.op == "name"){
