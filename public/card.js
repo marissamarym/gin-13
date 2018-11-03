@@ -150,7 +150,7 @@ function renderCards(){
   }
   
   var selbox = document.getElementById("selbox");
-  var sw = 0, sh = 0, sx = 0, sy = 0;
+  var sw = 0, sh = 0, sx = -1000, sy = -1000;
   if (mouseDownInfo.state == "multiselect"){
     selbox.innerHTML = mouseSel.cards.length;
     var ret = getMouseRect({

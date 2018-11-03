@@ -69,7 +69,10 @@ window.onload = function(){
   main();
   window.cardMain();
   var viewportupdate = function(){
-    document.getElementById("main").left = window.innerWidth/2-(window.WIDTH+400);
-    document.getElementById("main").left = window.innerWidth/2-(window.HEIGHT+400);
+    document.getElementById("main").style.left = (window.innerWidth/2-((window.WIDTH+400)/2))+"px";
+    document.getElementById("main").style.top = (window.innerHeight/2-(window.HEIGHT/2))+"px";
+    window.setTimeout(viewportupdate,1000);
   }
+  viewportupdate();
+  
 };
