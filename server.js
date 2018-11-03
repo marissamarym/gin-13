@@ -10,7 +10,11 @@ console.log('server running')
 
 var io = require('socket.io')(server);
 
-var rooms = {"lobby":{messages:[],players:{}}};
+var rooms = {"lobby":newRoom("lobby")};
+
+function newRoom(name){
+  return {messages:[],players:{}};
+}
 
 function locatePlayer(id){
   for (var k in rooms){
@@ -28,6 +32,14 @@ function updateServerData(data){
   }else if (data.op == "name"){
     room.players[data.id].name = data.text;
     console.log("set name: "+data.id + "="+data.text);
+  
+  }else if (data.op == "room"){
+    if (data.text in rooms){
+      
+    }
+    
+    rooms[data.text] = 
+    delete room.players[data.id];
   }
 }
 

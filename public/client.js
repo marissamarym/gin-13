@@ -28,10 +28,21 @@ function main(){
 
   socket.on('server-update', function(data){
     serverData = data;
-    document.getElementById("debug").innerHTML = JSON.stringify(serverData);
-    document.getElementById("msg-disp").innerHTML = displayData(serverData);
+    //document.getElementById("debug").innerHTML = `<font size="0.1">`+JSON.stringify(serverData)+`</font>`;
+    var newhtml = displayData(serverData);
+    if (document.getElementById("msg-disp").innerHTML != newhtml){
+      document.getElementById("msg-disp").innerHTML = newhtml
+      document.getElementById("msg-disp").scrollTop = document.getElementById("msg-disp").scrollHeight;
+    }
     
   })
+  
+  document.getElementById("room-btn").onclick = function(){
+    socket.emit('client-update',{
+      op:"room",id:socket.id,
+      text:document.getElementById("room-inp").value,
+    });
+  }
   
   document.getElementById("name-btn").onclick = function(){
     socket.emit('client-update',{
@@ -46,6 +57,8 @@ function main(){
       text:document.getElementById("msg-inp").value,
       timestamp:new Date(),
     });
+    
   }
+
 }
 window.onload = main;
