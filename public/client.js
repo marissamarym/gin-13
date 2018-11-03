@@ -36,6 +36,13 @@ function main(){
     window.cardResolve(serverData.cards);
     window.DESK_ROT = serverData.players[socket.id].idx;
     
+    for (var k in serverData.players){
+      var p = serverData.players[k];
+      var ab = document.getElementById("areabox-"+p.idx);
+      ab.innerHTML = p.name;
+    }
+    
+    
   })
 //   document.getElementById('room-inp').value = "lobby";
 //   document.getElementById('name-inp').value = socket.id;

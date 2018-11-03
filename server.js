@@ -156,7 +156,7 @@ function newConnection(socket){
 	function onClientStart(){
 		
     var headcnt = Object.keys(rooms.lobby.players).length;
-    rooms.lobby.players[socket.id]= ({name:socket.id, idx:headcnt});
+    rooms.lobby.players[socket.id]= ({name:socket.id.slice(0,6), idx:headcnt});
     
     var self_id = socket.id;
     var self_socket = socket;
