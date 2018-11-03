@@ -1,7 +1,7 @@
 // server.js
 // where your node app starts
 
-/////////////./////
+/////////////.///////
 //https://www.npmjs.com/package/btoa
 function btoa(str) {
   var buffer;
@@ -114,8 +114,8 @@ function updateServerData(data){
         console.log("err: moving a card that does not exist",data.cards[i]);
         continue;
       }
-      cd.x = data.cards[i].x;
-      cd.y = data.cards[i].y;
+      cd.x = data.targ.x;
+      cd.y = data.targ.y;
       cd.z = data.cards[i].z;
     }
   

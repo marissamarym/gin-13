@@ -62,37 +62,6 @@ function screen2desk(v0){
   return v;
 }
 
-function newDeck() {
-
-  var deck = []
-  for (var i = 0; i < 4; i++){
-    for (var j = 0; j < 13; j++){
-      deck.push({
-        suit:SUIT[i], 
-        rank:RANK[j], 
-        x: Math.random()*WIDTH, 
-        y: Math.random()*HEIGHT, z: 0,
-        targ: {x:0,y:0},
-      })
-    }
-  }
-  deck.push({suit:"red",rank:"joker", 
-             x: Math.random()*WIDTH, y: Math.random()*HEIGHT, z:0,
-             targ: {x:0,y:0}});
-  deck.push({suit:"black",rank:"joker",
-             x: Math.random()*WIDTH, y: Math.random()*HEIGHT, z:0,
-             targ: {x:0,y:0}});
-  function makeId(card){
-    return card.suit+"-"+card.rank+"-"+randId();
-  }
-  for (var i = 0; i < deck.length; i++){
-    deck[i].targ.x = WIDTH/2+10+CARD_HEIGHT/2+i*1;
-    deck[i].targ.y = HEIGHT/2-i*1;
-    deck[i].id = makeId(deck[i]);
-  }
-  
-  return deck;
-}
 
 function getCardById(id){
   for (var i = 0; i < cards.length; i++){
@@ -244,7 +213,7 @@ function cardResolve(ncards){
 
 function cardMain(commitCallback){
   var commit = function(){
-    commitCallback(commitCallback({cards:cards2ids(mouseSel.cards), targ:screen2desk({x:mouseX,y:mouseY})}));
+    commitCallback({cards:cards2ids(mouseSel.cards), targ:screen2desk({x:mouseX,y:mouseY})});
   }
   
   var desk = document.getElementById("desk");

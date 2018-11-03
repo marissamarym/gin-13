@@ -34,6 +34,7 @@ function main(){
       document.getElementById("msg-disp").scrollTop = document.getElementById("msg-disp").scrollHeight;
     }
     window.cardResolve(serverData.cards);
+    window.DESK_ROT = serverData.players[socket.id].idx;
     
   })
 //   document.getElementById('room-inp').value = "lobby";
