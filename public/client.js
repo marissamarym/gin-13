@@ -66,7 +66,13 @@ function main(){
 }
 window.onload = function(){
   main();
-  window.cardMain();
+  window.cardMain(function(data){
+    socket.emit('client-update',{
+      op:"movc",id:socket.id,
+      cards:data.cards, targ:data.targ,
+      timestamp:new Date(),
+    });
+  });
   var viewportupdate = function(){
     document.getElementById("main").style.left = (window.innerWidth/2-((window.WIDTH+400)/2))+"px";
     document.getElementById("main").style.top = (window.innerHeight/2-(window.HEIGHT/2))+"px";

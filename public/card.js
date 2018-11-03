@@ -216,10 +216,20 @@ function animateCards(){
     cards[i].y = cards[i].y * (1-spd) + cards[i].targ.y * spd; 
   }
 }
-
+function cards2ids(cds){
+  var result = []
+  for (var i = 0; i < cds.length; i++){
+    result.push(cds[i].id);
+  }
+  return result;
+}
 
 
 function cardMain(commitCallback){
+  var commit = function(){
+    commitCallback(commitCallback({cards:cards2ids(mouseSel.cards), targ:screen2desk({x:mouseX,y:mouseY})}));
+  }
+  
   var desk = document.getElementById("desk");
   desk.onmousedown = function(event){
     mouseX = event.clientX-desk.getBoundingClientRect().left;
@@ -242,7 +252,7 @@ function cardMain(commitCallback){
         }
       }
     }else if (mouseDownInfo.state == "multimove"){
-      comm
+      commit();
       mouseSel.cards = [];
       mouseDownInfo.state = "none";
     }
@@ -307,6 +317,7 @@ function cardMain(commitCallback){
   }
   desk.onmouseup = function(event){
     if (mouseDownInfo.state == "single"){
+      commit();
       mouseSel.cards = [];
       mouseDownInfo.state = "none";
     }else if (mouseDownInfo.state == "multiselect"){

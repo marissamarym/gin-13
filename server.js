@@ -2,6 +2,61 @@
 // where your node app starts
 
 /////////////./////
+
+
+var SUIT = ["diamond","club","heart","spade"]
+var RANK = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
+var SYMBOLS = {diamond:"♦",club:"♣",heart:"♥",spade:"♠"}
+var COLORS = {diamond:"red",club:"black",heart:"red",spade:"black"}
+var cards = [];
+var CARD_WIDTH = 50;
+var CARD_HEIGHT = 70;
+var WIDTH = 800;
+var HEIGHT = 800;
+
+function randId(){
+  return btoa((""+Math.random()).slice(2));
+}
+
+function newDeck() {
+
+  var deck = []
+  for (var i = 0; i < 4; i++){
+    for (var j = 0; j < 13; j++){
+      deck.push({
+        suit:SUIT[i], 
+        rank:RANK[j], 
+        x: Math.random()*WIDTH, 
+        y: Math.random()*HEIGHT,
+        targ: {x:0,y:0},
+      })
+    }
+  }
+  deck.push({suit:"red",rank:"joker", 
+             x: Math.random()*WIDTH, y: Math.random()*HEIGHT,
+             targ: {x:0,y:0}});
+  deck.push({suit:"black",rank:"joker",
+             x: Math.random()*WIDTH, y: Math.random()*HEIGHT,
+             targ: {x:0,y:0}});
+  function makeId(card){
+    return card.suit+"-"+card.rank+"-"+randId();
+  }
+  for (var i = 0; i < deck.length; i++){
+    deck[i].targ.x = WIDTH/2+10+CARD_HEIGHT/2+i*1;
+    deck[i].targ.y = HEIGHT/2-i*1;
+    deck[i].id = makeId(deck[i]);
+  }
+  
+  return deck;
+}
+
+
+
+
+
+////////////////////
+
+
 var express = require('express'); 
 var app = express();
 var server = app.listen(process.env.PORT || 300);
@@ -13,7 +68,7 @@ var io = require('socket.io')(server);
 var rooms = {"lobby":newRoom("lobby")};
 
 function newRoom(name){
-  return {name:name, messages:[],players:{}};
+  return {name:name, messages:[], players:{}, cards:newDeck()};
 }
 
 function locatePlayer(id){
