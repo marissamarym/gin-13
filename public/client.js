@@ -3,15 +3,20 @@
 var serverData = {};
 var socket = io();
 
+
+
+
 function displayData(data){
   if (!data.messages){
     return ".";
   }
-  var result = "";
+  var result = "<ul>";
   for (var i = 0; i < data.messages.length; i++){
-    result += data.messages[i].id + " ("+ data.messages[i].timestamp + "):<br>"
-    result += "<b>"+data.messages[i].text + "</b><br><br>"
+    var name = data.players[data.messages[i].id].name;
+    result += "<li><b>" + name + "</b> [id="+data.messages[i].id+"] @"+ data.messages[i].timestamp + ":<br>"
+    result += "<pre>"+data.messages[i].text + "</pre></li>"
   }
+  result += "</ul>"
   return result;
 }
 
@@ -22,7 +27,7 @@ function main(){
 
   socket.on('server-update', function(data){
     serverData = data;
-    document.getElementById("text0").innerHTML = displayData(serverData);
+    document.getElementById("msg-disp").innerHTML = displayData(serverData);
   })
   
   document.getElementById("name-btn").onclick = function(){

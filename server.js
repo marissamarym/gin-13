@@ -10,14 +10,15 @@ console.log('server running')
 
 var io = require('socket.io')(server);
 
-var serverData = {messages:[],players:[]};
+var serverData = {messages:[],players:{}};
 
 function updateServerData(data){
   if (data.op == "msg"){
     serverData.messages.push(data);
-  }
-  if (data.op == "name"){
-    serverData.players[data.id].name = data;
+    
+  }else if (data.op == "name"){
+    serverData.players[data.id].name = data.text;
+    console.log("set name: "+data.id + "="+data.text);
   }
 }
 
@@ -33,7 +34,7 @@ function newConnection(socket){
 
 	function onClientStart(){
 		
-    serverData.players.push({id:socket.id, name:socket.id});
+    serverData.players[socket.id]= ({name:socket.id});
     
     var self_id = socket.id;
     var self_socket = socket;
