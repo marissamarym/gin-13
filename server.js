@@ -10,7 +10,7 @@ console.log('server running')
 
 var io = require('socket.io')(server);
 
-var serverData = {messages:[],players:{}};
+var rooms = {{id="lobby",messages:[],players:{}}};
 
 function updateServerData(data){
   if (data.op == "msg"){
