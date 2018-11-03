@@ -35,15 +35,15 @@ function main(){
     }
     
   })
-  document.getElementById('room-inp').value = "lobby";
-  document.getElementById('name-inp').value = socket.id;
+//   document.getElementById('room-inp').value = "lobby";
+//   document.getElementById('name-inp').value = socket.id;
   
-  document.getElementById("room-btn").onclick = function(){
-    socket.emit('client-update',{
-      op:"room",id:socket.id,
-      text:document.getElementById("room-inp").value,
-    });
-  }
+//   document.getElementById("room-btn").onclick = function(){
+//     socket.emit('client-update',{
+//       op:"room",id:socket.id,
+//       text:document.getElementById("room-inp").value,
+//     });
+//   }
   
   document.getElementById("name-btn").onclick = function(){
     socket.emit('client-update',{

@@ -59,11 +59,26 @@
   -moz-user-select: none;
 }
 #panel{
+  background-color: lightgrey;
   position: absolute;
   left:800px;
+  height:780px;
   top:0px;
-  margin: 10px;
+  padding: 10px;
   font-family: monospace;
+  width: calc(100%-80px);
 }
 
+#msg-panel{
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 5px;
+}
 
+#msg-disp{
+  background-color: silver;
+  
+}
+#msg-inp{
+  width:100%;
+}
