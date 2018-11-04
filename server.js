@@ -154,10 +154,21 @@ function newConnection(socket){
 	socket.on('disconnect', onClientExit);
 
 	function onClientStart(){
-		
-    var headcnt = Object.keys(rooms.lobby.players).length;
-    rooms.lobby.players[socket.id]= ({name:socket.id.slice(0,6), idx:headcnt});
-    
+		var added = false;
+    var sillyname = socket.id.slice(0,6)
+    for (var k in rooms){
+      var headcnt = Object.keys(rooms[k].players).length;
+      if (headcnt < 4){
+        rooms[k].players[socket.id]= ({name:sillyname, idx:headcnt});
+        added = true;
+        break;
+      }
+    }
+    if (!added){
+      var sillyroom = "room-"+randId();
+      rooms[sillyroom] = newRoom(sillyroom);
+      rooms[sillyroom].players[socket.id]= ({name:sillyname, idx:0});
+    }
     var self_id = socket.id;
     var self_socket = socket;
 		setInterval(heartbeat, 200);

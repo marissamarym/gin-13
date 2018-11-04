@@ -30,6 +30,7 @@ function main(){
     serverData = data;
     //document.getElementById("debug").innerHTML = `<font size="0.1">`+JSON.stringify(serverData)+`</font>`;
     var newhtml = displayData(serverData);
+    document.getElementById("room-name").innerHTML = "Room <i>"+serverData.name+"</i>";
     document.getElementById("room-list").innerHTML = "<b>open rooms:</b>\n"+serverData.room_list.join("\n");
     // console.log(newhtml)
     
