@@ -15,6 +15,18 @@ function btoa(str) {
   return buffer.toString('base64');
 }
 
+//https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
+function arrShuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
+
 ////////////
 
 
@@ -57,12 +69,19 @@ function newDeck() {
     return card.suit+"-"+card.rank+"-"+randId();
   }
   for (var i = 0; i < deck.length; i++){
-    deck[i].x = WIDTH/2+10+CARD_HEIGHT/2+i*1;
-    deck[i].y = HEIGHT/2-i*1;
     deck[i].id = makeId(deck[i]);
   }
-  
+  shuffleDeck(deck);
   return deck;
+}
+
+function shuffleDeck(deck){
+  arrShuffle(deck);
+  for (var i = 0; i < deck.length; i++){
+    deck[i].x = WIDTH/2+10+CARD_HEIGHT/2+i*1;
+    deck[i].y = HEIGHT/2-i*1;
+    deck[i].z = i;
+  }
 }
 
 function getCardById(cards,id){
@@ -72,6 +91,9 @@ function getCardById(cards,id){
     }
   }
 }
+
+
+
 
 
 
