@@ -25,6 +25,11 @@ body{
   background-repeat: repeat;
 }
 
+#main{
+  position:absolute;
+}
+
+
 #desk{
   background-color: seagreen;
   width: 800px;
@@ -121,6 +126,7 @@ body{
 }
 
 #msg-disp{
+  margin-top: 5px;
   background-color: silver;
   
 }
@@ -135,9 +141,9 @@ body{
   width:80%;
 }
 .sub-panel-lbl{
-  font-size: 20px;
+  font-size: 18px;
   padding-top:0px;
-  padding-bottom:8px;
+  padding-bottom:0px;
 }
 .msg-item{
   margin: 8px;
@@ -145,7 +151,7 @@ body{
   box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
   background-color: rgb(230,230,230);
 }
-#main{
-  position:absolute;
 
+#name-id{
+  font-size:10px;
 }

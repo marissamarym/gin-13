@@ -39,6 +39,7 @@ function main(){
     }
     window.cardResolve(serverData.cards);
     window.DESK_ROT = serverData.players[socket.id].idx;
+    document.getElementById('name-inp').value = serverData.players[socket.id].name;
     
     for (var k in serverData.players){
       var p = serverData.players[k];
@@ -50,7 +51,7 @@ function main(){
     
   })
 //   document.getElementById('room-inp').value = "lobby";
-//   document.getElementById('name-inp').value = socket.id;
+  document.getElementById('name-id').innerHTML = "id="+socket.id;
   
 //   document.getElementById("room-btn").onclick = function(){
 //     socket.emit('client-update',{
