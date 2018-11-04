@@ -193,7 +193,8 @@ function maintainRooms(){
         delete rooms[k];
       }else{
         shuffleDeck(rooms[k].cards);
-        rooms[k].messages = {}
+        rooms[k].messages = []
+        rooms[k].empty_time = 0;
         serverMessages(rooms[k],welcome_messages);
       }
     }
