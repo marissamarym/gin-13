@@ -112,7 +112,7 @@ body{
   height:780px;
   top:0px;
   padding: 10px;
-  font-family: monospace;
+/*   font-family: sans-serif; */
   width: 400px;
   box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
   border-radius: 0px 6px 6px 0px;
