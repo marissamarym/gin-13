@@ -15,7 +15,7 @@ function displayData(data){
     var isme = (socket.id == data.messages[i].id) ? " (You) " : "";
     var time = (new Date(data.messages[i].timestamp)).toTimeString().split(" ")[0];
     result += "<div class='msg-item'><b>" + name + isme + "</b> ["+ time + "]:<br>"
-    result += "<pre>"+data.messages[i].text + "</pre></div>"
+    result += "<font size='4'>"+data.messages[i].text + "</font></div>"
   }
   result += ""
   return result;
