@@ -62,7 +62,7 @@ function main(){
     window.cardResolve(serverData.cards);
     window.DESK_ROT = serverData.players[socket.id].idx;
     // document.getElementById('name-inp').value = serverData.players[socket.id].name;
-    
+    document.getElementById('name-id').innerHTML = "id="+socket.id;
     
     for (var i = 0; i < 4; i++){
       var ab = document.getElementById("areabox-"+i);
@@ -79,7 +79,7 @@ function main(){
     
   })
 //   document.getElementById('room-inp').value = "lobby";
-  document.getElementById('name-id').innerHTML = "id="+socket.id;
+  
   try{
     document.getElementById('name-inp').value = socket.id.slice(0,6);
   }catch(e){

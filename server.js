@@ -148,12 +148,15 @@ function getDataForClient(id){
 
 function maintainRooms(){
   for (var k in rooms){
-    if (rooms[k].players.length==0){
+    console.log(k,Object.keys(rooms[k].players).length);
+    if (Object.keys(rooms[k].players).length==0 && k != "lobby"){
       rooms[k].empty_time += 1;
     }else{
       rooms[k].empty_time = 0;
     }
-    
+    if (rooms[k].empty_time > 999){
+      delete rooms[k];
+    }
   }
   
 }
@@ -202,6 +205,7 @@ function newConnection(socket){
     var self_socket = socket;
 		setInterval(heartbeat, 200);
 		function heartbeat(){
+      maintainRooms();
 			self_socket.emit('server-update', getDataForClient(self_id));
 		} 
 	}
