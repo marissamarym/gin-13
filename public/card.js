@@ -106,7 +106,7 @@ function renderCards(){
       }else{
         elt.innerHTML = "<font color="+cards[i].suit+">JK<br>ER</font>";
       }
-
+      
       var closure = function(){
         var closure_id = cards[i].id;
         elt.onmousedown = function(event){
@@ -132,6 +132,9 @@ function renderCards(){
     
     if (!vis){
       set_class += " card-back";
+      elt.setAttribute("title","");
+    }else{
+      elt.setAttribute("title",cards[i].suit+"-"+cards[i].rank);
     }
 
     elt.setAttribute("class",set_class);
