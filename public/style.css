@@ -119,8 +119,8 @@ body{
 }
 
 .sub-panel{
-  border: 1px solid grey;
-  border-radius: 5px;
+  border: 1px solid rgba(0,0,0,0.3);
+  border-radius: 3px;
   padding: 5px;
   margin-bottom: 10px;
 }
@@ -156,4 +156,12 @@ body{
 
 #name-id{
   font-size:10px;
+}
+
+.room-item{
+  background-color: rgb(210,210,210);
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 3px;
+  cursor: pointer;
 }

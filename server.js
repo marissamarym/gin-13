@@ -143,7 +143,7 @@ function updateServerData(data){
 
 function getDataForClient(id){
   var room = rooms[locatePlayer(id)];
-  return Object.assign({}, room, {"room_list":Object.keys(rooms)});
+  return Object.assign({}, room, {"room_list":Object.keys(rooms).slice(0,32)});
 }
 
 
