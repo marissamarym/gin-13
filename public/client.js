@@ -2,7 +2,7 @@
 
 var serverData = {};
 var socket = io();
-
+var old_msg_cnt = 0;
 
 function displayData(data){
   if (!data.messages){
@@ -55,9 +55,10 @@ function main(){
     document.getElementById("room-list").innerHTML = "goto"+room_sp+serverData.room_list.join("</span>"+room_sp)+"</span>";
     // console.log(newhtml)
     
-    if (document.getElementById("msg-disp").innerHTML.length != newhtml.length){
+    if (data.messages.length != old_msg_cnt){
       document.getElementById("msg-disp").innerHTML = newhtml
       document.getElementById("msg-disp").scrollTop = document.getElementById("msg-disp").scrollHeight;
+      old_msg_cnt = data.messages.length;
     }
     window.cardResolve(serverData.cards);
     window.DESK_ROT = serverData.players[socket.id].idx;

@@ -186,4 +186,6 @@ body{
   color:white;
   text-align:center;
   font-family: 'Open Sans', sans-serif;
+/*   position: relative;
+  z-index: 2000; */
 }

@@ -1,7 +1,7 @@
 // server.js
 // where your node app starts
 
-/////////////.////////
+//////////////////////
 //https://www.npmjs.com/package/btoa
 function btoa(str) {
   var buffer;
@@ -174,13 +174,18 @@ function getDataForClient(id){
 function maintainRooms(){
   for (var k in rooms){
     // console.log(k,Object.keys(rooms[k].players).length);
-    if (Object.keys(rooms[k].players).length==0 && k != "lobby"){
+    if (Object.keys(rooms[k].players).length==0){
       rooms[k].empty_time += 1;
     }else{
       rooms[k].empty_time = 0;
     }
     if (rooms[k].empty_time > 999){
-      delete rooms[k];
+      if ( k != "lobby"){
+        delete rooms[k];
+      }else{
+        shuffleDeck(rooms[k].cards);
+        
+      }
     }
   }
   
