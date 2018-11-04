@@ -94,19 +94,6 @@ function getCardById(cards,id){
 
 
 
-var welcome_messages = [
-  "welcome to card-table.glitch.me",
-  "where multiple persons can mess around with the same deck of cards online",
-  "click and drag on a card to move it",
-  "or drag a selection to move multiple cards",
-  
-  
-  
-  
-]
-
-
-
 ////////////////////
 
 
@@ -118,7 +105,19 @@ console.log('server running')
 
 var io = require('socket.io')(server);
 
+
+var welcome_messages = [
+  "welcome to card-table.glitch.me",
+  "where multiple persons can mess around with the same deck of cards online",
+  "click and drag on a card to move it, or drag a selection to move multiple cards",
+  // "create or go to a room by appending <code>?room=</code> to the URL, or click on one of the suggested links in the <b>Rooms</b> panel",
+  "share the URL with your friends to invite them to your room",
+]
+
+
+
 var rooms = {"lobby":newRoom("lobby")};
+serverMessages(rooms.lobby,welcome_messages);
 
 function newRoom(name){
   return {name:name, messages:[], players:{}, cards:newDeck(), empty_time:0};
@@ -195,10 +194,17 @@ function maintainRooms(){
       }else{
         shuffleDeck(rooms[k].cards);
         rooms[k].messages = {}
+        serverMessages(rooms[k],welcome_messages);
       }
     }
   }
   
+}
+
+function serverMessages(room, msgs){
+  for (var i = 0; i < msgs.length; i++){
+    room.messages.push({id:"server message", timestamp:(new Date()).getTime(), name:"", text:msgs[i]});
+  }
 }
 
 
