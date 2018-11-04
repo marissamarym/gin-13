@@ -98,12 +98,13 @@ window.onload = function(){
   });
   var viewportupdate = function(){
     var maindiv = document.getElementById("main");
-  
-    var scale = 0.9*window.innerHeight/window.HEIGHT;
-    var scale_str = "scale("+scale+")";
-    maindiv.style.transform = scale_str;
-    maindiv.style.left = (window.innerWidth/2-((window.WIDTH+400)*scale/2))+"px";
-    maindiv.style.top = (window.innerHeight/2-(window.HEIGHT/2)*scale)+"px";
+    var dh = Math.max(window.HEIGHT,window.innerHeight)
+    document.body.style.height = dh+"px";
+    // var scale = 0.9*window.innerHeight/window.HEIGHT;
+    // var scale_str = "scale("+scale+")";
+    // maindiv.style.transform = scale_str;
+    maindiv.style.left = (window.innerWidth/2-((window.WIDTH+400)/2))+"px";
+    maindiv.style.top = (dh/2-(window.HEIGHT/2))+"px";
     window.setTimeout(viewportupdate,1000);
   }
   viewportupdate();
