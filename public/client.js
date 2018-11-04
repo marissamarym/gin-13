@@ -14,8 +14,8 @@ function displayData(data){
     var name = (player != undefined) ? player.name : data.messages[i].id;
     var isme = (socket.id == data.messages[i].id) ? " (You) " : "";
     var time = (new Date(data.messages[i].timestamp)).toTimeString().split(" ")[0];
-    result += "<div class='msg-item'><b>" + name + isme + "</b> ["+ time + "]:<br>"
-    result += "<font size='4'>"+data.messages[i].text + "</font></div>"
+    result += "<div class='msg-item'><font size='1'><b>" + name + isme + "</b> ["+ time + "]:</font><br>"
+    result += ""+data.messages[i].text + "</font></div>"
   }
   result += ""
   return result;
