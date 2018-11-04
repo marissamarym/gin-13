@@ -162,7 +162,7 @@ function updateServerData(data){
     }
   }else if (data.op == "shfl"){
     shuffleDeck(room.cards);
-    room.messages.push({id:data.id, timestamp:data.timestamp, name:room.players[data.id].name, text:});
+    room.messages.push({id:data.id, timestamp:data.timestamp, name:room.players[data.id].name, text:"[SHUFFLE]"});
   }
 }
 
@@ -173,7 +173,7 @@ function getDataForClient(id){
 
 function maintainRooms(){
   for (var k in rooms){
-    console.log(k,Object.keys(rooms[k].players).length);
+    // console.log(k,Object.keys(rooms[k].players).length);
     if (Object.keys(rooms[k].players).length==0 && k != "lobby"){
       rooms[k].empty_time += 1;
     }else{

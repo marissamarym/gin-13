@@ -182,3 +182,8 @@ body{
 .room-item:hover{
   background-color: rgb(235,235,235);
 }
+#title{
+  color:white;
+  text-align:center;
+  font-family: 'Open Sans', sans-serif;
+}
