@@ -99,11 +99,28 @@ function main(){
     });
     
   }
+  document.getElementById("msg-inp").addEventListener("keyup", function(event) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Trigger the button element with a click
+      document.getElementById("msg-btn").click();
+    }
+  });
+  
   
   document.getElementById("msg-btn").onclick = function(){
     socket.emit('client-update',{
       op:"msg",id:socket.id,
       text:document.getElementById("msg-inp").value,
+      timestamp:(new Date()).getTime(),
+    });
+  };
+
+  document.getElementById("shuffle-btn").onclick = function(){
+    socket.emit('client-update',{
+      op:"shfl",id:socket.id,
       timestamp:(new Date()).getTime(),
     });
     

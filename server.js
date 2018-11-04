@@ -160,6 +160,9 @@ function updateServerData(data){
       rooms[data.text].players[data.id] = room.players[data.id]; 
       delete room.players[data.id];
     }
+  }else if (data.op == "shfl"){
+    shuffleDeck(room.cards);
+    room.messages.push({id:data.id, timestamp:data.timestamp, name:room.players[data.id].name, text:});
   }
 }
 
