@@ -40,7 +40,7 @@ function main(){
     }
     window.cardResolve(serverData.cards);
     window.DESK_ROT = serverData.players[socket.id].idx;
-    document.getElementById('name-inp').value = serverData.players[socket.id].name;
+    // document.getElementById('name-inp').value = serverData.players[socket.id].name;
     
     
     for (var i = 0; i < 4; i++){
@@ -59,6 +59,7 @@ function main(){
   })
 //   document.getElementById('room-inp').value = "lobby";
   document.getElementById('name-id').innerHTML = "id="+socket.id;
+  document.getElementById('name-inp').value = socket.id.slice(0,6);
   
 //   document.getElementById("room-btn").onclick = function(){
 //     socket.emit('client-update',{
@@ -96,8 +97,13 @@ window.onload = function(){
     });
   });
   var viewportupdate = function(){
-    document.getElementById("main").style.left = (window.innerWidth/2-((window.WIDTH+400)/2))+"px";
-    document.getElementById("main").style.top = (window.innerHeight/2-(window.HEIGHT/2))+"px";
+    var maindiv = document.getElementById("main");
+  
+    var scale = 0.9*window.innerHeight/window.HEIGHT;
+    var scale_str = "scale("+scale+")";
+    maindiv.style.transform = scale_str;
+    maindiv.style.left = (window.innerWidth/2-((window.WIDTH+400)*scale/2))+"px";
+    maindiv.style.top = (window.innerHeight/2-(window.HEIGHT/2)*scale)+"px";
     window.setTimeout(viewportupdate,1000);
   }
   viewportupdate();
