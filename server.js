@@ -94,7 +94,16 @@ function getCardById(cards,id){
 
 
 
-
+var welcome_messages = [
+  "welcome to card-table.glitch.me",
+  "where multiple persons can mess around with the same deck of cards online",
+  "click and drag on a card to move it",
+  "or drag a selection to move multiple cards",
+  
+  
+  
+  
+]
 
 
 
@@ -180,11 +189,12 @@ function maintainRooms(){
       rooms[k].empty_time = 0;
     }
     if (rooms[k].empty_time > 999){
+      console.log("closing room due to inactivity: ",k);
       if ( k != "lobby"){
         delete rooms[k];
       }else{
         shuffleDeck(rooms[k].cards);
-        
+        rooms[k].messages = {}
       }
     }
   }
