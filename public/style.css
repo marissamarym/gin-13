@@ -159,11 +159,16 @@ body{
 #name-id{
   font-size:10px;
 }
-
+#room-list{
+  overflow-x: scroll;
+  padding-top: 3px;
+  padding-bottom: 7px;
+  
+}
 .room-item{
   background-color: rgb(210,210,210);
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-left: 3px;
+  margin-right: 3px;
   padding-left: 5px;
   padding-right: 5px;
   border-radius: 3px;
@@ -171,4 +176,8 @@ body{
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
+  
+}
+.room-item:hover{
+  background-color: rgb(235,235,235);
 }
