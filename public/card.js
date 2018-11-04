@@ -141,7 +141,7 @@ function renderCards(){
     elt.style.left = (txy.x-CARD_WIDTH/2)+"px";
     elt.style.top = (txy.y-CARD_HEIGHT/2)+"px";
     elt.style.zIndex = ""+cards[i].z;
-    console.log(cards[i].z);
+    // console.log(cards[i].z);
     maxZIndex = Math.max(maxZIndex, cards[i].z);
 
   }

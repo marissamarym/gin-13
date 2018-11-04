@@ -133,6 +133,11 @@ body{
 #msg-btn{
   width:80%;
 }
+
+#msg-item{
+  padding: 5px;
+  background-color: white;
+}
 #main{
   position:absolute;
 

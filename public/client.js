@@ -3,6 +3,7 @@
 var serverData = {};
 var socket = io();
 
+
 function displayData(data){
   if (!data.messages){
     return ".";
@@ -13,7 +14,7 @@ function displayData(data){
     var name = (player != undefined) ? player.name : data.messages[i].id;
     var isme = (socket.id == data.messages[i].id) ? " (You) " : "";
     var time = (new Date(data.messages[i].timestamp)).toTimeString().split(" ")[0];
-    result += "<div><b>" + name + isme + "</b> ["+ time + "]:<br>"
+    result += "<div class='msg-item'><b>" + name + isme + "</b> ["+ time + "]:<br>"
     result += "<pre>"+data.messages[i].text + "</pre></div>"
   }
   result += ""
@@ -30,7 +31,9 @@ function main(){
     //document.getElementById("debug").innerHTML = `<font size="0.1">`+JSON.stringify(serverData)+`</font>`;
     var newhtml = displayData(serverData);
     document.getElementById("room-list").innerHTML = "<b>open rooms:</b>\n"+serverData.room_list.join("\n");
-    if (document.getElementById("msg-disp").innerHTML != newhtml){
+    // console.log(newhtml)
+    
+    if (document.getElementById("msg-disp").innerHTML.length != newhtml.length){
       document.getElementById("msg-disp").innerHTML = newhtml
       document.getElementById("msg-disp").scrollTop = document.getElementById("msg-disp").scrollHeight;
     }
