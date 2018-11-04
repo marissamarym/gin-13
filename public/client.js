@@ -42,12 +42,18 @@ function main(){
     window.DESK_ROT = serverData.players[socket.id].idx;
     document.getElementById('name-inp').value = serverData.players[socket.id].name;
     
+    
+    for (var i = 0; i < 4; i++){
+      var ab = document.getElementById("areabox-"+i);
+      ab.innerHTML = `<div style="padding:5px">EMPTY</div>`
+    }
     for (var k in serverData.players){
       var p = serverData.players[k];
       var ab = document.getElementById("areabox-"+p.idx);
       var isme = (k == socket.id)? " (You)" : "";
       ab.innerHTML = `<div style="padding:5px">PLAYER `+(p.idx+1)+": "+p.name+isme+`</div>`
     }
+
     
     
   })
