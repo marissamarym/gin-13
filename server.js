@@ -1,7 +1,7 @@
 // server.js
 // where your node app starts
 
-/////////////.///////
+/////////////.////////
 //https://www.npmjs.com/package/btoa
 function btoa(str) {
   var buffer;
