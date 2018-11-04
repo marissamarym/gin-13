@@ -22,7 +22,6 @@ function displayData(data){
 }
 
 function roomBtn(element){
-  console.log("hey!")
   window.location.href = window.location.href.split("?")[0]+"?room="+element.innerHTML;
 }
 
@@ -52,8 +51,8 @@ function main(){
     //document.getElementById("debug").innerHTML = `<font size="0.1">`+JSON.stringify(serverData)+`</font>`;
     var newhtml = displayData(serverData);
     document.getElementById("room-name").innerHTML = "Room <b><i>"+serverData.name+"</i></b>";
-    var room_sp = "<span class='room-item' onclick='roomBtn(this)'><a onclick='roomBtn(this)'>";
-    document.getElementById("room-list").innerHTML = "goto"+room_sp+serverData.room_list.join("</a></span>"+room_sp)+"</a></span>";
+    var room_sp = "<span class='room-item' onmousedown='roomBtn(this)'>";
+    document.getElementById("room-list").innerHTML = "goto"+room_sp+serverData.room_list.join("</span>"+room_sp)+"</span>";
     // console.log(newhtml)
     
     if (document.getElementById("msg-disp").innerHTML.length != newhtml.length){

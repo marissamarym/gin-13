@@ -90,7 +90,7 @@ var io = require('socket.io')(server);
 var rooms = {"lobby":newRoom("lobby")};
 
 function newRoom(name){
-  return {name:name, messages:[], players:{}, cards:newDeck()};
+  return {name:name, messages:[], players:{}, cards:newDeck(), empty_time:0};
 }
 
 function locatePlayer(id){
@@ -144,6 +144,18 @@ function updateServerData(data){
 function getDataForClient(id){
   var room = rooms[locatePlayer(id)];
   return Object.assign({}, room, {"room_list":Object.keys(rooms).slice(0,32)});
+}
+
+function maintainRooms(){
+  for (var k in rooms){
+    if (rooms[k].players.length==0){
+      rooms[k].empty_time += 1;
+    }else{
+      rooms[k].empty_time = 0;
+    }
+    
+  }
+  
 }
 
 
