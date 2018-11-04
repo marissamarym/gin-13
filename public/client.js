@@ -21,18 +21,31 @@ function displayData(data){
   return result;
 }
 
+function useQuery(element){
+  console.log("hey!")
+  window.location.href = window.location.href.split("?")[0]+"?"+element.innerHTML;
+}
+
+function parseQuery(){
+  var q = window.location.href.split("?")[0];
+  var qs = q.split("&");
+  var result = {}
+  for (var i = 0; i < qs.length; i++){
+    result[qs.split("=")[0]] = qs.split(")
+  }
+}
 
 function main(){
   console.log("start");
-  socket.emit('client-start')
+  socket.emit('client-start',parseQuery)
 
   socket.on('server-update', function(data){
     serverData = data;
     //document.getElementById("debug").innerHTML = `<font size="0.1">`+JSON.stringify(serverData)+`</font>`;
     var newhtml = displayData(serverData);
     document.getElementById("room-name").innerHTML = "Room <b><i>"+serverData.name+"</i></b>";
-    var room_sp = <span class='room-item'>
-    document.getElementById("room-list").innerHTML = "goto"+room_sp+serverData.room_list.join("</span><span class='room-item'>")+"</span>";
+    var room_sp = "<span class='room-item' onclick='useQuery(this)'>";
+    document.getElementById("room-list").innerHTML = "goto"+room_sp+serverData.room_list.join("</span>"+room_sp)+"</span>";
     // console.log(newhtml)
     
     if (document.getElementById("msg-disp").innerHTML.length != newhtml.length){
@@ -60,7 +73,10 @@ function main(){
   })
 //   document.getElementById('room-inp').value = "lobby";
   document.getElementById('name-id').innerHTML = "id="+socket.id;
-  document.getElementById('name-inp').value = socket.id.slice(0,6);
+  try{
+    document.getElementById('name-inp').value = socket.id.slice(0,6);
+  }catch(e){
+  }
   
 //   document.getElementById("room-btn").onclick = function(){
 //     socket.emit('client-update',{
