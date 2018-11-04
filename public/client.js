@@ -21,30 +21,38 @@ function displayData(data){
   return result;
 }
 
-function useQuery(element){
+function roomBtn(element){
   console.log("hey!")
-  window.location.href = window.location.href.split("?")[0]+"?"+element.innerHTML;
+  window.location.href = window.location.href.split("?")[0]+"?room="+element.innerHTML;
 }
 
 function parseQuery(){
-  var q = window.location.href.split("?")[0];
+  var q = window.location.href.split("?")[1];
   var qs = q.split("&");
   var result = {}
   for (var i = 0; i < qs.length; i++){
-    result[qs.split("=")[0]] = qs.split(")
+    result[qs[i].split("=")[0]] = qs[i].split("=")[1];
   }
+  return result
 }
 
 function main(){
   console.log("start");
-  socket.emit('client-start',parseQuery)
+  
+  var init_settings = {}; 
+  try{
+    init_settings = parseQuery();
+  }catch(e){
+  }
+  console.log(init_settings);
+  socket.emit('client-start',init_settings)
 
   socket.on('server-update', function(data){
     serverData = data;
     //document.getElementById("debug").innerHTML = `<font size="0.1">`+JSON.stringify(serverData)+`</font>`;
     var newhtml = displayData(serverData);
     document.getElementById("room-name").innerHTML = "Room <b><i>"+serverData.name+"</i></b>";
-    var room_sp = "<span class='room-item' onclick='useQuery(this)'>";
+    var room_sp = "<span class='room-item' onclick='roomBtn(this)'>";
     document.getElementById("room-list").innerHTML = "goto"+room_sp+serverData.room_list.join("</span>"+room_sp)+"</span>";
     // console.log(newhtml)
     

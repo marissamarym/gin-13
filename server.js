@@ -153,21 +153,38 @@ function newConnection(socket){
 	socket.on('client-update', onClientUpdate);
 	socket.on('disconnect', onClientExit);
 
-	function onClientStart(){
+	function onClientStart(data){
 		var added = false;
-    var sillyname = socket.id.slice(0,6)
-    for (var k in rooms){
-      var headcnt = Object.keys(rooms[k].players).length;
+    var sillyname = socket.id.slice(0,6);
+    
+    if (data.room != undefined){
+      if (!(data.room in rooms)){
+        rooms[data.room] = newRoom(data.room);
+      }
+      var headcnt = Object.keys(rooms[data.room].players).length;
       if (headcnt < 4){
-        rooms[k].players[socket.id]= ({name:sillyname, idx:headcnt});
+        rooms[data.room].players[socket.id]= ({name:sillyname, idx:headcnt});
         added = true;
-        break;
+      }
+      
+    }
+    if (!added){
+      for (var k in rooms){
+        var headcnt = Object.keys(rooms[k].players).length;
+        if (headcnt < 4){
+          rooms[k].players[socket.id]= ({name:sillyname, idx:headcnt});
+          added = true;
+          break;
+        }
       }
     }
     if (!added){
-      var sillyroom = "room-"+randId();
-      rooms[sillyroom] = newRoom(sillyroom);
-      rooms[sillyroom].players[socket.id]= ({name:sillyname, idx:0});
+      var randname = "room-"+randId().slice(0,3);
+      while (randname in rooms){
+        randname = "room-"+randId().slice(0,3);
+      }
+      rooms[randname] = newRoom(randname);
+      rooms[randname].players[socket.id]= ({name:sillyname, idx:0});
     }
     var self_id = socket.id;
     var self_socket = socket;
