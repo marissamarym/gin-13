@@ -188,7 +188,7 @@ function maintainRooms(){
       rooms[k].empty_time = 0;
     }
     if (rooms[k].empty_time > 999){
-      console.log("closing room due to inactivity: ",k);
+      console.log("closing room due to inactivity: ",k,rooms[k].empty_time);
       if ( k != "lobby"){
         delete rooms[k];
       }else{
