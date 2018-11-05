@@ -266,6 +266,7 @@ function cardMain(commitCallback){
   var onmousemove = function(clientX,clientY){
     mouseX = clientX-desk.getBoundingClientRect().left;
     mouseY = clientY-desk.getBoundingClientRect().top;
+    console.log(mouseX,mouseY);
     if (mouseDownInfo.state == "multiselect"){
       mouseDownInfo.p1 = screen2desk({x:mouseX,y:mouseY})
     
@@ -320,7 +321,7 @@ function cardMain(commitCallback){
       }
     }
   }
-  var onmouseup = function(clientX,clientY){
+  var onmouseup = function(){
     if (mouseDownInfo.state == "single"){
       commit();
       mouseSel.cards = [];
@@ -338,12 +339,12 @@ function cardMain(commitCallback){
     }
     
   }
-  desk.onmousedown = onmousedown;
-  desk.onmousemove = onmousemove;
-  desk.onmouseup = onmouseup;
-  desk.ontouchstart = onmousedown;
-  desk.ontouchmove = onmousemove;
-  desk.ontouchend = onmouseup;
+  desk.onmousedown = function(event){onmousedown(event.clientX,event.clientY)}
+  desk.onmousemove = function(event){onmousemove(event.clientX,event.clientY)}
+  desk.onmouseup =   function(event){onmouseup(event.clientX,event.clientY)}
+  desk.ontouchstart =function(event){onmousedown(event.touches[0].pageX,event.touches[0].pageY);event.preventDefault();}
+  desk.ontouchmove = function(event){onmousemove(event.touches[0].pageX,event.touches[0].pageY);event.preventDefault();}
+  desk.ontouchend =  function(event){onmouseup();event.preventDefault();}
   
   function animloop(){
     animateCards();
