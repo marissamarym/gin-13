@@ -109,10 +109,12 @@ function renderCards(){
       
       var closure = function(){
         var closure_id = cards[i].id;
-        elt.onmousedown = function(event){
+        var onmousedown= function(event){
           mouseDownInfo.cardId = closure_id;
           mouseDownInfo.t = (new Date()).getTime();
         }
+        elt.onmousedown = onmousedown;
+        elt.ontouchstart = onmousedown;
       }
       closure();
       document.getElementById("desk").appendChild(elt);
@@ -233,7 +235,7 @@ function cardMain(commitCallback){
   }
   
   var desk = document.getElementById("desk");
-  desk.onmousedown = function(event){
+  var onmousedown = function(event){
     mouseX = event.clientX-desk.getBoundingClientRect().left;
     mouseY = event.clientY-desk.getBoundingClientRect().top;
     var t= (new Date()).getTime();
@@ -261,7 +263,7 @@ function cardMain(commitCallback){
     }
     //console.log(x+", "+y);
   }
-  desk.onmousemove = function(event){
+  var onmousemove = function(event){
     mouseX = event.clientX-desk.getBoundingClientRect().left;
     mouseY = event.clientY-desk.getBoundingClientRect().top;
     if (mouseDownInfo.state == "multiselect"){
@@ -318,7 +320,7 @@ function cardMain(commitCallback){
       }
     }
   }
-  desk.onmouseup = function(event){
+  var onmouseup = function(event){
     if (mouseDownInfo.state == "single"){
       commit();
       mouseSel.cards = [];
@@ -336,10 +338,12 @@ function cardMain(commitCallback){
     }
     
   }
-  
-//   document.getElementById("rot").onclick = function(){
-//     DESK_ROT = (DESK_ROT + 1) % 4
-//   }
+  desk.onmousedown = onmousedown;
+  desk.onmousemove = onmousemove;
+  desk.onmouseup = onmouseup;
+  desk.ontouchstart = onmousedown;
+  desk.ontouchmove = onmousemove;
+  desk.ontouchend = onmouseup;
   
   function animloop(){
     animateCards();
