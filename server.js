@@ -196,6 +196,7 @@ function maintainRooms(){
         rooms[k].messages = []
         rooms[k].empty_time = 0;
         serverMessages(rooms[k],welcome_messages);
+        console.log("reset",k,rooms[k].empty_time);
       }
     }
   }
