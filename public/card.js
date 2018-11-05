@@ -235,9 +235,10 @@ function cardMain(commitCallback){
   }
   
   var desk = document.getElementById("desk");
+  
   var onmousedown = function(clientX,clientY){
-    mouseX = clientX-desk.getBoundingClientRect().left;
-    mouseY = clientY-desk.getBoundingClientRect().top;
+    mouseX = clientX-desk.getBoundingClientRect().left-window.pageXOffset;
+    mouseY = clientY-desk.getBoundingClientRect().top-window.pageYOffset;
     var t= (new Date()).getTime();
     
     if (mouseDownInfo.state == "none"){
@@ -257,16 +258,48 @@ function cardMain(commitCallback){
         }
       }
     }else if (mouseDownInfo.state == "multimove"){
+      handhold();
       commit();
       mouseSel.cards = [];
       mouseDownInfo.state = "none";
     }
     //console.log(x+", "+y);
   }
+  var handhold = function(){
+    var txy = screen2desk({x:mouseX,y:mouseY});
+      var area = undefined;
+      var aw = 500;
+      for (var k in AREA){
+        if (inArea(txy,AREA[k])){
+          var ret = corners2rect({
+            p0:desk2screen(AREA[k]),
+            p1:desk2screen({x:AREA[k].x+AREA[k].w, y:AREA[k].y+AREA[k].h})
+          })
+          aw = ret.w;
+          break;
+        }
+      }
+
+      var spread = Math.min(20*mouseSel.cards.length, aw-CARD_WIDTH);
+
+      for (var i = 0; i < mouseSel.cards.length; i++){
+
+        var dxy = {x:(i/mouseSel.cards.length)*spread-spread/2,y:0};
+        dxy.x += WIDTH/2;
+        dxy.y += HEIGHT/2;
+        dxy = screen2desk(dxy);
+        dxy.x -= WIDTH/2;
+        dxy.y -= HEIGHT/2;
+        mouseSel.cards[i].targ.x = txy.x+dxy.x;
+        mouseSel.cards[i].targ.y = txy.y+dxy.y;
+        mouseSel.cards[i].targ.x = Math.min(Math.max(mouseSel.cards[i].targ.x,CARD_WIDTH/2),WIDTH-CARD_WIDTH/2);
+        mouseSel.cards[i].targ.y = Math.min(Math.max(mouseSel.cards[i].targ.y,CARD_HEIGHT/2),HEIGHT-CARD_HEIGHT/2);
+      }
+    
+  }
   var onmousemove = function(clientX,clientY){
-    mouseX = clientX-desk.getBoundingClientRect().left;
-    mouseY = clientY-desk.getBoundingClientRect().top;
-    console.log(mouseX,mouseY);
+    mouseX = clientX-desk.getBoundingClientRect().left-window.pageXOffset;
+    mouseY = clientY-desk.getBoundingClientRect().top-window.pageYOffset;
     if (mouseDownInfo.state == "multiselect"){
       mouseDownInfo.p1 = screen2desk({x:mouseX,y:mouseY})
     
@@ -289,35 +322,7 @@ function cardMain(commitCallback){
       }
     }else{
       if (mouseSel.cards.length){
-        var txy = screen2desk({x:mouseX,y:mouseY});
-        var area = undefined;
-        var aw = 500;
-        for (var k in AREA){
-          if (inArea(txy,AREA[k])){
-            var ret = corners2rect({
-              p0:desk2screen(AREA[k]),
-              p1:desk2screen({x:AREA[k].x+AREA[k].w, y:AREA[k].y+AREA[k].h})
-            })
-            aw = ret.w;
-            break;
-          }
-        }
-        
-        var spread = Math.min(20*mouseSel.cards.length, aw-CARD_WIDTH);
-
-        for (var i = 0; i < mouseSel.cards.length; i++){
-          
-          var dxy = {x:(i/mouseSel.cards.length)*spread-spread/2,y:0};
-          dxy.x += WIDTH/2;
-          dxy.y += HEIGHT/2;
-          dxy = screen2desk(dxy);
-          dxy.x -= WIDTH/2;
-          dxy.y -= HEIGHT/2;
-          mouseSel.cards[i].targ.x = txy.x+dxy.x;
-          mouseSel.cards[i].targ.y = txy.y+dxy.y;
-          mouseSel.cards[i].targ.x = Math.min(Math.max(mouseSel.cards[i].targ.x,CARD_WIDTH/2),WIDTH-CARD_WIDTH/2);
-          mouseSel.cards[i].targ.y = Math.min(Math.max(mouseSel.cards[i].targ.y,CARD_HEIGHT/2),HEIGHT-CARD_HEIGHT/2);
-        }
+        handhold();
       }
     }
   }
