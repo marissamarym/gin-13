@@ -235,9 +235,9 @@ function cardMain(commitCallback){
   }
   
   var desk = document.getElementById("desk");
-  var onmousedown = function(event){
-    mouseX = event.clientX-desk.getBoundingClientRect().left;
-    mouseY = event.clientY-desk.getBoundingClientRect().top;
+  var onmousedown = function(clientX,clientY){
+    mouseX = clientX-desk.getBoundingClientRect().left;
+    mouseY = clientY-desk.getBoundingClientRect().top;
     var t= (new Date()).getTime();
     
     if (mouseDownInfo.state == "none"){
@@ -263,9 +263,9 @@ function cardMain(commitCallback){
     }
     //console.log(x+", "+y);
   }
-  var onmousemove = function(event){
-    mouseX = event.clientX-desk.getBoundingClientRect().left;
-    mouseY = event.clientY-desk.getBoundingClientRect().top;
+  var onmousemove = function(clientX,clientY){
+    mouseX = clientX-desk.getBoundingClientRect().left;
+    mouseY = clientY-desk.getBoundingClientRect().top;
     if (mouseDownInfo.state == "multiselect"){
       mouseDownInfo.p1 = screen2desk({x:mouseX,y:mouseY})
     
@@ -320,7 +320,7 @@ function cardMain(commitCallback){
       }
     }
   }
-  var onmouseup = function(event){
+  var onmouseup = function(clientX,clientY){
     if (mouseDownInfo.state == "single"){
       commit();
       mouseSel.cards = [];
