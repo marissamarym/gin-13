@@ -47,6 +47,8 @@ function randId(){
 function newDeck() {
 
   var deck = []
+  
+   for (var t = 0; t < 2; t++){
   for (var i = 0; i < 4; i++){
     for (var j = 0; j < 13; j++){
       deck.push({
@@ -59,6 +61,7 @@ function newDeck() {
       })
     }
   }
+   }
    for (var i = 0; i < 4; i++){
     for (var j = 0; j < 13; j++){
       deck.push({
@@ -71,6 +74,12 @@ function newDeck() {
       })
     }
   }
+    deck.push({suit:"red",rank:"joker", 
+             x:0, y:0, z:0, resolve_dl: 0,
+             targ: {x:0,y:0}});
+  deck.push({suit:"black",rank:"joker",
+             x: 0, y: 0, z:0, resolve_dl: 0,
+             targ: {x:0,y:0}});
   function makeId(card){
     return card.suit+"-"+card.rank+"-"+randId();
   }
