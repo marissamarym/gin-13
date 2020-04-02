@@ -11,10 +11,6 @@
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-    <div id="title">
-      <div style="font-size:20px">card-table.glitch.me</div>
-      <div style="font-size:14px"><i>- A deck of cards on a table</i></div>
-    </div>
     
     <div id="main">
       
@@ -32,12 +28,14 @@
 
       <div id="panel">
         <div class="sub-panel">
-          <div class="sub-panel-lbl" id="room-name"></div>
-          <div id="room-list"></div>
-          <div style="font-size:10px;">or put <code>?room=...</code> after the URL to enter/create a room</div>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <div>
+               <img src="https://cdn.glitch.com/4a2fab06-83ca-4860-8fa9-e5066377dbc7%2FScreen%20Shot%202020-04-02%20at%2010.28.11%20AM.png?v=1585848604864" width="300" />
+            </div>
+          </div>
         </div>
           
-        <div class="sub-panel">
+        <div class="sub-panel" style="display: none;">
           <table style="width:100%"><tr><td><div class="sub-panel-lbl">Player</div></td><td><input id="name-inp" style="width:100%"/></td>
             <td style="width:80px; text-align:center;"><button id="name-btn">Rename</button></td></tr></table>
           
@@ -46,7 +44,7 @@
         </div>
 
 
-        <div class="sub-panel">
+        <div class="sub-panel" style="display: none;">
           <div class="sub-panel-lbl">Messages</div>
           <div id="msg-disp"></div>
 
@@ -61,6 +59,11 @@
         
         <div class="sub-panel">
           <button id="shuffle-btn">Shuffle</button>
+        </div>
+          <div class="sub-panel">
+          <table style="width:100%"><tr><td><div class="sub-panel-lbl">Player</div></td><td><input id="name-inp" style="width:100%"/></td>
+            <td style="width:80px; text-align:center;"><button id="name-btn">Rename</button></td></tr></table>
+          <div id="name-id"></div>
         </div>
       </div>
     </div>

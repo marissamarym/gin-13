@@ -59,12 +59,18 @@ function newDeck() {
       })
     }
   }
-  deck.push({suit:"red",rank:"joker", 
-             x:0, y:0, z:0, resolve_dl: 0,
-             targ: {x:0,y:0}});
-  deck.push({suit:"black",rank:"joker",
-             x: 0, y: 0, z:0, resolve_dl: 0,
-             targ: {x:0,y:0}});
+   for (var i = 0; i < 4; i++){
+    for (var j = 0; j < 13; j++){
+      deck.push({
+        suit:SUIT[i], 
+        rank:RANK[j], 
+        x: 0, 
+        y: 0, z:0,
+        targ: {x:0,y:0},
+        resolve_dl: 0,
+      })
+    }
+  }
   function makeId(card){
     return card.suit+"-"+card.rank+"-"+randId();
   }
@@ -259,6 +265,7 @@ function newConnection(socket){
 	}
   
 	function onClientUpdate(data){
+    console.log('client update', data)
     updateServerData(data);
 	}
   
