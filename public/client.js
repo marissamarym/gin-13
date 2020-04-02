@@ -63,7 +63,6 @@ function main(){
     window.cardResolve(serverData.cards);
     window.DESK_ROT = serverData.players[socket.id].idx;
     // document.getElementById('name-inp').value = serverData.players[socket.id].name;
-    document.getElementById('name-id').innerHTML = "id="+socket.id;
     
     for (var i = 0; i < 4; i++){
       var ab = document.getElementById("areabox-"+i);

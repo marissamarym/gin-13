@@ -103,7 +103,7 @@ body{
   position: absolute;
   color: rgba(255,255,255,0.7);
   font-family: monospace;
-  font-size:16px;
+  font-size:24px;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -158,9 +158,6 @@ body{
   background-color: rgb(235,235,235);
 }
 
-#name-id{
-  font-size:10px;
-}
 #room-list{
   overflow-x: scroll;
   padding-top: 3px;
@@ -195,4 +192,9 @@ body{
   width: 100%;
   height: 200px;
   font-size: 40px;
+}
+#name-btn {
+  width: 160px;
+  height: 50px;
+  font-size: 20px;
 }
