@@ -81,6 +81,20 @@ function shuffleDeck(deck){
   }
 }
 
+function dealDeck(deck, players, number){
+  if (!number) {
+    return
+  }
+  for (var i = 0; i < Object.values(players).length; i++){
+    for (var j = 0; j < number; j++) {
+      const index = i + j;
+        deck[index].x = WIDTH / 2 + CARD_HEIGHT / 2 + index * 1 + (i*10);
+        deck[index].y = HEIGHT / 2 - index * 1 + 100;
+        deck[index].z = index;
+    }
+  }
+}
+
 function getCardById(cards,id){
   for (var i = 0; i < cards.length; i++){
     if (cards[i].id == id){
@@ -157,10 +171,12 @@ function updateServerData(data){
     console.log("set name: "+data.id + "="+data.text);
   
   }else if (data.op == "deal"){
+    console.log('data',data)
     room.deal_number = data.number;
     console.log("set deal number: "+data.id + "="+data.number);
     shuffleDeck(room.cards);
     console.log('players', room.players)
+    dealDeck(room.cards, room.players, room.deal_number)
   }else if (data.op == "room"){
     if (!(data.text in rooms)){
       rooms[data.text] = newRoom(data.text);
