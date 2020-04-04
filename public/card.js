@@ -8,6 +8,9 @@ var CARD_HEIGHT = 70;
 var WIDTH = 800;
 var HEIGHT = 800;
 var DESK_ROT = 0;
+
+const COMMON_LONG_SIDE = 500;
+const COMMON_SHORT_SIDE = 250;
 var AREA = {
   0:{x:150,y:650,w:500,h:150},
   1:{x:650,y:150,w:150,h:500},

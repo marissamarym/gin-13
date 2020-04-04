@@ -92,7 +92,7 @@ function dealDeck(deck, players, number){
       console.log({i, j})
         const index = cardIndex;
         deck[index].x = WIDTH / 2 + CARD_HEIGHT / 2;
-        deck[index].y = HEIGHT / 2 - index * 1  + (i*100) - 20;
+        deck[index].y = HEIGHT / 2 - index * 1  + (i*100) - 25;
         deck[index].z = index;
       cardIndex++;
     }
