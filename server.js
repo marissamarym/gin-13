@@ -76,7 +76,7 @@ function shuffleDeck(deck){
   arrShuffle(deck);
   for (var i = 0; i < deck.length; i++){
     deck[i].x = WIDTH/2+10+CARD_HEIGHT/2+i*1;
-    deck[i].y = HEIGHT/2-i*1;
+    deck[i].y = HEIGHT/2-i*1 - 100;
     deck[i].z = i;
   }
 }
@@ -85,12 +85,16 @@ function dealDeck(deck, players, number){
   if (!number) {
     return
   }
+  console.log('players',players)
+  var cardIndex = 0;
   for (var i = 0; i < Object.values(players).length; i++){
     for (var j = 0; j < number; j++) {
-      const index = i + j;
-        deck[index].x = WIDTH / 2 + CARD_HEIGHT / 2 + index * 1 + (i*10);
-        deck[index].y = HEIGHT / 2 - index * 1 + 100;
+      console.log({i, j})
+        const index = cardIndex;
+        deck[index].x = WIDTH / 2 + CARD_HEIGHT / 2;
+        deck[index].y = HEIGHT / 2 - index * 1  + (i*100) - 20;
         deck[index].z = index;
+      cardIndex++;
     }
   }
 }
