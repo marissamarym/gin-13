@@ -9,15 +9,18 @@ var WIDTH = 800;
 var HEIGHT = 800;
 var DESK_ROT = 0;
 
-const COMMON_LONG_SIDE = 500;
-const COMMON_SHORT_SIDE = 250;
+const C_S = 250;
+const P_S = 150;
+
+const C_LONG = C_S * 2;
+
 var AREA = {
-  0:{x:150,y:650,w:500,h:150},
-  1:{x:650,y:150,w:150,h:500},
-  2:{x:150,y:  0,w:500,h:150},
-  3:{x:  0,y:150,w:150,h:500},
-  front:{x:150,y:150,w:250,h:500},
-  back: {x:400,y:150,w:250,h:500},
+  0:{x:P_S,y:C_LONG + P_S,w:C_LONG,h:P_S},
+  1:{x:C_LONG + P_S,y:P_S,w:P_S,h:C_LONG},
+  2:{x:P_S,y:  0,w:C_LONG,h:P_S},
+  3:{x:  0,y:P_S,w:P_S,h:C_LONG},
+  front:{x:P_S,y:P_S,w:C_S,h:C_LONG},
+  back: {x:400,y:P_S,w:C_S,h:C_LONG},
 }
 
 var mouseDownInfo = {cardId:"",t:0,p0:{x:0,y:0},p1:{x:0,y:0},state:"none"};
