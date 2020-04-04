@@ -95,7 +95,15 @@ function main(){
   document.getElementById("name-btn").onclick = function(){
     socket.emit('client-update',{
       op:"name",id:socket.id,
-      text:document.getElementById("name-inp").value,
+      number:document.getElementById("name-inp").value,
+    });
+    
+  }
+  
+    document.getElementById("deal-btn").onclick = function(){
+    socket.emit('client-update',{
+      op:"deal",id:socket.id,
+      text:document.getElementById("deal-inp").value,
     });
     
   }

@@ -156,6 +156,11 @@ function updateServerData(data){
     room.players[data.id].name = data.text;
     console.log("set name: "+data.id + "="+data.text);
   
+  }else if (data.op == "deal"){
+    room.deal_number = data.number;
+    console.log("set deal number: "+data.id + "="+data.number);
+    shuffleDeck(room.cards);
+    console.log('players', room.players)
   }else if (data.op == "room"){
     if (!(data.text in rooms)){
       rooms[data.text] = newRoom(data.text);
