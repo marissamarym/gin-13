@@ -51,14 +51,18 @@ function newDeck() {
   for (var t = 0; t < 2; t++){
     for (var i = 0; i < 4; i++){
       for (var j = 0; j < 14; j++){
-        deck.push({
-          suit:SUIT[i], 
-          rank:RANK[j], 
-          x: 0, 
-          y: 0, z:0,
-          targ: {x:0,y:0},
-          resolve_dl: 0,
-        })
+        const isSkippedJoker = RANK[j] === '*' && i % 2 === 0;
+        console.log('isSkippedJoker',isSkippedJoker)
+        if (!isSkippedJoker) { 
+          deck.push({
+            suit:SUIT[i], 
+            rank:RANK[j], 
+            x: 0, 
+            y: 0, z:0,
+            targ: {x:0,y:0},
+            resolve_dl: 0,
+          })   
+        }
       }
     }
    }
